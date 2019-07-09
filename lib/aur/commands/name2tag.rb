@@ -16,8 +16,9 @@ module Aur
 
       def run
         puts file
+        tags = tags_from_filename
         tags.each_pair { |k, v| tag_msg(k, v) }
-        apply_tags(tags_from_filename)
+        apply_tags(tags)
       end
 
       private
