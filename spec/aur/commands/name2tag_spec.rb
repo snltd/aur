@@ -6,16 +6,11 @@ require_relative '../../../lib/aur/commands/name2tag'
 
 # Test for name2tag command
 #
-class TestName2Tag < MiniTest::Test
+class TestName2tag < MiniTest::Test
   attr_reader :flac, :mp3
 
   def setup
-    @flac = Aur::Name2Tag::Flac.new(FLAC_TEST)
-    @mp3 = Aur::Name2Tag::Mp3.new(MP3_TEST)
-  end
-
-  def test_run
-    flac.run
-    mp3.run
+    @flac = Aur::Name2tag::Flac.new(FLAC_TEST)
+    @mp3 = Aur::Name2tag::Mp3.new(MP3_TEST)
   end
 end

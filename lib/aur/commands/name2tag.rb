@@ -20,11 +20,7 @@ module Aur
         apply_tags(tags_from_filename)
       end
 
-      def tag_msg(name, val)
-        msg format('%12<tag_name>s -> %<tag_value>s',
-                   tag_name: name,
-                   tag_value: val)
-      end
+      private
 
       # @return [Hash] tag_name => value
       #
@@ -32,6 +28,12 @@ module Aur
         TAGS.each_with_object({}) do |t, a|
           a[info.send(:tag_for, t)] = mk_title(info.send("f_#{t}".to_sym))
         end
+      end
+
+      def tag_msg(name, val)
+        msg format('%12<tag_name>s -> %<tag_value>s',
+                   tag_name: name,
+                   tag_value: val)
       end
     end
 
