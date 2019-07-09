@@ -39,7 +39,7 @@ jobs:
         paths:
           - vendor/bundle
 
-      - run: bundle exec rake push
+      - run: bundle exec rake
 
 workflows:
   version: 2
