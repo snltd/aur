@@ -1,0 +1,7 @@
+Gemfile.lock
+.yardoc
+/doc
+.*swp
+*.gem
+.ruby-version
+.nfs*
