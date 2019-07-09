@@ -17,6 +17,7 @@ class TestSort < MiniTest::Test
 
   def test_run
     mv = Spy.on(FileUtils, :mv)
+    mkdir = Spy.on(FileUtils, :mkdir_p)
     out, err = capture_io { flac.run }
 
     assert_empty(err)
@@ -26,5 +27,8 @@ class TestSort < MiniTest::Test
     assert_equal([FLAC_TEST, RES_DIR + 'test_tones.test_tones' +
                   FLAC_TEST.basename],
                  mv.calls.first.args)
+    assert(mkdir.has_been_called?)
+    assert_equal([RES_DIR + 'test_tones.test_tones'],
+                 mkdir.calls.first.args)
   end
 end
