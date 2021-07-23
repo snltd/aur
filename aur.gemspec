@@ -29,7 +29,7 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency 'ruby-mp3info', '~> 0.8.0'
 
   gem.add_development_dependency 'minitest', '~> 5.14'
-  gem.add_development_dependency 'rake', '~> 12.0'
+  gem.add_development_dependency 'rake', '~> 13.0'
   gem.add_development_dependency 'rubocop', '~> 1.0'
   gem.add_development_dependency 'rubocop-minitest', '~> 0.14'
   gem.add_development_dependency 'rubocop-performance', '~> 1.11'
