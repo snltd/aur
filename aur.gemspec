@@ -8,7 +8,6 @@ require_relative 'lib/aur/version'
 Gem::Specification.new do |gem|
   gem.name          = 'Aur'
   gem.version       = AUR_VERSION
-  gem.date          = Date.today.to_s
 
   gem.summary       = 'audio file management tool'
   gem.description   = 'audio file management tool'
@@ -32,9 +31,9 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'minitest', '~> 5.14'
   gem.add_development_dependency 'rake', '~> 12.0'
   gem.add_development_dependency 'rubocop', '~> 1.0'
-  gem.add_development_dependency 'rubocop-rake', '~> 0.6'
   gem.add_development_dependency 'rubocop-minitest', '~> 0.14'
   gem.add_development_dependency 'rubocop-performance', '~> 1.11'
+  gem.add_development_dependency 'rubocop-rake', '~> 0.6'
   gem.add_development_dependency 'spy', '~> 1.0.0'
   gem.add_development_dependency 'yard', '~> 0.9.5'
 

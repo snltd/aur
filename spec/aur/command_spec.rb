@@ -18,7 +18,9 @@ class CommandTest < MiniTest::Test
   end
 
   def test_flist
+    suffixes = %w[.flac .mp3]
+
     assert(obj.flist.all? { |f| f.instance_of?(Pathname) })
-    assert(obj.flist.all? { |f| %w[.flac .mp3].include?(f.extname) })
+    assert(obj.flist.all? { |f| suffixes.include?(f.extname) })
   end
 end

@@ -16,13 +16,23 @@ module Aur
       in_brackets = false
 
       new_words = words.map.with_index do |w, i|
-        w = (w.gsub('-', '.')+ '.').upcase if w.match?(/^(\w-)+\w?/)
+        w = handle_initials(w) if w.match?(/^(\w-)+\w?/)
         w, in_brackets = brackets(w, in_brackets) if w.include?('-')
         w = smart_expand(w)
         smart_capitalize(w, i, words.size)
       end
 
       new_words.join(' ').tap { |str| str.<< ')' if in_brackets }
+    end
+
+    # I separte initials with a dash. So y-m-c-a => Y.M.C.A. (including the
+    # trailing dot.) Because we also do brackets with a '-', this isn't going
+    # to be perfect, but I think it's near enough.
+    # @param word [String] a word which looks like an initialism
+    # @return [String] word turned into an initialism
+    #
+    def handle_initials(word)
+      (word.tr('-', '.') + '.').upcase
     end
 
     # I think the first word in brackets should always be capitalized. Looks
@@ -60,19 +70,17 @@ module Aur
     # Don't capitalize a word if it's in the NO_CAPS list, but *do* capitalize
     # it if it's the first or last word in a title. String#capitalize will
     # downcase all but the first character, which messes up our brackets
-    # handling, hence the logic in the else clause.
+    # handling, hence the logic at the end.
     #
     def smart_capitalize(word, index, len)
-      return word if word.match(/^(\w\.)+$/) # e.g. L.A.
+      return word if /^(\w\.)+$/.match?(word) # initialisms
 
-      if index.positive? && index < (len - 1) && NO_CAPS.include?(word)
-        return word
-      end
+      return word if NO_CAPS.include?(word) && index.between?(1, len - 2)
 
-      return word.capitalize unless word =~ /\s/
+      return word.capitalize unless /\s/.match?(word)
 
       word.split(/\s/).map do |w|
-        w.start_with?('(') ? w : smart_capitalize(w, 1, 10)
+        w.start_with?('(') ? w : smart_capitalize(w, 1, len)
       end.join(' ')
     end
   end

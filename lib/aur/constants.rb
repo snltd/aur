@@ -2,7 +2,7 @@
 
 SUPPORTED_TYPES = %w[flac mp3].freeze
 
-BIN = { flac:     Pathname.new('/usr/bin/flac'),
+BIN = { flac: Pathname.new('/usr/bin/flac'),
         shnsplit: Pathname.new('/usr/bin/shnsplit') }.freeze
 
 # These words are not (normally) capitalised when generating tags
@@ -24,20 +24,20 @@ NO_CAPS = %w[a aboard about above absent across after against along
 #
 EXPAND = {
   '&': 'and',
-           cant: "can't",
-           couldnt: "couldn't",
-           etc: 'etc.',
-           hes: "he's",
-           im: "I'm",
-           its: "it's",
-           shes: "she's",
-           thats: "that's",
-           theres: "there's",
-           weve: "we've",
-           wont: "won't",
-           wouldnt: "wouldn't",
-           youll: "you'll",
-           youre: "you're",
-           youve: "you've",
-           dont: "don't"
+  cant: "can't",
+  couldnt: "couldn't",
+  etc: 'etc.',
+  hes: "he's",
+  im: "I'm",
+  its: "it's",
+  shes: "she's",
+  thats: "that's",
+  theres: "there's",
+  weve: "we've",
+  wont: "won't",
+  wouldnt: "wouldn't",
+  youll: "you'll",
+  youre: "you're",
+  youve: "you've",
+  dont: "don't"
 }.freeze

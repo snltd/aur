@@ -14,8 +14,8 @@ docopt = CMDS.each_with_object(['  Usage:']) do |cmd, a|
 end.join("\n")
 
 def sanitize_keys(options)
-  options.each_with_object({}) do |(k, v), r|
-    r[k.to_s.delete('-').to_sym] = v
+  options.transform_keys do |k|
+    k.to_s.delete('-').to_sym
   end
 end
 

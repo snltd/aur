@@ -56,7 +56,7 @@ module Aur
       end
 
       def f_t_num
-        fname_bits.first =~ /^\d\d?/ ? fname_bits.first : '00'
+        /^\d\d?/.match?(fname_bits.first) ? fname_bits.first : '00'
       end
 
       def tag_for(field)
@@ -98,11 +98,11 @@ module Aur
       #
       def tag_map
         { artist: :artist,
-          album:  :album,
-          title:  :title,
-          t_num:  :tracknumber,
-          year:   :date,
-          genre:  :genre }
+          album: :album,
+          title: :title,
+          t_num: :tracknumber,
+          year: :date,
+          genre: :genre }
       end
     end
 
@@ -128,11 +128,11 @@ module Aur
 
       def tag_map
         { artist: :artist,
-          album:  :album,
-          title:  :title,
-          t_num:  :tracknum,
-          year:   :year,
-          genre:  :genre }
+          album: :album,
+          title: :title,
+          t_num: :tracknum,
+          year: :year,
+          genre: :genre }
       end
     end
   end

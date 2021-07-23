@@ -18,7 +18,7 @@ module Aur
 
       def track_fnum(_info)
         print "#{file.basename} > "
-        STDIN.gets.chomp
+        $stdin.gets.chomp
       end
     end
   end
