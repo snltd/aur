@@ -35,6 +35,9 @@ class TestName2Tag < MiniTest::Test
                  mk_title('this_is-almost-too_easy'))
   end
 
-  # We can't do brackets at the start because of ambiguity. What
-  # would you bracket in 'first-last.flac' ?
+  def test_mk_title_initials
+    assert_equal('C.R.E.E.P.', mk_title('c-r-e-e-p'))
+    assert_equal('The N.W.R.A.', mk_title('the_n-w-r-a'))
+    assert_equal('W.M.C. Blob 59', mk_title('w-m-c_blob_59'))
+  end
 end
