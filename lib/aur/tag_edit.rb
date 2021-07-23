@@ -1,76 +1,74 @@
 # frozen_string_literal: true
 
 require_relative 'constants'
+require_relative 'stdlib/string'
 
 module Aur
   #
-  # Methods to construct tags from filenames.
+  # Methods to construct tags from filenames. The naming, capitalising,
+  # bracketing and all of that is just my personal preference.
   #
   module TagEdit
-    # Turn a filename type name, like 'pet_shop_boys' into a tag
-    # type name, like 'Pet Shop Boys'
+    # Turn a filename type name, like 'pet_shop_boys' into a tag type name,
+    # like 'Pet Shop Boys'
     #
+    # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Metrics/AbcSize
     def mk_title(string)
       words = string.split('_')
       in_brackets = false
 
       new_words = words.map.with_index do |w, i|
-        w, in_brackets = brackets(w, in_brackets) if w.include?('-')
-        w = smart_expand(w)
-        smart_capitalize(w, i, words.size)
+        w = w.initials if w.match?(/^(\w-)+\w?/)
+
+        if w.include?('-')
+          ws = w.split('-')
+          bw, in_brackets = in_brackets ? close_brackets(ws) : open_brackets(ws)
+          bw
+        else
+          smart_capitalize(w.expand, i, words.size)
+        end
       end
 
-      new_words.join(' ').tap { |str| str.<< ')' if in_brackets }
+      new_words.flatten.join(' ').tap { |str| str.<< ')' if in_brackets }
     end
+    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/MethodLength
 
-    # I think the first word in brackets should always be
-    # capitalized. Looks right to me.
+    # I do brackets by treating every segment as a full title. So, I always
+    # capitalize the words before and after the brackets, and the first and
+    # last words inside them.
     #
-    def brackets(word, in_brackets)
-      words = word.split('-')
-      words[1], inside = bracketize_word(words, in_brackets)
-      [words.join(' '), inside]
+    def open_brackets(words)
+      first = words.first.expand(:caps)
+      inner = words[1].expand(:caps)
+
+      return ["#{first} (#{inner}", true] if words.size < 3
+
+      final = words.last.expand(:caps)
+      inner = words[1..-2].join('-').initials if words.size > 3
+
+      ["#{first} (#{inner}) #{final}", false]
     end
 
-    # If @words has three elements, return the middle word, in
-    # brackets. If it has two elements, open or close brackets
-    # before or after the second word, depending on whether or not
-    # we are currently in brackets.
-    # @param words [Array[String]] a list of words to manipula
-    # @param in_brackets [Bool] whether we are currently inside
-    #   brackets
-    # @return Array [bracketed string, whether we are now inside
-    #   brackets]
-    #
-    def bracketize_word(words, in_brackets)
-      if words.size == 3
-        ["(#{words[1].capitalize})", false]
-      elsif in_brackets
-        ["#{words[1]})", false]
-      else
-        ["(#{words[1].capitalize}", true]
-      end
+    def close_brackets(words)
+      ["#{words[0].expand(:caps)}) #{words[1].expand(:caps)}", false]
     end
 
-    def smart_expand(word)
-      EXPAND.fetch(word.to_sym, word)
-    end
-
-    # Don't capitalize a word if it's in the NO_CAPS list, but
-    # *do* capitalize it if it's the first or last word in a
-    # title. String#capitalize will downcase all but the first
-    # character, which messes up our brackets handling, hence the
-    # logic in the else clause.
+    # Don't capitalize a word if it's in the NO_CAPS list, but *do* capitalize
+    # it if it's the first or last word in a title. String#capitalize will
+    # downcase all but the first character, which messes up our brackets
+    # handling, hence the logic at the end.
     #
     def smart_capitalize(word, index, len)
-      if index.positive? && index < (len - 1) && NO_CAPS.include?(word)
-        return word
-      end
+      return word if /^(\w\.)+$/.match?(word) # initialisms
 
-      return word.capitalize unless word =~ /\s/
+      return word if NO_CAPS.include?(word) && index.between?(1, len - 2)
+
+      return word.capitalize unless /\s/.match?(word)
 
       word.split(/\s/).map do |w|
-        w.start_with?('(') ? w : smart_capitalize(w, 1, 10)
+        w.start_with?('(') ? w : smart_capitalize(w, 1, len)
       end.join(' ')
     end
   end

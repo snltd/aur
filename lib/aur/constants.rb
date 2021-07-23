@@ -2,8 +2,10 @@
 
 SUPPORTED_TYPES = %w[flac mp3].freeze
 
-BIN = { flac:     Pathname.new('/usr/bin/flac'),
-        shnsplit: Pathname.new('/usr/bin/shnsplit') }.freeze
+BIN = {
+  flac: Pathname.new('/usr/bin/flac'),
+  shnsplit: Pathname.new('/usr/bin/shnsplit')
+}.freeze
 
 # These words are not (normally) capitalised when generating tags
 #
@@ -20,24 +22,33 @@ NO_CAPS = %w[a aboard about above absent across after against along
              within without worth yet].freeze
 
 # The keys of this hash are expanded to the corresponding value when
-# generating tags
+# generating tags. Some of these contractions are, of course, real words, but
+# you're more likely to see can't than cant and won't than wont. Lets and its
+# are less certain, but I think they're more commonly expanded than not.
 #
 EXPAND = {
   '&': 'and',
-           cant: "can't",
-           couldnt: "couldn't",
-           etc: 'etc.',
-           hes: "he's",
-           im: "I'm",
-           its: "it's",
-           shes: "she's",
-           thats: "that's",
-           theres: "there's",
-           weve: "we've",
-           wont: "won't",
-           wouldnt: "wouldn't",
-           youll: "you'll",
-           youre: "you're",
-           youve: "you've",
-           dont: "don't"
+  aint: "ain't",
+  cant: "can't",
+  couldnt: "couldn't",
+  didnt: "didn't",
+  dont: "don't",
+  etc: 'etc.',
+  hes: "he's",
+  havent: "haven't",
+  im: "I'm",
+  isnt: "isn't",
+  its: "it's",
+  lets: "let's",
+  n: "'n'",
+  shes: "she's",
+  thats: "that's",
+  theres: "there's",
+  weve: "we've",
+  whos: "who's",
+  wont: "won't",
+  wouldnt: "wouldn't",
+  youll: "you'll",
+  youre: "you're",
+  youve: "you've"
 }.freeze

@@ -1,22 +1,11 @@
-AllCops:
-  TargetRubyVersion: 2.3
-
-Style/FormatStringToken:
-  Enabled: false
-
-# Allow long blocks of tests
-#
-Metrics/BlockLength:
-  Max: 120
-
-Metrics/MethodLength:
-  Max: 100
+inherit_from:
+  - ../.rubocop.yml
 
 Metrics/AbcSize:
-  Max: 45
-
+  Max: 64
 Metrics/ClassLength:
-  Max: 300
-
-Metrics/CyclomaticComplexity:
-  Max: 10
+  Max: 400
+Metrics/MethodLength:
+  Max: 39
+Naming/VariableNumber:
+  Enabled: false

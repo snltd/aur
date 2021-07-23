@@ -49,8 +49,11 @@ module Aur
       else
         puts "Don't know what to do with #{file}."
       end
-    rescue FlacInfoReadError
+    rescue FlacInfoReadError => e
+      return if action == :Name2tag
+
       puts "ERROR: cannot read FLAC info for '#{file}'."
+      puts e
       @errs.<< file
     end
     # rubocop:enable Metrics/MethodLength
@@ -60,7 +63,7 @@ module Aur
     def load_library(libfile)
       require_relative(File.join('commands', libfile))
     rescue LoadError => e
-      p e
+      puts e
       abort "ERROR: '#{libfile}' command is not implemented."
     end
 

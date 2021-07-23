@@ -19,15 +19,15 @@ module Aur
 
       # rubocop:disable Metrics/AbcSize
       def fields
-        { Filename:   file.basename.to_s,
-          Type:       file.extclass.upcase,
-          Bitrate:    info.bitrate,
-          Artist:     info.artist,
-          Album:      info.album,
-          Title:      info.title,
-          Genre:      info.genre,
+        { Filename: file.basename.to_s,
+          Type: file.extclass.upcase,
+          Bitrate: info.bitrate,
+          Artist: info.artist,
+          Album: info.album,
+          Title: info.title,
+          Genre: info.genre,
           'Track no': info.t_num,
-          Year:       info.year }
+          Year: info.year }
       end
       # rubocop:enable Metrics/AbcSize
     end

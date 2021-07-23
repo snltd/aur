@@ -3,6 +3,7 @@
 
 require_relative '../../spec_helper'
 require_relative '../../../lib/aur/stdlib/string'
+require_relative '../../../lib/aur/constants'
 
 # Tests for String extensions
 #
@@ -26,5 +27,17 @@ class StringTest < MiniTest::Test
                  'this is (almost) too easy'.to_safe)
     assert_equal('im_almost_sure_youre_not',
                  "I'm almost sure you're not...".to_safe)
+  end
+
+  def test_expand
+    assert_equal('normal', 'normal'.expand)
+    assert_equal("isn't", 'isnt'.expand)
+    assert_equal("Isn't", 'isnt'.expand(:caps))
+  end
+
+  def test_initials
+    assert_equal('Y.M.C.A.', 'y-m-c-a'.initials)
+    assert_equal('C.R.E.E.P.', 'c-r-e-e-p'.initials)
+    assert_equal('X.', 'x'.initials)
   end
 end
