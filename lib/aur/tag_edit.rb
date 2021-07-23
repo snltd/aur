@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'constants'
+require_relative 'stdlib/string'
 
 module Aur
   #
@@ -11,60 +12,47 @@ module Aur
     # Turn a filename type name, like 'pet_shop_boys' into a tag type name,
     # like 'Pet Shop Boys'
     #
+    # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Metrics/AbcSize
     def mk_title(string)
       words = string.split('_')
       in_brackets = false
 
       new_words = words.map.with_index do |w, i|
-        w = handle_initials(w) if w.match?(/^(\w-)+\w?/)
-        w, in_brackets = brackets(w, in_brackets) if w.include?('-')
-        w = smart_expand(w)
-        smart_capitalize(w, i, words.size)
+        w = w.initials if w.match?(/^(\w-)+\w?/)
+
+        if w.include?('-')
+          ws = w.split('-')
+          bw, in_brackets = in_brackets ? close_brackets(ws) : open_brackets(ws)
+          bw
+        else
+          smart_capitalize(w.expand, i, words.size)
+        end
       end
 
-      new_words.join(' ').tap { |str| str.<< ')' if in_brackets }
+      new_words.flatten.join(' ').tap { |str| str.<< ')' if in_brackets }
     end
+    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/MethodLength
 
-    # I separte initials with a dash. So y-m-c-a => Y.M.C.A. (including the
-    # trailing dot.) Because we also do brackets with a '-', this isn't going
-    # to be perfect, but I think it's near enough.
-    # @param word [String] a word which looks like an initialism
-    # @return [String] word turned into an initialism
+    # I do brackets by treating every segment as a full title. So, I always
+    # capitalize the words before and after the brackets, and the first and
+    # last words inside them.
     #
-    def handle_initials(word)
-      (word.tr('-', '.') + '.').upcase
+    def open_brackets(words)
+      first = words.first.expand(:caps)
+      inner = words[1].expand(:caps)
+
+      return ["#{first} (#{inner}", true] if words.size < 3
+
+      final = words.last.expand(:caps)
+      inner = words[1..-2].join('-').initials if words.size > 3
+
+      ["#{first} (#{inner}) #{final}", false]
     end
 
-    # I think the first word in brackets should always be capitalized. Looks
-    # right to me.
-    #
-    def brackets(word, in_brackets)
-      words = word.split('-')
-      words[1], inside = bracketize_word(words, in_brackets)
-      [words.join(' '), inside]
-    end
-
-    # If @words has three elements, return the middle word, in brackets. If it
-    # has two elements, open or close brackets before or after the second
-    # word, depending on whether or not we are currently in brackets.  We
-    # can't do brackets at the start because of ambiguity. What would you
-    # bracket in 'first-last.flac' ?
-    # @param words [Array[String]] a list of words to manipula
-    # @param in_brackets [Bool] whether we are currently inside brackets
-    # @return Array [bracketed string, whether we are now inside brackets]
-    #
-    def bracketize_word(words, in_brackets)
-      if words.size == 3
-        ["(#{words[1].capitalize})", false]
-      elsif in_brackets
-        ["#{words[1]})", false]
-      else
-        ["(#{words[1].capitalize}", true]
-      end
-    end
-
-    def smart_expand(word)
-      EXPAND.fetch(word.to_sym, word)
+    def close_brackets(words)
+      ["#{words[0].expand(:caps)}) #{words[1].expand(:caps)}", false]
     end
 
     # Don't capitalize a word if it's in the NO_CAPS list, but *do* capitalize
