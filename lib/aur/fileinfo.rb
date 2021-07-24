@@ -106,7 +106,6 @@ module Aur
       end
     end
 
-    #
     # Methods to deal with MP3s
     #
     class Mp3 < Flac
@@ -132,7 +131,7 @@ module Aur
           title: :title,
           t_num: :tracknum,
           year: :year,
-          genre: :genre }
+          genre: :genre_s }
       end
     end
   end
