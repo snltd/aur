@@ -25,6 +25,8 @@ module Aur
     end
 
     def run!
+      $stderr.puts 'No valid files supplied.' if flist.empty?
+
       flist.each { |f| run_file(f) }
     end
 
@@ -67,6 +69,8 @@ module Aur
       abort "ERROR: '#{libfile}' command is not implemented."
     end
 
+    # Given a list of files, returns a list of files which aur knows how to
+    # process.
     # @param flist [Array[Pathname]]
     # @return [Array[Pathname]]
     #

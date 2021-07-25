@@ -3,8 +3,8 @@
 SUPPORTED_TYPES = %w[flac mp3].freeze
 
 BIN = {
-  flac: Pathname.new('/usr/bin/flac'),
-  shnsplit: Pathname.new('/usr/bin/shnsplit')
+  flac: Pathname.new('/opt/local/bin/flac'),
+  shnsplit: Pathname.new('/opt/local/bin/shnsplit')
 }.freeze
 
 # These words are not (normally) capitalised when generating tags
