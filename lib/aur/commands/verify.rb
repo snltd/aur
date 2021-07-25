@@ -23,7 +23,7 @@ module Aur
     #
     class Mp3 < Aur::Base
       def run
-        $stderr.puts 'MP3 files cannot be verified.'
+        warn 'MP3 files cannot be verified.'
       end
     end
   end

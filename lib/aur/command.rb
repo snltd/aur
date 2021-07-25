@@ -25,7 +25,7 @@ module Aur
     end
 
     def run!
-      $stderr.puts 'No valid files supplied.' if flist.empty?
+      warn 'No valid files supplied.' if flist.empty?
 
       flist.each { |f| run_file(f) }
     end
