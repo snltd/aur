@@ -5,15 +5,23 @@ require_relative '../renamers'
 require_relative '../stdlib/string'
 
 module Aur
-  module NumName
+  module Numname
     #
-    # Prefix a file's name with its track number
+    # Prefix a file's name with its track number. If there's no track number,
+    # it will prefix with '00'.
     #
     class Generic < Aur::Base
       include Aur::Renamers
 
       def run
-        rename_file(file, dest_file)
+        prefix = file.basename.to_s.split('.').first
+        num = track_fnum(info)
+
+        if prefix == num
+          puts 'No change required.'
+        else
+          rename_file(file, dest_file)
+        end
       end
 
       # @return [String] filename prefixed with track number
