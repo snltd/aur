@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require_relative '../spec_helper'
-require_relative '../../lib/aur/command'
+require_relative '../../spec_helper'
+require_relative '../../../lib/aur/command'
 
 # Run 'aur tag2name' commands against things, and verify the results
 #
@@ -10,7 +10,7 @@ class TestTag2NameCommand < MiniTest::Test
   def test_flac_tag2name
     setup_test_dir
     source_file = TMP_DIR + 'bad_name.flac'
-    FileUtils.cp(FRES_DIR + 'bad_name.flac', TMP_DIR)
+    FileUtils.cp(RES_DIR + 'bad_name.flac', TMP_DIR)
 
     assert(source_file.exist?)
 
@@ -19,8 +19,10 @@ class TestTag2NameCommand < MiniTest::Test
     end
 
     assert_empty(err)
-    assert_equal(out.strip,
-                 'bad_name.flac -> 02.the_null_set.sammy_davis_jr-dancing.flac')
+    assert_equal(
+      'bad_name.flac -> 02.the_null_set.sammy_davis_jr-dancing.flac',
+      out.strip
+    )
 
     refute(source_file.exist?)
     assert (TMP_DIR + '02.the_null_set.sammy_davis_jr-dancing.flac').exist?
@@ -30,7 +32,7 @@ class TestTag2NameCommand < MiniTest::Test
   def test_mp3_tag2name
     setup_test_dir
     source_file = TMP_DIR + 'bad_name.mp3'
-    FileUtils.cp(FRES_DIR + 'bad_name.mp3', TMP_DIR)
+    FileUtils.cp(RES_DIR + 'bad_name.mp3', TMP_DIR)
 
     assert(source_file.exist?)
 
@@ -39,8 +41,8 @@ class TestTag2NameCommand < MiniTest::Test
     end
 
     assert_empty(err)
-    assert_equal(out.strip,
-                 'bad_name.mp3 -> 02.the_null_set.sammy_davis_jr-dancing.mp3')
+    assert_equal('bad_name.mp3 -> 02.the_null_set.sammy_davis_jr-dancing.mp3',
+                 out.strip)
 
     refute(source_file.exist?)
     assert (TMP_DIR + '02.the_null_set.sammy_davis_jr-dancing.mp3').exist?

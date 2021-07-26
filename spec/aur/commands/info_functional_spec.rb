@@ -1,17 +1,12 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require 'pathname'
-require 'fileutils'
-require 'minitest/autorun'
-require 'spy/integration'
-require_relative '../../lib/aur/command'
-
-RES_DIR = Pathname.new(__dir__) + 'resources'
+require_relative '../../spec_helper'
+require_relative '../../../lib/aur/command'
 
 # Run 'aur info' commands against things, and verify the output
 #
-class TestFileInfo < MiniTest::Test
+class TestInfoCommand < MiniTest::Test
   attr_reader :dir
 
   def test_flac_info
@@ -19,7 +14,7 @@ class TestFileInfo < MiniTest::Test
       Aur::Command.new(:info, [RES_DIR + 'bad_name.flac']).run!
     end
 
-    assert_equal(out, bad_name_flac_info)
+    assert_equal(bad_name_flac_info, out)
     assert_empty(err)
   end
 
@@ -28,7 +23,7 @@ class TestFileInfo < MiniTest::Test
       Aur::Command.new(:info, [RES_DIR + 'bad_name.mp3']).run!
     end
 
-    assert_equal(out, bad_name_mp3_info)
+    assert_equal(bad_name_mp3_info, out)
     assert_empty(err)
   end
 end

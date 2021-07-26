@@ -7,12 +7,12 @@ require_relative '../../../lib/aur/commands/numname'
 
 # Tests for numname command
 #
-class TestNumName < MiniTest::Test
+class TestNumname < MiniTest::Test
   attr_reader :flac, :mp3
 
   def setup
-    @flac = Aur::NumName::Generic.new(FLAC_TEST)
-    @mp3 = Aur::NumName::Generic.new(MP3_TEST)
+    @flac = Aur::Numname::Generic.new(FLAC_TEST)
+    @mp3 = Aur::Numname::Generic.new(MP3_TEST)
   end
 
   def test_run

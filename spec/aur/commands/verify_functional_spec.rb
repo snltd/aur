@@ -1,14 +1,9 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require 'pathname'
-require 'fileutils'
-require 'minitest/autorun'
-require 'spy/integration'
-require_relative '../../lib/aur/command'
-require_relative '../../lib/aur/constants'
-
-RES_DIR = Pathname.new(__dir__) + 'resources'
+require_relative '../../spec_helper'
+require_relative '../../../lib/aur/command'
+require_relative '../../../lib/aur/constants'
 
 # Run 'aur verify' commands against things, and verify the output
 #
@@ -17,10 +12,10 @@ class TestVerifyCmd < MiniTest::Test
 
   def test_verify_nothing
     out, err = capture_io do
-      Aur::Command.new(:verify, [RES_DIR + '/etc/passwd']).run!
+      Aur::Command.new(:verify, [RES_DIR + 'front.png']).run!
     end
 
-    assert_equal(err, "No valid files supplied.\n")
+    assert_equal("No valid files supplied.\n", err)
     assert_empty(out)
   end
 
@@ -41,6 +36,6 @@ class TestVerifyCmd < MiniTest::Test
     end
 
     assert_empty(out)
-    assert_equal(err, "MP3 files cannot be verified.\n")
+    assert_equal("MP3 files cannot be verified.\n", err)
   end
 end
