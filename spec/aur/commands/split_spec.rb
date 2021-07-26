@@ -8,6 +8,7 @@ require_relative '../../../lib/aur/commands/split'
 #
 class SplitTest < MiniTest::Test
   def test_cuefile
+    skip unless BIN[:shnsplit].exist?
     totest = Aur::Split::Generic.new(FLAC_TEST)
     assert_equal(Pathname.new(RES_DIR + 'test_tone-100hz.cue'), totest.cuefile)
   end
