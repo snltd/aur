@@ -7,7 +7,8 @@ require_relative '../lib/aur/command'
 
 ME = Pathname.new(__FILE__).basename.to_s
 
-CMDS = %i[info verify split tag2name name2tag numname sort inumber].freeze
+CMDS = %i[info verify split tag2name name2tag numname sort inumber
+          number].freeze
 
 docopt = CMDS.each_with_object(['  Usage:']) do |cmd, a|
   a.<< "  #{ME} #{cmd} <file>..."

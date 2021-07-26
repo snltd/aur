@@ -5,7 +5,7 @@ require_relative '../renamers'
 require_relative '../stdlib/string'
 
 module Aur
-  module Tag2Name
+  module Tag2name
     #
     # Rename a file from its tags
     #
