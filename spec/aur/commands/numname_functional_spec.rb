@@ -7,7 +7,7 @@ require_relative '../../../lib/aur/command'
 # Run 'aur numname' commands against things, and verify the results
 #
 class TestNumNameCommand < MiniTest::Test
-  def _test_flac_numname
+  def test_flac_numname
     setup_test_dir
     source_file = TMP_DIR + 'bad_name.flac'
     FileUtils.cp(RES_DIR + 'bad_name.flac', TMP_DIR)
@@ -45,7 +45,7 @@ class TestNumNameCommand < MiniTest::Test
     cleanup_test_dir
   end
 
-  def _test_mp3_numname
+  def test_mp3_numname
     setup_test_dir
     source_file = TMP_DIR + 'bad_name.mp3'
     FileUtils.cp(RES_DIR + 'bad_name.mp3', TMP_DIR)
