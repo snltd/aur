@@ -3,7 +3,7 @@
 require 'i18n'
 I18n.available_locales = %i[en]
 
-# Extensions to stdlib
+# Extensions to stdlib String
 #
 class String
   # The rules for making a filename-safe string are to:
