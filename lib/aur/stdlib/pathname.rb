@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-#
 # Extensions to stdlib Pathname
 #
 class Pathname

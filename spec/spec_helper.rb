@@ -18,3 +18,15 @@ end
 def cleanup_test_dir
   FileUtils.rm_r(TMP_DIR) if TMP_DIR.exist?
 end
+
+# Nicked from StackOverflow, makes it easy to test things which require user
+# input.
+#
+def with_stdin
+  stdin = $stdin
+  $stdin, write = IO.pipe
+  yield write
+ensure
+  write.close
+  $stdin = stdin
+end
