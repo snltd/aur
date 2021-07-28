@@ -37,7 +37,7 @@ class TestNumberCommand < MiniTest::Test
     cleanup_test_dir
   end
 
-  def test_mp3_inumber
+  def _test_mp3_inumber
     setup_test_dir
     source_file = TMP_DIR + 'bad_name.mp3'
     FileUtils.cp(RES_DIR + 'bad_name.mp3', TMP_DIR)

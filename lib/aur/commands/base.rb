@@ -2,13 +2,14 @@
 
 require_relative '../stdlib/pathname'
 require_relative '../fileinfo'
+require_relative '../tagger'
 
 module Aur
   #
   # Abstract class extended by all commands.
   #
   class Base
-    attr_reader :file, :info, :opts, :errs
+    attr_reader :file, :info, :opts, :errs, :tagger
 
     # @param file [Pathname]
     # @return [Aur::FileInfo::FileType] where FileType is Flac or
@@ -18,15 +19,16 @@ module Aur
     def initialize(file, opts = {})
       @opts = opts
       @file = file
-      @info = Object.const_get(filetype_class).new(file)
+      @info = Object.const_get(class_for(:FileInfo)).new(file)
+      @tagger = Object.const_get(class_for(:Tagger)).new(info)
       @errs = 0
     end
 
     # @return [String] name of relevant info class
     # @raise [NameError] if the info class does not exist
     #
-    def filetype_class
-      format('Aur::FileInfo::%<name>s', name: file.extclass)
+    def class_for(action)
+      format('Aur::%<action>s::%<name>s', action: action, name: file.extclass)
     end
 
     def msg(message)

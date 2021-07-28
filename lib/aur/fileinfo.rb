@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
-require_relative 'stdlib/pathname'
 require 'flacinfo'
 require 'mp3info'
+require_relative 'stdlib/pathname'
 
 module Aur
   module FileInfo
     #
-    # Methods to deal with FLACs
+    # Generic fileinfo methods. Subclassed into all the filetypes we support
     #
-    class Flac
+    class Generic
       attr_reader :file, :info, :raw
 
       def initialize(file)
@@ -92,9 +92,13 @@ module Aur
       def respond_to_missing?(method, *_args)
         tag_map.key?(method) || super
       end
+    end
 
-      # This hash, and one like it in the MP3 class, lets us refer
-      # to FLACs and MP3s in the same general way.
+    # Methods specific to FLACs
+    #
+    class Flac < Generic
+      # This hash, and one like it in the MP3 class, lets us refer to FLACs
+      # and MP3s in the same general way.
       #
       def tag_map
         { artist: :artist,
@@ -106,9 +110,9 @@ module Aur
       end
     end
 
-    # Methods to deal with MP3s
+    # Methods specific to MP3s
     #
-    class Mp3 < Flac
+    class Mp3 < Generic
       def read
         Mp3Info.open(file)
       end
@@ -122,8 +126,6 @@ module Aur
       def tags
         flatten_keys(info.tag)
       end
-
-      private
 
       def tag_map
         { artist: :artist,

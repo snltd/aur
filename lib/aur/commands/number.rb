@@ -19,25 +19,7 @@ module Aur
         msg format('%12<tag_name>s -> %<tag_value>s',
                    tag_name: 'track_number',
                    tag_value: track_number)
-        apply_tag(track_number)
-      end
-    end
-
-    # Set the track number of a FLAC
-    #
-    class Flac < Generic
-      def apply_tag(track_number)
-        info.raw.comment_del('TRACKNUMBER')
-        info.raw.comment_add("TRACKNUMBER=#{track_number}")
-        info.raw.update!
-      end
-    end
-
-    # Set the track number of an MP3
-    #
-    class Mp3 < Generic
-      def apply_tag(track_number)
-        Mp3Info.open(file) { |f| f.tag.tracknum = track_number }
+        tagger.tag!(info.tag_for(:t_num) => track_number)
       end
     end
   end
