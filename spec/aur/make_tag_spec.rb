@@ -2,10 +2,10 @@
 # frozen_string_literal: true
 
 require_relative '../spec_helper'
-require_relative '../../lib/aur/tag_edit'
+require_relative '../../lib/aur/make_tag'
 
 class TestName2Tag < MiniTest::Test
-  include Aur::TagEdit
+  include Aur::MakeTag
 
   def test_mk_title_plain
     assert_equal('Pet Shop Boys', mk_title('pet_shop_boys'))
