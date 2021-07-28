@@ -8,7 +8,7 @@ module Aur
   # Methods to construct tags from filenames. The naming, capitalising,
   # bracketing and all of that is just my personal preference.
   #
-  module TagEdit
+  module MakeTag
     # Turn a filename type name, like 'pet_shop_boys' into a tag type name,
     # like 'Pet Shop Boys'
     #

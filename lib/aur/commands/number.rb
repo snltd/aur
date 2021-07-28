@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 require_relative 'base'
-require_relative '../constants'
-require_relative '../tag_edit'
-require_relative '../fileinfo'
-require_relative '../stdlib/string'
 
 module Aur
   module Number
@@ -12,8 +8,6 @@ module Aur
     # Set the track number tag from the file name.
     #
     class Generic < Aur::Base
-      include Aur::TagEdit
-
       def run
         track_number = info.f_t_num.to_i
 

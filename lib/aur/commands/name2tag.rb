@@ -2,7 +2,7 @@
 
 require_relative 'base'
 require_relative '../constants'
-require_relative '../tag_edit'
+require_relative '../make_tag'
 require_relative '../stdlib/string'
 
 module Aur
@@ -12,7 +12,7 @@ module Aur
     #
     class Generic < Aur::Base
       TAGS = %i[artist title album t_num].freeze
-      include Aur::TagEdit
+      include Aur::MakeTag
 
       def run
         puts file
