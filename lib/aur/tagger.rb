@@ -34,7 +34,9 @@ module Aur
       #
       def prep(tags)
         tags.tap do |t|
-          t.each_pair { |k, v| t[k] = v.to_i if AS_INTS.include?(k) }
+          t.each_pair do |k, v|
+            t[k] = v.to_i if AS_INTS.include?(k) && v.is_a?(String)
+          end
         end
       end
     end
