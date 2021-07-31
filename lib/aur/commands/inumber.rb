@@ -16,7 +16,7 @@ module Aur
 
       def run
         number = validate(new_number)
-        tagger.tag!(info.tag_for(:t_num).to_s => number)
+        tagger.tag!(t_num: number)
         rename_file(file, dest_file(number))
       rescue ArgumentError => e
         pp e

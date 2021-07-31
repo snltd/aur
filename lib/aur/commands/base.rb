@@ -3,12 +3,15 @@
 require_relative '../stdlib/pathname'
 require_relative '../fileinfo'
 require_relative '../tagger'
+require_relative '../logger'
 
 module Aur
   #
   # Abstract class extended by all commands.
   #
   class Base
+    include Aur::Logger
+
     attr_reader :file, :info, :opts, :errs, :tagger
 
     # @param file [Pathname]
@@ -20,7 +23,7 @@ module Aur
       @opts = opts
       @file = file
       @info = Object.const_get(class_for(:FileInfo)).new(file)
-      @tagger = Object.const_get(class_for(:Tagger)).new(info)
+      @tagger = Object.const_get(class_for(:Tagger)).new(info, opts)
       @errs = 0
     end
 
@@ -29,12 +32,6 @@ module Aur
     #
     def class_for(action)
       format('Aur::%<action>s::%<name>s', action: action, name: file.extclass)
-    end
-
-    def msg(message)
-      return if opts[:quiet]
-
-      puts message
     end
   end
 end

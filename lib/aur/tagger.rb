@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'logger'
+
 module Aur
   module Tagger
     #
@@ -7,8 +9,33 @@ module Aur
     # interface.
     #
     class Base
-      def initialize(info)
+      attr_reader :info, :opts
+
+      include Aur::Logger
+
+      AS_INTS = %i[year t_num].freeze
+
+      # @param info [Aur::Fileinfo::*]
+      # @param opts [Hash]
+      def initialize(info, opts = {})
         @info = info
+        @opts = opts
+      end
+
+      def tag_msg(tags)
+        tags.each_pair do |name, value|
+          msg format('%12<tag_name>s -> %<tag_value>s',
+                     tag_name: name,
+                     tag_value: value)
+        end
+      end
+
+      # Certain tags should be certain types
+      #
+      def prep(tags)
+        tags.tap do |t|
+          t.each_pair { |k, v| t[k] = v.to_i if AS_INTS.include?(k) }
+        end
       end
     end
 
@@ -18,13 +45,15 @@ module Aur
       # @param tags [Hash] of tag_name => tag_value
       #
       def tag!(tags)
+        tag_msg(tags)
+
         tags.each_pair do |name, value|
-          tag_name = name.to_s.upcase
-          @info.raw.comment_del(tag_name)
-          @info.raw.comment_add("#{tag_name}=#{value}")
+          # puts "setting #{info.tag_for(name)}=#{value}"
+          info.raw.comment_del(info.tag_name(name))
+          info.raw.comment_add("#{info.tag_name(name)}=#{value}")
         end
 
-        @info.raw.update!
+        info.raw.update!
       end
     end
 
@@ -32,8 +61,14 @@ module Aur
     #
     class Mp3 < Base
       def tag!(tags)
-        Mp3Info.open(@info.file) do |f|
-          tags.each_pair { |name, value| f.tag[name.to_s] = value }
+        tag_msg(tags)
+
+        tags = prep(tags)
+
+        Mp3Info.open(info.file) do |mp3|
+          tags.each_pair do |name, value|
+            mp3.tag[info.tag_name(name)] = value
+          end
         end
       end
     end

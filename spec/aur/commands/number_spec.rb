@@ -15,7 +15,7 @@ class TestNumber < MiniTest::Test
 
     out, err = capture_io { totest.run }
     assert_empty(err)
-    assert_equal("track_number -> 1\n", out)
+    assert_equal('t_num -> 1', out.strip)
     assert_equal(%w[TRACKNUMBER], del.calls.map(&:args).flatten)
     assert_equal(['TRACKNUMBER=1'], add.calls.map(&:args).flatten)
     assert upd.has_been_called?
@@ -41,7 +41,7 @@ class TestNumber < MiniTest::Test
     spy = Spy.on(Mp3Info, :open)
     out, err = capture_io { totest.run }
     assert_empty(err)
-    assert_equal("track_number -> 1\n", out)
+    assert_equal('t_num -> 1', out.strip)
     assert spy.has_been_called?
   end
 

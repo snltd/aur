@@ -63,6 +63,19 @@ module Aur
         tag_map.fetch(field, nil)
       end
 
+      def tag_name(field)
+        tag_names.fetch(field, nil)
+      end
+
+      # return [Hash] just the tags we use in our names and infos
+      def our_tags
+        tag_map.tap do |t|
+          t.each_pair do |k, v|
+            t[k] = tags.fetch(v, nil)
+          end
+        end
+      end
+
       private
 
       # @return [Array] dot-separated filename segments
@@ -97,8 +110,9 @@ module Aur
     # Methods specific to FLACs
     #
     class Flac < Generic
-      # This hash, and one like it in the MP3 class, lets us refer to FLACs
-      # and MP3s in the same general way.
+      # This hash maps our common tag names to the names the FLAC library
+      # uses, presenting a consistent interface. There's one like it in the
+      # MP3 class.
       #
       def tag_map
         { artist: :artist,
@@ -107,6 +121,18 @@ module Aur
           t_num: :tracknumber,
           year: :date,
           genre: :genre }
+      end
+
+      # This hash maps what we call tags to the names we have to use to
+      # manipulate them.
+      #
+      def tag_names
+        { artist: 'ARTIST',
+          album: 'ALBUM',
+          title: 'TITLE',
+          t_num: 'TRACKNUMBER',
+          year: 'DATE',
+          genre: 'GENRE' }
       end
     end
 
@@ -134,6 +160,15 @@ module Aur
           t_num: :tracknum,
           year: :year,
           genre: :genre_s }
+      end
+
+      def tag_names
+        { artist: 'artist',
+          album: 'album',
+          title: 'title',
+          t_num: 'tracknum',
+          year: 'year',
+          genre: 'genre_s' }
       end
     end
   end

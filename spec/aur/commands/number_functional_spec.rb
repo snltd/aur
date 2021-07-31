@@ -18,13 +18,13 @@ class TestNumberCommand < MiniTest::Test
 
     out, err = capture_io { Aur::Command.new(:number, [source_file]).run! }
     assert_empty(err)
-    assert_equal('track_number -> 1', out.strip)
+    assert_equal('t_num -> 1', out.strip)
 
     assert(source_file.exist?)
 
     out, err = capture_io { Aur::Command.new(:info, [source_file]).run! }
     assert_empty(err)
-    assert_match(/Track no : 1/, out)
+    assert_match(/Track no : 2/, out)
 
     cleanup_test_dir
   end
@@ -40,13 +40,13 @@ class TestNumberCommand < MiniTest::Test
 
     out, err = capture_io { Aur::Command.new(:number, [source_file]).run! }
     assert_empty(err)
-    assert_equal('track_number -> 1', out.strip)
+    assert_equal('t_num -> 1', out.strip)
 
     assert(source_file.exist?)
 
     out, err = capture_io { Aur::Command.new(:info, [source_file]).run! }
     assert_empty(err)
-    assert_match(/Track no : 1/, out)
+    assert_match(/Track no : 2/, out)
 
     cleanup_test_dir
   end

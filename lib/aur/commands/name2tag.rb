@@ -17,25 +17,15 @@ module Aur
 
       def run
         puts file
-        tags = tags_from_filename
-        tags.each_pair { |k, v| tag_msg(k, v) }
-        tagger.tag!(tags)
+        tagger.tag!(tags_from_filename)
       end
 
-      private
-
-      # @return [Hash] tag_name => value
+      # @return [Hash] :tag_name => 'Nicely Formatted String'
       #
       def tags_from_filename
-        TAGS.each_with_object({}) do |t, a|
-          a[info.send(:tag_for, t)] = mk_title(info.send("f_#{t}".to_sym))
+        TAGS.each_with_object({}) do |tag, aggr|
+          aggr[tag] = mk_title(info.send("f_#{tag}".to_sym))
         end
-      end
-
-      def tag_msg(name, val)
-        msg format('%12<tag_name>s -> %<tag_value>s',
-                   tag_name: name,
-                   tag_value: val)
       end
     end
   end

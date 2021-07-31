@@ -16,10 +16,7 @@ module Aur
           return
         end
 
-        msg format('%12<tag_name>s -> %<tag_value>s',
-                   tag_name: 'track_number',
-                   tag_value: track_number)
-        tagger.tag!(info.tag_for(:t_num) => track_number)
+        tagger.tag!(t_num: track_number)
       end
     end
   end
