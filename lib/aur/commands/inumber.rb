@@ -16,9 +16,10 @@ module Aur
 
       def run
         number = validate(new_number)
-        tag_file(number)
+        tagger.tag!(t_num: number)
         rename_file(file, dest_file(number))
-      rescue ArgumentError
+      rescue ArgumentError => e
+        pp e
         abort 'Invalid input.'
       end
 
@@ -39,24 +40,6 @@ module Aur
         return input.to_i if /^\d+$/.match?(input)
 
         raise ArgumentError
-      end
-    end
-
-    # Re-tag FLACs
-    #
-    class Flac < Generic
-      def tag_file(number)
-        info.raw.comment_del('TRACKNUMBER')
-        info.raw.comment_add("TRACKNUMBER=#{number}")
-        info.raw.update!
-      end
-    end
-
-    # Re-tag MP3s
-    #
-    class Mp3 < Generic
-      def tag_file(number)
-        Mp3Info.open(file) { |f| f.tag.tracknum = number }
       end
     end
   end

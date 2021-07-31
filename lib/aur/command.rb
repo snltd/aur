@@ -11,15 +11,17 @@ module Aur
   # types which may occur in @flist.
   #
   class Command
-    attr_reader :flist, :action, :errs
+    attr_reader :flist, :action, :errs, :opts
 
     # @param action [Symbol] the action to take.
     # @param flist [Array[Pathname]] list of files to which the
     #   action must be applied.
     #
-    def initialize(action, flist)
+    def initialize(action, opts)
+      flist = opts.is_a?(Array) ? opts : opts[:'<file>']
       load_library(action.to_s)
       @flist = screen_flist(flist.map { |f| Pathname.new(f) })
+      @opts = opts
       @action = action.capitalize
       @errs = []
     end
@@ -27,7 +29,7 @@ module Aur
     def run!
       warn 'No valid files supplied.' if flist.empty?
 
-      flist.each { |f| run_file(f) }
+      flist.each { |f| run_command(f) }
     end
 
     private
@@ -40,7 +42,7 @@ module Aur
     # @param file [Pathname] file which needs action applied
     #
     # rubocop:disable Metrics/MethodLength
-    def run_file(file)
+    def run_command(file)
       k_special = special_class(file)
       k_generic = generic_class(file)
 

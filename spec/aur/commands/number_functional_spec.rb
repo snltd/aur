@@ -8,46 +8,36 @@ require_relative '../../../lib/aur/command'
 #
 class TestNumberCommand < MiniTest::Test
   def test_flac_number
-    setup_test_dir
-    source_file = TMP_DIR + '01.the_null_set.song_one.flac'
-    FileUtils.cp(RES_DIR + '01.the_null_set.song_one.flac', TMP_DIR)
-    assert(source_file.exist?)
+    with_test_file('01.the_null_set.song_one.flac') do |f|
+      out, = capture_io { Aur::Command.new(:info, [f]).run! }
+      refute_match(/Track no : 1/, out)
 
-    out, = capture_io { Aur::Command.new(:info, [source_file]).run! }
-    refute_match(/Track no : 2/, out)
+      out, err = capture_io { Aur::Command.new(:number, [f]).run! }
+      assert_empty(err)
+      assert_equal('t_num -> 1', out.strip)
 
-    out, err = capture_io { Aur::Command.new(:number, [source_file]).run! }
-    assert_empty(err)
-    assert_equal('track_number -> 1', out.strip)
+      assert(f.exist?)
 
-    assert(source_file.exist?)
-
-    out, err = capture_io { Aur::Command.new(:info, [source_file]).run! }
-    assert_empty(err)
-    assert_match(/Track no : 1/, out)
-
-    cleanup_test_dir
+      out, err = capture_io { Aur::Command.new(:info, [f]).run! }
+      assert_empty(err)
+      assert_match(/Track no : 1/, out)
+    end
   end
 
-  def test_mp3_number
-    setup_test_dir
-    source_file = TMP_DIR + '01.the_null_set.song_one.mp3'
-    FileUtils.cp(RES_DIR + '01.the_null_set.song_one.mp3', TMP_DIR)
-    assert(source_file.exist?)
+  def _test_mp3_number
+    with_test_file('01.the_null_set.song_one.mp3') do |f|
+      out, = capture_io { Aur::Command.new(:info, [f]).run! }
+      refute_match(/Track no : 1/, out)
 
-    out, = capture_io { Aur::Command.new(:info, [source_file]).run! }
-    refute_match(/Track no : 2/, out)
+      out, err = capture_io { Aur::Command.new(:number, [f]).run! }
+      assert_empty(err)
+      assert_equal('t_num -> 1', out.strip)
 
-    out, err = capture_io { Aur::Command.new(:number, [source_file]).run! }
-    assert_empty(err)
-    assert_equal('track_number -> 1', out.strip)
+      assert(f.exist?)
 
-    assert(source_file.exist?)
-
-    out, err = capture_io { Aur::Command.new(:info, [source_file]).run! }
-    assert_empty(err)
-    assert_match(/Track no : 1/, out)
-
-    cleanup_test_dir
+      out, err = capture_io { Aur::Command.new(:info, [f]).run! }
+      assert_empty(err)
+      assert_match(/Track no : 1/, out)
+    end
   end
 end
