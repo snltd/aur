@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
+require_relative 'exception'
 require_relative 'constants'
+require_relative 'stdlib/pathname'
 
 module Aur
   #
@@ -57,10 +59,14 @@ module Aur
       warn "ERROR: cannot read FLAC info for '#{file}'."
       puts e
       @errs.<< file
-    rescue StandardError => e
-      warn "Don't know what to do with #{file}."
-      puts e
-      @errs.<< file
+      # rescue StandardError => e
+      # warn "Error handling
+      # puts e
+      # @errs.<< file
+    rescue Aur::Exception::InvalidTagValue => e
+      warn "'#{e}' is an invalid value."
+    rescue Aur::Exception::InvalidTagName => e
+      warn "'#{e}' is not a valid tag name."
     end
     # rubocop:enable Metrics/MethodLength
 

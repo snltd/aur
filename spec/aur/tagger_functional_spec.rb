@@ -20,7 +20,11 @@ class TestTaggerFunctional < MiniTest::Test
       info = Aur::FileInfo::Flac.new(f)
       assert_equal('My Band', info.tags[:artist])
 
-      capture_io { assert_raises(NoMethodError) { file.tag!(merp: 'byerp') } }
+      e = assert_raises(Aur::Exception::InvalidTagName) do
+        file.tag!(tracknumber: 4)
+      end
+
+      assert_equal('tracknumber', e.message)
 
       assert_equal(6, info.our_tags[:t_num].to_i)
       capture_io { assert file.tag!(t_num: 3) }
