@@ -10,7 +10,7 @@ module Aur
   # contain methods which can perform the given action on all file
   # types which may occur in @flist.
   #
-  class Command
+  class Action
     attr_reader :flist, :action, :errs, :opts
 
     # @param action [Symbol] the action to take.

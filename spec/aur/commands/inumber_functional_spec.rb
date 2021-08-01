@@ -2,19 +2,19 @@
 # frozen_string_literal: true
 
 require_relative '../../spec_helper'
-require_relative '../../../lib/aur/command'
+require_relative '../../../lib/aur/action'
 
 # Run 'aur numname' commands against things, and verify the results
 #
 class TestNumberCommand < MiniTest::Test
   def test_flac_inumber
     with_test_file('01.the_null_set.song_one.flac') do |f|
-      out, = capture_io { Aur::Command.new(:info, [f]).run! }
+      out, = capture_io { Aur::Action.new(:info, [f]).run! }
       refute_match(/Track no : 4/, out)
 
       with_stdin do |input|
         input.puts "4\n"
-        out, err = capture_io { Aur::Command.new(:inumber, [f]).run! }
+        out, err = capture_io { Aur::Action.new(:inumber, [f]).run! }
         assert_empty(err)
         assert_equal(
           '01.the_null_set.song_one.flac > ' \
@@ -28,7 +28,7 @@ class TestNumberCommand < MiniTest::Test
       new_file = TMP_DIR + '04.the_null_set.song_one.flac'
       assert new_file.exist?
 
-      out, err = capture_io { Aur::Command.new(:info, [new_file]).run! }
+      out, err = capture_io { Aur::Action.new(:info, [new_file]).run! }
       assert_empty(err)
       assert_match(/Track no : 4$/, out)
     end
@@ -36,13 +36,13 @@ class TestNumberCommand < MiniTest::Test
 
   def test_mp3_inumber
     with_test_file('bad_name.mp3') do |f|
-      out, = capture_io { Aur::Command.new(:info, [f]).run! }
+      out, = capture_io { Aur::Action.new(:info, [f]).run! }
       assert_match(/Track no : 2/, out)
       refute_match(/Track no : 11/, out)
 
       with_stdin do |input|
         input.puts "11\n"
-        out, err = capture_io { Aur::Command.new(:inumber, [f]).run! }
+        out, err = capture_io { Aur::Action.new(:inumber, [f]).run! }
         assert_empty(err)
         assert_equal(
           'bad_name.mp3 > ' \
@@ -55,7 +55,7 @@ class TestNumberCommand < MiniTest::Test
       new_file = TMP_DIR + '11.bad_name.mp3'
       assert new_file.exist?
 
-      out, err = capture_io { Aur::Command.new(:info, [new_file]).run! }
+      out, err = capture_io { Aur::Action.new(:info, [new_file]).run! }
       assert_empty(err)
       refute_match(/Track no : 2/, out)
       assert_match(/Track no : 11/, out)

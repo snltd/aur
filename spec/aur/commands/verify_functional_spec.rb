@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 require_relative '../../spec_helper'
-require_relative '../../../lib/aur/command'
+require_relative '../../../lib/aur/action'
 require_relative '../../../lib/aur/constants'
 
 # Run 'aur verify' commands against things, and verify the output
@@ -12,7 +12,7 @@ class TestVerifyCmd < MiniTest::Test
 
   def test_verify_nothing
     out, err = capture_io do
-      Aur::Command.new(:verify, [RES_DIR + 'front.png']).run!
+      Aur::Action.new(:verify, [RES_DIR + 'front.png']).run!
     end
 
     assert_equal("No valid files supplied.\n", err)
@@ -23,7 +23,7 @@ class TestVerifyCmd < MiniTest::Test
     skip unless BIN[:flac].exist?
 
     out, err = capture_io do
-      Aur::Command.new(:verify, [RES_DIR + 'bad_name.flac']).run!
+      Aur::Action.new(:verify, [RES_DIR + 'bad_name.flac']).run!
     end
 
     assert_match(/^bad_name.flac\s+OK$/, out)
@@ -32,7 +32,7 @@ class TestVerifyCmd < MiniTest::Test
 
   def test_mp3_verify
     out, err = capture_io do
-      Aur::Command.new(:verify, [RES_DIR + 'bad_name.mp3']).run!
+      Aur::Action.new(:verify, [RES_DIR + 'bad_name.mp3']).run!
     end
 
     assert_empty(out)

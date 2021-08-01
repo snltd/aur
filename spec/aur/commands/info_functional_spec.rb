@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 require_relative '../../spec_helper'
-require_relative '../../../lib/aur/command'
+require_relative '../../../lib/aur/action'
 
 # Run 'aur info' commands against things, and verify the output
 #
@@ -11,7 +11,7 @@ class TestInfoCommand < MiniTest::Test
 
   def test_flac_info
     out, err = capture_io do
-      Aur::Command.new(:info, [RES_DIR + 'bad_name.flac']).run!
+      Aur::Action.new(:info, [RES_DIR + 'bad_name.flac']).run!
     end
 
     assert_equal(bad_name_flac_info, out)
@@ -20,7 +20,7 @@ class TestInfoCommand < MiniTest::Test
 
   def test_mp3_info
     out, err = capture_io do
-      Aur::Command.new(:info, [RES_DIR + 'bad_name.mp3']).run!
+      Aur::Action.new(:info, [RES_DIR + 'bad_name.mp3']).run!
     end
 
     assert_equal(bad_name_mp3_info, out)

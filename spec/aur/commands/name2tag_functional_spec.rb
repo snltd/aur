@@ -2,20 +2,20 @@
 # frozen_string_literal: true
 
 require_relative '../../spec_helper'
-require_relative '../../../lib/aur/command'
+require_relative '../../../lib/aur/action'
 
 # Run 'aur tag2name' commands against things, and verify the results
 #
 class TestName2TagCommand < MiniTest::Test
   def test_flac_name2tag
     with_test_file('01.the_null_set.song_one.flac') do |f|
-      out, err = capture_io { Aur::Command.new(:name2tag, [f]).run! }
+      out, err = capture_io { Aur::Action.new(:name2tag, [f]).run! }
 
       assert_empty(err)
       assert_equal(flac_name2tag_output, out)
       assert(f.exist?)
 
-      out, err = capture_io { Aur::Command.new(:info, [f]).run! }
+      out, err = capture_io { Aur::Action.new(:info, [f]).run! }
       assert_empty(err)
       assert_match('Artist : The Null Set', out)
       assert_match('Title : Song One', out)
@@ -25,13 +25,13 @@ class TestName2TagCommand < MiniTest::Test
 
   def test_mp3_name2tag
     with_test_file('01.the_null_set.song_one.mp3') do |f|
-      out, err = capture_io { Aur::Command.new(:name2tag, [f]).run! }
+      out, err = capture_io { Aur::Action.new(:name2tag, [f]).run! }
 
       assert_empty(err)
       assert_equal(mp3_name2tag_output, out)
       assert(f.exist?)
 
-      out, err = capture_io { Aur::Command.new(:info, [f]).run! }
+      out, err = capture_io { Aur::Action.new(:info, [f]).run! }
       assert_empty(err)
       assert_match('Artist : The Null Set', out)
       assert_match('Title : Song One', out)
