@@ -74,16 +74,6 @@ class TestTagger < MiniTest::Test
     assert_equal('-1', e.message)
   end
 
-  def _test_prep
-    mp3info = Aur::FileInfo::Mp3.new(MP3_TEST)
-    t = Aur::Tagger::Mp3.new(mp3info, {})
-
-    assert_equal(
-      { artist: 'Slint', title: 'Washer', t_num: 4, year: 1991 },
-      t.prep({ artist: 'Slint', title: 'Washer', t_num: '04', year: '1991' })
-    )
-  end
-
   def test_tags
     { artist: 'The Singer',
       title: 'A Song',
