@@ -5,11 +5,11 @@ require_relative '../renamers'
 require_relative '../stdlib/string'
 
 module Aur
-  module Tag2name
+  module Command
     #
     # Rename a file from its tags
     #
-    class Generic < Aur::Base
+    class Tag2name < Base
       include Aur::Renamers
 
       def run

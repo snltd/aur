@@ -3,11 +3,11 @@
 require_relative 'base'
 
 module Aur
-  module Split
+  module Command
     #
     # Split based on a cue file
     #
-    class Generic < Aur::Base
+    class Split < Aur::Base
       def run
         abort 'No shnsplit binary.' unless BIN[:shnsplit].exist?
 

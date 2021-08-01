@@ -6,11 +6,11 @@ require_relative '../make_tag'
 require_relative '../stdlib/string'
 
 module Aur
-  module Name2tag
+  module Command
     #
     # Retag a file from its name
     #
-    class Generic < Aur::Base
+    class Name2tag < Base
       include Aur::MakeTag
 
       TAGS = %i[artist title album t_num].freeze

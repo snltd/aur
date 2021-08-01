@@ -5,12 +5,12 @@ require_relative '../renamers'
 require_relative '../stdlib/string'
 
 module Aur
-  module Numname
+  module Command
     #
     # Prefix a file's name with its track number. If there's no track number,
     # it will prefix with '00'.
     #
-    class Generic < Aur::Base
+    class Numname < Base
       include Aur::Renamers
 
       def run

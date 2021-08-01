@@ -3,12 +3,16 @@
 require_relative 'base'
 
 module Aur
-  module Verify
+  module Command
     #
     # Verify FLACs.
     #
-    class Flac < Aur::Base
+    class Verify < Base
       def run
+        raise "unsupported filetype: #{info.filetype}"
+      end
+
+      def run_flac
         abort 'No flac binary.' unless BIN[:flac].exist?
 
         res = system("#{BIN[:flac]} --test --totally-silent #{file}")
@@ -17,12 +21,8 @@ module Aur
                     name: info.prt_name,
                     status: res ? 'OK' : 'INVALID')
       end
-    end
 
-    # You can't verify MP3s
-    #
-    class Mp3 < Aur::Base
-      def run
+      def run_mp3
         warn 'MP3 files cannot be verified.'
       end
     end
