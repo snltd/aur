@@ -4,15 +4,15 @@
 require_relative '../../spec_helper'
 require_relative '../../../lib/aur/action'
 
-# Run 'aur numname' commands against things, and verify the results
+# Run 'aur num2name' commands against things, and verify the results
 #
-class TestNumberCommand < MiniTest::Test
-  def test_flac_number
+class TestName2NumCommand < MiniTest::Test
+  def test_flac_name2num
     with_test_file('01.the_null_set.song_one.flac') do |f|
       out, = capture_io { Aur::Action.new(:info, [f]).run! }
       refute_match(/Track no : 1/, out)
 
-      out, err = capture_io { Aur::Action.new(:number, [f]).run! }
+      out, err = capture_io { Aur::Action.new(:name2num, [f]).run! }
       assert_empty(err)
       assert_equal('t_num -> 1', out.strip)
 
@@ -24,12 +24,12 @@ class TestNumberCommand < MiniTest::Test
     end
   end
 
-  def test_mp3_number
+  def test_mp3_name2num
     with_test_file('01.the_null_set.song_one.mp3') do |f|
       out, = capture_io { Aur::Action.new(:info, [f]).run! }
       refute_match(/Track no : 1/, out)
 
-      out, err = capture_io { Aur::Action.new(:number, [f]).run! }
+      out, err = capture_io { Aur::Action.new(:name2num, [f]).run! }
       assert_empty(err)
       assert_equal('t_num -> 1', out.strip)
 
