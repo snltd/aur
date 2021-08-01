@@ -17,7 +17,7 @@ module Aur
       def run
         number = validate(new_number)
         tagger.tag!(t_num: number)
-        rename_file(file, dest_file(number))
+        rename_file(file, renumbered_file(number))
       rescue ArgumentError => e
         pp e
         abort 'Invalid input.'
@@ -28,18 +28,10 @@ module Aur
         $stdin.gets.chomp
       end
 
-      def dest_file(number, tfile = file)
-        if /^\d\d\./.match?(tfile.basename.to_s)
-          tfile.dirname + tfile.basename.to_s.sub(/^\d\d/, number.to_n)
-        else
-          tfile.dirname + [number.to_n, tfile.basename.to_s].join('.')
-        end
-      end
-
       def validate(input)
         return input.to_i if /^\d+$/.match?(input)
 
-        raise ArgumentError
+        raise(Aur::Exception::InvalidInput, input)
       end
     end
   end

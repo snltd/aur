@@ -6,7 +6,7 @@ module Aur
   #
   module Logger
     def msg(message)
-      return if opts[:quiet]
+      return if defined?(opts) && opts[:quiet]
 
       puts message
     end

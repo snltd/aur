@@ -5,7 +5,8 @@ require 'docopt'
 require 'pathname'
 require_relative '../lib/aur/action'
 
-CMDS = %i[info
+CMDS = %i[bump
+          info
           inumber
           name2num
           name2tag
@@ -24,6 +25,7 @@ docopt = <<~EOCMDS
     aur num2name <file>...
     aur name2num <file>...
     aur inumber <file>...
+    aur bump <number> <file>...
     aur split <file>...
     aur info <file>...
     aur sort <file>...
@@ -31,9 +33,7 @@ docopt = <<~EOCMDS
 EOCMDS
 
 def sanitize_keys(options)
-  options.transform_keys do |k|
-    k.to_s.delete('-').to_sym
-  end
+  options.transform_keys { |k| k.to_s.delete('-').to_sym }
 end
 
 def errors(errs)

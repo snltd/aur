@@ -41,3 +41,15 @@ ensure
   write.close
   $stdin = stdin
 end
+
+# Assert that the given file has the given tag.
+#
+def assert_tag(file, key, value)
+  info = if file.extname == '.flac'
+           Aur::FileInfo::Flac.new(file)
+         else
+           Aur::FileInfo::Mp3.new(file)
+         end
+
+  assert_equal(value, info.our_tags[key])
+end
