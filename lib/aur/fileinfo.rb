@@ -70,9 +70,7 @@ module Aur
       # return [Hash] just the tags we use in our names and infos
       def our_tags
         tag_map.tap do |t|
-          t.each_pair do |k, v|
-            t[k] = tags.fetch(v, nil)
-          end
+          t.each_pair { |k, v| t[k] = tags.fetch(v, nil) }
         end
       end
 
