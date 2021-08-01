@@ -11,8 +11,8 @@ class TestTag2name < MiniTest::Test
   attr_reader :flac, :mp3
 
   def setup
-    @flac = Aur::Tag2name::Generic.new(FLAC_TEST)
-    @mp3 = Aur::Tag2name::Generic.new(MP3_TEST)
+    @flac = Aur::Command::Tag2name.new(FLAC_TEST)
+    @mp3 = Aur::Command::Tag2name.new(MP3_TEST)
   end
 
   def test_run

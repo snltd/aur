@@ -3,7 +3,7 @@
 
 require 'docopt'
 require 'pathname'
-require_relative '../lib/aur/command'
+require_relative '../lib/aur/action'
 
 CMDS = %i[info verify split tag2name name2tag numname sort inumber
           number].freeze
@@ -44,7 +44,7 @@ end
 CMDS.each do |cmd|
   next unless opts[cmd]
 
-  cmd = Aur::Command.new(cmd, opts)
+  cmd = Aur::Action.new(cmd, opts[:'<file>'], opts)
   cmd.run!
   errors(cmd.errs)
   exit

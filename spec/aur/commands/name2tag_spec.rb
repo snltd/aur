@@ -8,7 +8,7 @@ require_relative '../../../lib/aur/commands/name2tag'
 #
 class TestName2tag < MiniTest::Test
   def test_flac
-    t1 = Aur::Name2tag::Generic.new(FLAC_TEST)
+    t1 = Aur::Command::Name2tag.new(FLAC_TEST)
 
     assert_equal(
       { artist: 'Unknown Artist',
@@ -18,7 +18,7 @@ class TestName2tag < MiniTest::Test
       t1.tags_from_filename
     )
 
-    t2 = Aur::Name2tag::Generic.new(RES_DIR + '01.the_null_set.song_one.flac')
+    t2 = Aur::Command::Name2tag.new(RES_DIR + '01.the_null_set.song_one.flac')
 
     assert_equal(
       { artist: 'The Null Set',
@@ -30,7 +30,7 @@ class TestName2tag < MiniTest::Test
   end
 
   def test_mp3
-    t1 = Aur::Name2tag::Generic.new(MP3_TEST)
+    t1 = Aur::Command::Name2tag.new(MP3_TEST)
 
     assert_equal(
       { artist: 'Unknown Artist',
@@ -39,7 +39,7 @@ class TestName2tag < MiniTest::Test
         t_num: '00' }, t1.tags_from_filename
     )
 
-    t2 = Aur::Name2tag::Generic.new(RES_DIR + '01.the_null_set.song_one.mp3')
+    t2 = Aur::Command::Name2tag.new(RES_DIR + '01.the_null_set.song_one.mp3')
 
     assert_equal(
       { artist: 'The Null Set',

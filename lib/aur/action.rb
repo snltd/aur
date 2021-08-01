@@ -5,22 +5,23 @@ require_relative 'constants'
 module Aur
   #
   # Command dispatcher. When given an @action, the class will load a
-  # libary filed called 'action.rb'. This must contain a Generic
-  # class or a class for each supported filetype. Said classes
-  # contain methods which can perform the given action on all file
-  # types which may occur in @flist.
+  # file called 'commands/action.rb', and from it load a class called
+  # 'Aur::Command:Action', passing @opts to the initializer. That class
+  # contains a #run method, which runs the action.
   #
-  class Command
+  # action.rb can optionally load files from commands/filetype/action.rb to
+  # deal with different target filetypes.
+  #
+  class Action
     attr_reader :flist, :action, :errs, :opts
 
     # @param action [Symbol] the action to take.
     # @param flist [Array[Pathname]] list of files to which the
     #   action must be applied.
     #
-    def initialize(action, opts)
-      flist = opts.is_a?(Array) ? opts : opts[:'<file>']
-      load_library(action.to_s)
+    def initialize(action, flist, opts = {})
       @flist = screen_flist(flist.map { |f| Pathname.new(f) })
+      load_library(action.to_s)
       @opts = opts
       @action = action.capitalize
       @errs = []
@@ -43,24 +44,29 @@ module Aur
     #
     # rubocop:disable Metrics/MethodLength
     def run_command(file)
-      k_special = special_class(file)
-      k_generic = generic_class(file)
+      klass = action_class(file)
 
-      if k_special.respond_to?(:run)
-        k_special.run
-      elsif k_generic.respond_to?(:run)
-        k_generic.run
+      if klass.respond_to?(special_method(file))
+        klass.send(special_method(file))
       else
-        puts "Don't know what to do with #{file}."
+        klass.run
       end
     rescue FlacInfoReadError => e
       return if action == :Name2tag
 
-      puts "ERROR: cannot read FLAC info for '#{file}'."
+      warn "ERROR: cannot read FLAC info for '#{file}'."
+      puts e
+      @errs.<< file
+    rescue StandardError => e
+      warn "Don't know what to do with #{file}."
       puts e
       @errs.<< file
     end
     # rubocop:enable Metrics/MethodLength
+
+    def special_method(file)
+      "run_#{file.extclass.downcase}".to_sym
+    end
 
     # @param libfile [String]
     #
@@ -83,18 +89,10 @@ module Aur
     end
 
     # @param file [Pathname] file which needs action applied
-    # @return [Aur::Module::Class]
+    # @return [Aur::Command::*] instance of class ready to deal with file
     #
-    def generic_class(file)
-      create_class(format('Aur::%<action>s::Generic', action: action), file)
-    end
-
-    # @param file [Pathname] file which needs action applied
-    # @return [Aur::Module::Class]
-    #
-    def special_class(file)
-      create_class(format('Aur::%<action>s::%<file_type>s',
-                          action: action, file_type: file.extclass), file)
+    def action_class(file)
+      create_class(format('Aur::Command::%<action>s', action: action), file)
     end
 
     # @param file [Pathname] file which needs action applied
@@ -103,7 +101,7 @@ module Aur
     def create_class(name, file)
       return nil unless Object.const_defined?(name)
 
-      Object.const_get(name).new(file)
+      Object.const_get(name).new(file, opts)
     end
   end
 end

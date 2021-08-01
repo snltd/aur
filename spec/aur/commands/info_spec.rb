@@ -10,7 +10,7 @@ class TestInfo < MiniTest::Test
   attr_reader :flac
 
   def setup
-    @flac = Aur::Info::Generic.new(FLAC_TEST)
+    @flac = Aur::Command::Info.new(FLAC_TEST)
   end
 
   def test_fmt_line

@@ -3,11 +3,11 @@
 require_relative 'base'
 
 module Aur
-  module Info
+  module Command
     #
     # Display information about a file.
     #
-    class Generic < Aur::Base
+    class Info < Base
       def run
         fields.each_pair { |k, v| puts fmt_line(k, v) }
         puts

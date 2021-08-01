@@ -6,12 +6,12 @@ require_relative '../stdlib/string'
 require_relative '../stdlib/numeric'
 
 module Aur
-  module Inumber
+  module Command
     #
     # Ask the user for a number, then prefix the filename with that number and
     # set the tracknum tag.
     #
-    class Generic < Aur::Base
+    class Inumber < Base
       include Aur::Renamers
 
       def run

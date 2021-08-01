@@ -10,8 +10,8 @@ class TestSort < MiniTest::Test
   attr_reader :flac, :mp3
 
   def setup
-    @flac = Aur::Sort::Generic.new(FLAC_TEST)
-    @mp3 = Aur::Sort::Generic.new(MP3_TEST)
+    @flac = Aur::Command::Sort.new(FLAC_TEST)
+    @mp3 = Aur::Command::Sort.new(MP3_TEST)
   end
 
   def test_run

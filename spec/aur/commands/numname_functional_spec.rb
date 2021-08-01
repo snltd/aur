@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 require_relative '../../spec_helper'
-require_relative '../../../lib/aur/command'
+require_relative '../../../lib/aur/action'
 
 # Run 'aur numname' commands against things, and verify the results
 #
@@ -12,7 +12,7 @@ class TestNumNameCommand < MiniTest::Test
       expected_file = TMP_DIR + '02.bad_name.flac'
 
       refute(expected_file.exist?)
-      out, err = capture_io { Aur::Command.new(:numname, [f]).run! }
+      out, err = capture_io { Aur::Action.new(:numname, [f]).run! }
       assert_empty(err)
       assert_equal('bad_name.flac -> 02.bad_name.flac', out.strip)
 
@@ -20,7 +20,7 @@ class TestNumNameCommand < MiniTest::Test
       assert(expected_file.exist?)
 
       out, err = capture_io do
-        Aur::Command.new(:numname, [expected_file]).run!
+        Aur::Action.new(:numname, [expected_file]).run!
       end
 
       assert_empty(err)
@@ -35,7 +35,7 @@ class TestNumNameCommand < MiniTest::Test
 
     assert(source_file.exist?)
 
-    out, err = capture_io { Aur::Command.new(:numname, [source_file]).run! }
+    out, err = capture_io { Aur::Action.new(:numname, [source_file]).run! }
     assert_equal("untagged_file.flac -> 00.untagged_file.flac\n", out)
     assert_empty(err)
     refute(source_file.exist?)
@@ -45,7 +45,7 @@ class TestNumNameCommand < MiniTest::Test
 
   def test_mp3_numname
     with_test_file('bad_name.mp3') do |f|
-      out, err = capture_io { Aur::Command.new(:numname, [f]).run! }
+      out, err = capture_io { Aur::Action.new(:numname, [f]).run! }
 
       assert_empty(err)
       assert_equal('bad_name.mp3 -> 02.bad_name.mp3', out.strip)
@@ -54,7 +54,7 @@ class TestNumNameCommand < MiniTest::Test
       assert (TMP_DIR + '02.bad_name.mp3').exist?
 
       out, err = capture_io do
-        Aur::Command.new(:numname, [TMP_DIR + '02.bad_name.mp3']).run!
+        Aur::Action.new(:numname, [TMP_DIR + '02.bad_name.mp3']).run!
       end
 
       assert_empty(err)

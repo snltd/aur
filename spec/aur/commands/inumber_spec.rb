@@ -11,7 +11,7 @@ class TestInumber < MiniTest::Test
   attr_reader :totest
 
   def setup
-    @totest = Aur::Inumber::Generic.new(FLAC_TEST)
+    @totest = Aur::Command::Inumber.new(FLAC_TEST)
   end
 
   def test_dest_file

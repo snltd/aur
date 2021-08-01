@@ -3,11 +3,11 @@
 require_relative 'base'
 
 module Aur
-  module Number
+  module Command
     #
     # Set the track number tag from the file name.
     #
-    class Generic < Aur::Base
+    class Number < Base
       def run
         track_number = info.f_t_num.to_i
 

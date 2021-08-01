@@ -8,7 +8,7 @@ require_relative '../../../lib/aur/commands/number'
 #
 class TestNumber < MiniTest::Test
   def test_flac
-    totest = Aur::Number::Generic.new(RES_DIR + '01.the_null_set.song_one.flac')
+    totest = Aur::Command::Number.new(RES_DIR + '01.the_null_set.song_one.flac')
     del = Spy.on(totest.info.raw, :comment_del)
     add = Spy.on(totest.info.raw, :comment_add)
     upd = Spy.on(totest.info.raw, :update!)
@@ -22,7 +22,7 @@ class TestNumber < MiniTest::Test
   end
 
   def test_flac_no_number
-    totest = Aur::Number::Generic.new(RES_DIR + 'bad_name.flac')
+    totest = Aur::Command::Number.new(RES_DIR + 'bad_name.flac')
     del = Spy.on(totest.info.raw, :comment_del)
     add = Spy.on(totest.info.raw, :comment_add)
     upd = Spy.on(totest.info.raw, :update!)
@@ -37,7 +37,7 @@ class TestNumber < MiniTest::Test
   end
 
   def test_mp3
-    totest = Aur::Number::Generic.new(RES_DIR + '01.the_null_set.song_one.mp3')
+    totest = Aur::Command::Number.new(RES_DIR + '01.the_null_set.song_one.mp3')
     spy = Spy.on(Mp3Info, :open)
     totest.run
     assert_equal(1, spy.calls.count)
@@ -46,7 +46,7 @@ class TestNumber < MiniTest::Test
   end
 
   def test_mp3_no_number
-    totest = Aur::Number::Generic.new(RES_DIR + 'bad_name.mp3')
+    totest = Aur::Command::Number.new(RES_DIR + 'bad_name.mp3')
     spy = Spy.on(Mp3Info, :open)
     out, err = capture_io { totest.run }
     assert_empty(out)

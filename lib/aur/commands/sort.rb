@@ -6,11 +6,11 @@ require_relative '../renamers'
 require_relative '../stdlib/string'
 
 module Aur
-  module Sort
+  module Command
     #
     # Move files into artist.title directories
     #
-    class Generic < Aur::Base
+    class Sort < Base
       include Aur::Renamers
 
       def run
