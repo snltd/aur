@@ -46,7 +46,35 @@ class TestTagger < MiniTest::Test
     assert spy.has_been_called?
   end
 
-  def test_prep
+  def test_validate
+    flacinfo = Aur::FileInfo::Flac.new(FLAC_TEST)
+    t = Aur::Tagger::Flac.new(flacinfo, {})
+
+    assert_equal({ artist: 'Prince' }, t.validate(artist: 'Prince'))
+    assert_equal({ title: '1999' }, t.validate(title: '1999'))
+    assert_equal({ album: '1999' }, t.validate(album: '1999'))
+    assert_equal({ year: 1999 }, t.validate(year: '1999'))
+    assert_equal({ year: 2021 }, t.validate(year: 2021))
+    assert_equal({ t_num: 9 }, t.validate(t_num: '9'))
+    assert_equal({ t_num: 1 }, t.validate(t_num: 1))
+    assert_equal({ genre: 'Noise' }, t.validate(genre: 'Noise'))
+    assert_equal({ genre: 'Noise' }, t.validate(genre: 'noise'))
+
+    e = assert_raises(Aur::Exception::InvalidTagValue) do
+      t.validate(year: '2050')
+    end
+    assert_equal('2050', e.message)
+
+    e = assert_raises(Aur::Exception::InvalidTagValue) do
+      t.validate(t_num: '0')
+    end
+    assert_equal('0', e.message)
+
+    e = assert_raises(Aur::Exception::InvalidTagValue) { t.validate(t_num: -1) }
+    assert_equal('-1', e.message)
+  end
+
+  def _test_prep
     mp3info = Aur::FileInfo::Mp3.new(MP3_TEST)
     t = Aur::Tagger::Mp3.new(mp3info, {})
 
