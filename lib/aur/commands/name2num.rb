@@ -7,7 +7,7 @@ module Aur
     #
     # Set the track number tag from the file name.
     #
-    class Number < Base
+    class Name2num < Base
       def run
         track_number = info.f_t_num.to_i
 

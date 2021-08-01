@@ -2,18 +2,19 @@
 # frozen_string_literal: true
 
 require_relative '../../spec_helper'
-require_relative '../../../lib/aur/commands/number'
+require_relative '../../../lib/aur/commands/name2num'
 
-# Test for number command
+# Test for name2num command
 #
-class TestNumber < MiniTest::Test
+class TestName2num < MiniTest::Test
   def test_flac
-    totest = Aur::Command::Number.new(RES_DIR + '01.the_null_set.song_one.flac')
-    del = Spy.on(totest.info.raw, :comment_del)
-    add = Spy.on(totest.info.raw, :comment_add)
-    upd = Spy.on(totest.info.raw, :update!)
+    t = Aur::Command::Name2num.new(RES_DIR + '01.the_null_set.song_one.flac')
 
-    out, err = capture_io { totest.run }
+    del = Spy.on(t.info.raw, :comment_del)
+    add = Spy.on(t.info.raw, :comment_add)
+    upd = Spy.on(t.info.raw, :update!)
+
+    out, err = capture_io { t.run }
     assert_empty(err)
     assert_equal('t_num -> 1', out.strip)
     assert_equal(%w[TRACKNUMBER], del.calls.map(&:args).flatten)
@@ -22,12 +23,12 @@ class TestNumber < MiniTest::Test
   end
 
   def test_flac_no_number
-    totest = Aur::Command::Number.new(RES_DIR + 'bad_name.flac')
-    del = Spy.on(totest.info.raw, :comment_del)
-    add = Spy.on(totest.info.raw, :comment_add)
-    upd = Spy.on(totest.info.raw, :update!)
+    t = Aur::Command::Name2num.new(RES_DIR + 'bad_name.flac')
+    del = Spy.on(t.info.raw, :comment_del)
+    add = Spy.on(t.info.raw, :comment_add)
+    upd = Spy.on(t.info.raw, :update!)
 
-    out, err = capture_io { totest.run }
+    out, err = capture_io { t.run }
     assert_empty(out)
     assert_equal("No number found at start of filename\n", err)
 
@@ -37,18 +38,18 @@ class TestNumber < MiniTest::Test
   end
 
   def test_mp3
-    totest = Aur::Command::Number.new(RES_DIR + '01.the_null_set.song_one.mp3')
+    t = Aur::Command::Name2num.new(RES_DIR + '01.the_null_set.song_one.mp3')
     spy = Spy.on(Mp3Info, :open)
-    totest.run
+    t.run
     assert_equal(1, spy.calls.count)
     assert_equal([RES_DIR + '01.the_null_set.song_one.mp3'],
                  spy.calls.first.args)
   end
 
   def test_mp3_no_number
-    totest = Aur::Command::Number.new(RES_DIR + 'bad_name.mp3')
+    t = Aur::Command::Name2num.new(RES_DIR + 'bad_name.mp3')
     spy = Spy.on(Mp3Info, :open)
-    out, err = capture_io { totest.run }
+    out, err = capture_io { t.run }
     assert_empty(out)
     assert_equal("No number found at start of filename\n", err)
     refute spy.has_been_called?

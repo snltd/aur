@@ -3,16 +3,16 @@
 
 require 'ostruct'
 require_relative '../../spec_helper'
-require_relative '../../../lib/aur/commands/numname'
+require_relative '../../../lib/aur/commands/num2name'
 
-# Tests for numname command
+# Tests for num2name command
 #
-class TestNumname < MiniTest::Test
+class TestNum2name < MiniTest::Test
   attr_reader :flac, :mp3
 
   def setup
-    @flac = Aur::Command::Numname.new(FLAC_TEST)
-    @mp3 = Aur::Command::Numname.new(MP3_TEST)
+    @flac = Aur::Command::Num2name.new(FLAC_TEST)
+    @mp3 = Aur::Command::Num2name.new(MP3_TEST)
   end
 
   def test_run

@@ -10,7 +10,7 @@ module Aur
     # Prefix a file's name with its track number. If there's no track number,
     # it will prefix with '00'.
     #
-    class Numname < Base
+    class Num2name < Base
       include Aur::Renamers
 
       def run
