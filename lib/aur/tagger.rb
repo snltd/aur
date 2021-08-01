@@ -22,12 +22,8 @@ module Aur
         @opts = opts
       end
 
-      def tag_msg(tags)
-        tags.each_pair do |name, value|
-          msg format('%12<tag_name>s -> %<tag_value>s',
-                     tag_name: name,
-                     tag_value: value)
-        end
+      def tag_msg(name, value)
+        msg format('%12<name>s -> %<value>s', name: name, value: value)
       end
 
       # Certain tags should be certain types
@@ -47,10 +43,8 @@ module Aur
       # @param tags [Hash] of tag_name => tag_value
       #
       def tag!(tags)
-        tag_msg(tags)
-
-        tags.each_pair do |name, value|
-          # puts "setting #{info.tag_for(name)}=#{value}"
+        prep(tags).each_pair do |name, value|
+          tag_msg(name, value)
           info.raw.comment_del(info.tag_name(name))
           info.raw.comment_add("#{info.tag_name(name)}=#{value}")
         end
@@ -63,12 +57,9 @@ module Aur
     #
     class Mp3 < Base
       def tag!(tags)
-        tag_msg(tags)
-
-        tags = prep(tags)
-
         Mp3Info.open(info.file) do |mp3|
-          tags.each_pair do |name, value|
+          prep(tags).each_pair do |name, value|
+            tag_msg(name, value)
             mp3.tag[info.tag_name(name)] = value
           end
         end

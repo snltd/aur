@@ -8,44 +8,32 @@ require_relative '../../../lib/aur/command'
 #
 class TestTag2NameCommand < MiniTest::Test
   def test_flac_tag2name
-    setup_test_dir
-    source_file = TMP_DIR + 'bad_name.flac'
-    FileUtils.cp(RES_DIR + 'bad_name.flac', TMP_DIR)
+    with_test_file('bad_name.flac') do |f|
+      out, err = capture_io { Aur::Command.new(:tag2name, [f]).run! }
 
-    assert(source_file.exist?)
+      assert_empty(err)
+      assert_equal(
+        'bad_name.flac -> 02.the_null_set.sammy_davis_jr-dancing.flac',
+        out.strip
+      )
 
-    out, err = capture_io do
-      Aur::Command.new(:tag2name, [TMP_DIR + 'bad_name.flac']).run!
+      refute(f.exist?)
+      assert (TMP_DIR + '02.the_null_set.sammy_davis_jr-dancing.flac').exist?
     end
-
-    assert_empty(err)
-    assert_equal(
-      'bad_name.flac -> 02.the_null_set.sammy_davis_jr-dancing.flac',
-      out.strip
-    )
-
-    refute(source_file.exist?)
-    assert (TMP_DIR + '02.the_null_set.sammy_davis_jr-dancing.flac').exist?
-    cleanup_test_dir
   end
 
   def test_mp3_tag2name
-    setup_test_dir
-    source_file = TMP_DIR + 'bad_name.mp3'
-    FileUtils.cp(RES_DIR + 'bad_name.mp3', TMP_DIR)
+    with_test_file('bad_name.mp3') do |f|
+      out, err = capture_io { Aur::Command.new(:tag2name, [f]).run! }
 
-    assert(source_file.exist?)
+      assert_empty(err)
+      assert_equal(
+        "bad_name.mp3 -> 02.the_null_set.sammy_davis_jr-dancing.mp3\n",
+        out
+      )
 
-    out, err = capture_io do
-      Aur::Command.new(:tag2name, [TMP_DIR + 'bad_name.mp3']).run!
+      refute(f.exist?)
+      assert (TMP_DIR + '02.the_null_set.sammy_davis_jr-dancing.mp3').exist?
     end
-
-    assert_empty(err)
-    assert_equal('bad_name.mp3 -> 02.the_null_set.sammy_davis_jr-dancing.mp3',
-                 out.strip)
-
-    refute(source_file.exist?)
-    assert (TMP_DIR + '02.the_null_set.sammy_davis_jr-dancing.mp3').exist?
-    cleanup_test_dir
   end
 end

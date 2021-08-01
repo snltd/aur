@@ -19,7 +19,7 @@ class TestName2TagCommand < MiniTest::Test
       assert_empty(err)
       assert_match('Artist : The Null Set', out)
       assert_match('Title : Song One', out)
-      assert_match('Track no : 01', out)
+      assert_match('Track no : 1', out)
     end
   end
 
@@ -45,7 +45,7 @@ def flac_name2tag_output
       artist -> The Null Set
        title -> Song One
        album -> Aurtest
-       t_num -> 01
+       t_num -> 1
 )
 end
 
@@ -54,6 +54,6 @@ def mp3_name2tag_output
       artist -> The Null Set
        title -> Song One
        album -> Aurtest
-       t_num -> 01
+       t_num -> 1
 )
 end

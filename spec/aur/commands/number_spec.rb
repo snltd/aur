@@ -39,10 +39,10 @@ class TestNumber < MiniTest::Test
   def test_mp3
     totest = Aur::Number::Generic.new(RES_DIR + '01.the_null_set.song_one.mp3')
     spy = Spy.on(Mp3Info, :open)
-    out, err = capture_io { totest.run }
-    assert_empty(err)
-    assert_equal('t_num -> 1', out.strip)
-    assert spy.has_been_called?
+    totest.run
+    assert_equal(1, spy.calls.count)
+    assert_equal([RES_DIR + '01.the_null_set.song_one.mp3'],
+                 spy.calls.first.args)
   end
 
   def test_mp3_no_number

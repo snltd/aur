@@ -8,7 +8,7 @@ require_relative '../../lib/aur/tagger'
 # Run tagger against real files and observe real changes
 #
 class TestTaggerFunctional < MiniTest::Test
-  def _test_flac_tagging
+  def test_flac_tagging
     with_test_file('test_tone-100hz.flac') do |f|
       info = Aur::FileInfo::Flac.new(f)
       file = Aur::Tagger::Flac.new(info)
@@ -31,7 +31,7 @@ class TestTaggerFunctional < MiniTest::Test
 
   # Silently set all the tags on an initially untagged file.
   #
-  def _test_all_flac_tags
+  def test_all_flac_tags
     with_test_file('01.the_null_set.song_one.flac') do |f|
       info = Aur::FileInfo::Flac.new(f)
       file = Aur::Tagger::Flac.new(info, quiet: true)
@@ -56,8 +56,8 @@ class TestTaggerFunctional < MiniTest::Test
         { artist: 'The Singer',
           album: 'Difficult Second Album',
           title: 'Their Song',
-          t_num: 5,
-          year: 2021,
+          t_num: '5',
+          year: '2021',
           genre: 'Pop' },
         info.our_tags
       )
