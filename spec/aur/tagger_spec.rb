@@ -31,17 +31,18 @@ class TestTagger < MiniTest::Test
     assert upd.has_been_called?
   end
 
+  # The way the Mp3Info class is written makes it really hard to test. It
+  # doesn't matter though. We have full functional tests.
   def test_mp3
     mp3info = Aur::FileInfo::Mp3.new(MP3_TEST)
     t = Aur::Tagger::Mp3.new(mp3info, {})
 
     spy = Spy.on(Mp3Info, :open)
+    # Because we Spy on the #open method and Mp3Info works on a block passed
+    # to #open, nothing inside the loop (e.g. the calling of the #msg method)
+    # happens, so there's really nothing to test. Just ensure it was called.
 
-    out, err = capture_io { t.tag!(test_tags) }
-
-    assert_empty(err)
-    assert_equal(expected_output, out)
-
+    t.tag!(test_tags)
     assert spy.has_been_called?
   end
 

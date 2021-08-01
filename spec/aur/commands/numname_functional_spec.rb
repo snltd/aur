@@ -7,27 +7,25 @@ require_relative '../../../lib/aur/command'
 # Run 'aur numname' commands against things, and verify the results
 #
 class TestNumNameCommand < MiniTest::Test
-  def _test_flac_numname
-    setup_test_dir
-    source_file = TMP_DIR + 'bad_name.flac'
-    FileUtils.cp(RES_DIR + 'bad_name.flac', TMP_DIR)
-    assert(source_file.exist?)
+  def test_flac_numname
+    with_test_file('bad_name.flac') do |f|
+      expected_file = TMP_DIR + '02.bad_name.flac'
 
-    out, err = capture_io { Aur::Command.new(:numname, [source_file]).run! }
-    assert_empty(err)
-    assert_equal('bad_name.flac -> 02.bad_name.flac', out.strip)
+      refute(expected_file.exist?)
+      out, err = capture_io { Aur::Command.new(:numname, [f]).run! }
+      assert_empty(err)
+      assert_equal('bad_name.flac -> 02.bad_name.flac', out.strip)
 
-    refute(source_file.exist?)
-    assert (TMP_DIR + '02.bad_name.flac').exist?
+      refute(f.exist?)
+      assert(expected_file.exist?)
 
-    out, err = capture_io do
-      Aur::Command.new(:numname, [TMP_DIR + '02.bad_name.flac']).run!
+      out, err = capture_io do
+        Aur::Command.new(:numname, [expected_file]).run!
+      end
+
+      assert_empty(err)
+      assert_equal("No change required.\n", out)
     end
-
-    assert_empty(err)
-    assert_equal("No change required.\n", out)
-
-    cleanup_test_dir
   end
 
   def test_flac_numname_no_number_tag
@@ -45,28 +43,22 @@ class TestNumNameCommand < MiniTest::Test
     cleanup_test_dir
   end
 
-  def _test_mp3_numname
-    setup_test_dir
-    source_file = TMP_DIR + 'bad_name.mp3'
-    FileUtils.cp(RES_DIR + 'bad_name.mp3', TMP_DIR)
+  def test_mp3_numname
+    with_test_file('bad_name.mp3') do |f|
+      out, err = capture_io { Aur::Command.new(:numname, [f]).run! }
 
-    assert(source_file.exist?)
+      assert_empty(err)
+      assert_equal('bad_name.mp3 -> 02.bad_name.mp3', out.strip)
 
-    out, err = capture_io { Aur::Command.new(:numname, [source_file]).run! }
+      refute(f.exist?)
+      assert (TMP_DIR + '02.bad_name.mp3').exist?
 
-    assert_empty(err)
-    assert_equal('bad_name.mp3 -> 02.bad_name.mp3', out.strip)
+      out, err = capture_io do
+        Aur::Command.new(:numname, [TMP_DIR + '02.bad_name.mp3']).run!
+      end
 
-    refute(source_file.exist?)
-    assert (TMP_DIR + '02.bad_name.mp3').exist?
-
-    out, err = capture_io do
-      Aur::Command.new(:numname, [TMP_DIR + '02.bad_name.mp3']).run!
+      assert_empty(err)
+      assert_equal("No change required.\n", out)
     end
-
-    assert_empty(err)
-    assert_equal("No change required.\n", out)
-
-    cleanup_test_dir
   end
 end

@@ -24,7 +24,7 @@ class TestNumberCommand < MiniTest::Test
     end
   end
 
-  def _test_mp3_number
+  def test_mp3_number
     with_test_file('01.the_null_set.song_one.mp3') do |f|
       out, = capture_io { Aur::Command.new(:info, [f]).run! }
       refute_match(/Track no : 1/, out)
