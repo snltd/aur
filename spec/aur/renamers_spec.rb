@@ -64,6 +64,11 @@ class TestRenamers < MiniTest::Test
       end
     end
   end
+
+  def test_flipped_suffix
+    assert_equal(MP3_TEST, flipped_suffix(FLAC_TEST, 'mp3'))
+    assert_equal(FLAC_TEST, flipped_suffix(MP3_TEST, 'flac'))
+  end
 end
 
 def flac_info
