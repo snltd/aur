@@ -15,6 +15,8 @@ module Aur
 
     class InvalidValue < RuntimeError; end
 
+    class MissingBinary < RuntimeError; end
+
     class UnsupportedFiletype < RuntimeError; end
   end
 end

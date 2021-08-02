@@ -13,6 +13,7 @@ module Aur
       include Aur::Renamers
 
       def run_flac
+        check_dependencies
         info = Aur::FileInfo::Flac.new(file)
         cmd = construct_command(file, info.our_tags)
         puts "#{file} -> #{flipped_suffix(file, 'mp3')}"
@@ -20,12 +21,19 @@ module Aur
       end
 
       def construct_command(file, tags)
-        raise(MissingBinary, BIN[:flac]) unless BIN[:flac].exist?
-        raise(MissingBinary, BIN[:lame]) unless BIN[:lame].exist?
-
         "#{BIN[:flac]} -dsc #{escaped(file)} | " \
           "#{BIN[:lame]} #{LAME_FLAGS} #{lame_tag_opts(tags)} " \
           "- #{escaped(flipped_suffix(file, 'mp3'))}"
+      end
+
+      def check_dependencies
+        unless BIN[:flac].exist?
+          raise(Aur::Exception::MissingBinary, BIN[:flac])
+        end
+
+        return if BIN[:lame].exist?
+
+        raise(Aur::Exception::MissingBinary, BIN[:lame])
       end
 
       def lame_tag_opts(tags)

@@ -8,6 +8,9 @@ require_relative '../../../lib/aur/action'
 #
 class TestFlac2Mp3Command < MiniTest::Test
   def test_flac2mp3
+    skip unless BIN[:flac].exist?
+    skip unless BIN[:lame].exist?
+
     with_test_file('test_tone-100hz.flac') do |f|
       expected_file = TMP_DIR + 'test_tone-100hz.mp3'
       refute(expected_file.exist?)
