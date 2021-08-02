@@ -4,8 +4,13 @@ SUPPORTED_TYPES = %w[flac mp3].freeze
 
 BIN = {
   flac: Pathname.new('/opt/local/bin/flac'),
+  lame: Pathname.new('/opt/local/bin/lame'),
   shnsplit: Pathname.new('/opt/local/bin/shnsplit')
 }.freeze
+
+# Preset for encoding MP3s
+#
+LAME_FLAGS = '-h --vbr-new --preset 128 --id3v2-only --add-id3v2 --silent'
 
 # These words are not (normally) capitalised when generating tags
 #

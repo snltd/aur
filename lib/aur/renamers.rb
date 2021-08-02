@@ -62,5 +62,9 @@ module Aur
 
       tfile.dirname + basename
     end
+
+    def flipped_suffix(file, new_suffix)
+      file.sub_ext(".#{new_suffix}")
+    end
   end
 end

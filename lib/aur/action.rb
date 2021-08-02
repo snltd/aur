@@ -50,8 +50,10 @@ module Aur
 
       if klass.respond_to?(special_method(file))
         klass.send(special_method(file))
-      else
+      elsif klass.respond_to?(:run)
         klass.run
+      else
+        raise Aur::Exception::UnsupportedFiletype
       end
     rescue FlacInfoReadError => e
       return if action == :Name2tag
