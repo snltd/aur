@@ -3,6 +3,7 @@
 SUPPORTED_TYPES = %w[flac mp3].freeze
 
 BIN = {
+  ffmpeg: Pathname.new('/opt/sysdef/ffmpeg/bin/ffmpeg'),
   flac: Pathname.new('/opt/local/bin/flac'),
   lame: Pathname.new('/opt/local/bin/lame'),
   shnsplit: Pathname.new('/opt/local/bin/shnsplit')

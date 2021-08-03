@@ -39,12 +39,6 @@ class TestFlac2Mp3 < MiniTest::Test
     )
   end
 
-  def test_escaped
-    assert_equal('"Spiderland"', t.escaped('Spiderland'))
-    assert_equal('"Theme from \"Shaft\""', t.escaped('Theme from "Shaft"'))
-    assert_equal('"\"Loads\" of \"Quotes\""', t.escaped('"Loads" of "Quotes"'))
-  end
-
   private
 
   def test_tags
