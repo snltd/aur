@@ -22,10 +22,10 @@ module Aur
     #   action must be applied.
     #
     def initialize(action, flist, opts = {})
+      @action = action.capitalize
+      @opts = opts
       @flist = screen_flist(flist.map { |f| Pathname.new(f) })
       load_library(action.to_s)
-      @opts = opts
-      @action = action.capitalize
       @errs = []
     end
 
@@ -91,6 +91,8 @@ module Aur
     # @return [Array[Pathname]]
     #
     def screen_flist(flist)
+      return flist if action == :Transcode # ffmpeg can transcode anything
+
       flist.select do |f|
         f.file? && SUPPORTED_TYPES.include?(f.extname.delete('.'))
       end

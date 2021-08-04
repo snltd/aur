@@ -16,16 +16,27 @@ module Aur
       attr_reader :file, :info, :opts, :errs, :tagger
 
       # @param file [Pathname]
-      # @return [Aur::FileInfo::FileType] where FileType is Flac or
-      #   Mp3 or any other supported file type.
+      # @return [Aur::FileInfo::FileType] where FileType is Flac or Mp3 or any
+      #   other supported file type.
       # @raise [NameError] if the info class does not exist
       #
       def initialize(file, opts = {})
         @file = file
         @opts = opts
-        @info = Object.const_get(class_for(:FileInfo)).new(file)
-        @tagger = Object.const_get(class_for(:Tagger)).new(info, opts)
+        @info = setup_info
+        @tagger = setup_tagger
         @errs = 0
+      end
+
+      # Separated out for the benefit of transcode, which does not need
+      # fileinfo, and would otherwise require classes for arbitrary filetypes.
+      #
+      def setup_info
+        Object.const_get(class_for(:FileInfo)).new(file)
+      end
+
+      def setup_tagger
+        Object.const_get(class_for(:Tagger)).new(info, opts)
       end
 
       # @return [String] name of relevant info class
