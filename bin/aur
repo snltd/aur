@@ -12,6 +12,7 @@ CMDS = %i[bump
           name2num
           name2tag
           num2name
+          reencode
           set
           sort
           split
@@ -32,6 +33,7 @@ docopt = <<~EOCMDS
     aur sort <file>...
     aur verify <file>...
     aur flac2mp3 <file>...
+    aur reencode <file>...
 EOCMDS
 
 def sanitize_keys(options)

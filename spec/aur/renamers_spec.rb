@@ -65,9 +65,10 @@ class TestRenamers < MiniTest::Test
     end
   end
 
-  def test_flipped_suffix
-    assert_equal(MP3_TEST, flipped_suffix(FLAC_TEST, 'mp3'))
-    assert_equal(FLAC_TEST, flipped_suffix(MP3_TEST, 'flac'))
+  def test_escaped
+    assert_equal('"Spiderland"', escaped('Spiderland'))
+    assert_equal('"Theme from \"Shaft\""', escaped('Theme from "Shaft"'))
+    assert_equal('"\"Loads\" of \"Quotes\""', escaped('"Loads" of "Quotes"'))
   end
 end
 

@@ -16,14 +16,18 @@ module Aur
         check_dependencies
         info = Aur::FileInfo::Flac.new(file)
         cmd = construct_command(file, info.our_tags)
-        puts "#{file} -> #{flipped_suffix(file, 'mp3')}"
+        puts "#{file} -> #{dest_file}"
         system(cmd)
       end
 
       def construct_command(file, tags)
         "#{BIN[:flac]} -dsc #{escaped(file)} | " \
           "#{BIN[:lame]} #{LAME_FLAGS} #{lame_tag_opts(tags)} " \
-          "- #{escaped(flipped_suffix(file, 'mp3'))}"
+          "- #{escaped(dest_file)}"
+      end
+
+      def dest_file
+        file.sub_ext('.mp3')
       end
 
       def check_dependencies
@@ -40,14 +44,6 @@ module Aur
         lame_flag_map.each_pair.with_object([]) do |(flag, tag), aggr|
           aggr.<< "#{flag} #{escaped(tags[tag])}" if tags.fetch(tag, false)
         end.join(' ')
-      end
-
-      def escaped(tag)
-        '"' + tag.to_s.gsub(/"/, '\"') + '"'
-      end
-
-      def cuefile
-        file.sub(/\.\w+$/, '.cue')
       end
 
       # Maps LAME's command-line tag options to what we call tags

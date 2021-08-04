@@ -12,4 +12,9 @@ class TestPathname < MiniTest::Test
     assert_equal('Mp3', Pathname.new('file.mp3').extclass)
     assert_equal('Jpg', Pathname.new('file.jpg').extclass)
   end
+
+  def test_prefixed
+    assert_equal(RES_DIR + '_test_tone-100hz.flac', FLAC_TEST.prefixed)
+    assert_equal(RES_DIR + 'xxtest_tone-100hz.flac', FLAC_TEST.prefixed('xx'))
+  end
 end
