@@ -11,6 +11,24 @@ module Aur
       def run
         tagger.tag!(opts[:'<tag>'].to_sym => opts[:'<value>'])
       end
+
+      def self.help
+        require_relative '../fileinfo'
+
+        <<~EOHELP
+          usage: aur set <tag> <value> <file>...
+
+          Sets one tag to the same value across any number of files. The tag
+          must be one of:
+
+            artist
+            album
+            title
+            t_num
+            year
+            genre
+        EOHELP
+      end
     end
   end
 end

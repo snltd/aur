@@ -33,6 +33,19 @@ module Aur
 
         raise(Aur::Exception::InvalidValue, input)
       end
+
+      def self.help
+        <<~EOHELP
+          usage: aur bump <value> <file>...
+
+          'bump' increments the track number of the given file(s) by the given
+          integer value. It changes the track number tag and the track number at
+          the beginning of the filename.
+
+          Negative values can be given, which will decrement the track number.
+          An error is thrown if a tag number drops below one.
+        EOHELP
+      end
     end
   end
 end

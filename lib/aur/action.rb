@@ -30,12 +30,20 @@ module Aur
     end
 
     def run!
+      display_help if action == :Help
+
       warn 'No valid files supplied.' if flist.empty?
 
       flist.each { |f| run_command(f) }
     end
 
     private
+
+    def display_help
+      require_relative 'commands/help'
+      Aur::Command::Help.new(opts[:'<command>'])
+      exit
+    end
 
     # Some operations present the same interface regardless of file
     # type. Others do not. This dispatcher calls the "special" class

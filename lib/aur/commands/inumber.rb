@@ -33,6 +33,15 @@ module Aur
 
         raise(Aur::Exception::InvalidInput, input)
       end
+
+      def self.help
+        <<~EOHELP
+          usage: aur inumber <file>...
+
+          For each given file, asks for a track number. This number is used to
+          prefix the filename, and applied as a tag.
+        EOHELP
+      end
     end
   end
 end

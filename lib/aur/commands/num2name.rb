@@ -32,6 +32,15 @@ module Aur
                fname: file.basename.to_s)
       end
 
+      def self.help
+        <<~EOHELP
+          usage: aur num2name <file>...
+
+          Prefix a filename with its track number, taken from the tags. If there
+          is no track number, the prefix is '00'.
+        EOHELP
+      end
+
       private
 
       def dest_file

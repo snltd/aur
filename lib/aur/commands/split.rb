@@ -7,7 +7,7 @@ module Aur
     #
     # Split based on a cue file
     #
-    class Split < Aur::Base
+    class Split < Base
       def run
         abort 'No shnsplit binary.' unless BIN[:shnsplit].exist?
 
@@ -20,6 +20,16 @@ module Aur
 
       def cuefile
         file.sub(/\.\w+$/, '.cue')
+      end
+
+      def self.help
+        <<~EOHELP
+          usage: aur split <file>...
+
+          Looks for a cue file with the same basename as the given file, and uses
+          shnsplit to split the former according to the latter. No tagging is
+          done.
+        EOHELP
       end
     end
   end

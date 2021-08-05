@@ -26,6 +26,20 @@ module Aur
          file_suffix(info)].join('.')
       end
 
+      def self.help
+        <<~EOHELP
+          usage: aur tag2name <file>...
+
+          Renames a file based on its tags. The pattern is
+
+            <track_num>.<artist>.<title>.suffix
+
+          track_num is two zero-padded digits; artist is turned to lower
+          snakd-case with non-alnum characters removed, and any leading 'the_'
+          stripped off; title is lower snake-cased
+        EOHELP
+      end
+
       private
 
       def dest_file

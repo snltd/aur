@@ -56,6 +56,21 @@ module Aur
           '--tn': :t_num,
           '--tg': :genre }
       end
+
+      def self.help
+        <<~EOHELP
+          usage: aur flac2mp3 <file>...
+
+          Converts a FLAC into an MP3 using following preset values.
+
+            #{LAME_FLAGS}
+
+          The new MP3 file is created in the same directory as the FLAC, with
+          the same filename, barring the suffix.
+
+          Tags are copied from the FLAC.
+        EOHELP
+      end
     end
   end
 end
