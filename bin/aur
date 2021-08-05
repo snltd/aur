@@ -7,6 +7,7 @@ require_relative '../lib/aur/action'
 
 CMDS = %i[bump
           flac2mp3
+          help
           info
           inumber
           name2num
@@ -36,6 +37,7 @@ docopt = <<~EOCMDS
     aur flac2mp3 <file>...
     aur transcode <newtype> <file>...
     aur reencode <file>...
+    aur help <command>
 EOCMDS
 
 def sanitize_keys(options)

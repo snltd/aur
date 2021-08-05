@@ -43,6 +43,15 @@ module Aur
       def setup_tagger
         {}
       end
+
+      def self.help
+        <<~EOHELP
+          usage: aur transcode <newtype> <file>...
+
+          Uses ffmpeg to transcode the given file(s) to the format given by
+          newtype. For instance, 'flac', or 'wav'.
+        EOHELP
+      end
     end
   end
 end

@@ -19,6 +19,15 @@ module Aur
         rename_file(file, dest)
       end
 
+      def self.help
+        <<~EOHELP
+          usage: aur sort <file>...
+
+          Puts each file in a directory derived from file's artist and album
+          tags. Useful for separating out mixed-up albums.
+        EOHELP
+      end
+
       private
 
       def create_dir(dir)

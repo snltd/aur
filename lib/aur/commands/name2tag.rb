@@ -27,6 +27,22 @@ module Aur
           aggr[tag] = mk_title(info.send("f_#{tag}".to_sym))
         end
       end
+
+      def self.help
+        <<~EOHELP
+          usage: aur name2tag <file>...
+
+          Takes the name of the file and turns it into tags. This will only work
+          correctly if the filename follows the format
+
+            <track_num>.<artist>.<title>.suffix
+
+          The album tag is taken from the name of the directory containing the
+          file, assuming the format
+
+            <artist>.<album>
+        EOHELP
+      end
     end
   end
 end

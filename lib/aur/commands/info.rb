@@ -30,6 +30,14 @@ module Aur
           Year: info.year }
       end
       # rubocop:enable Metrics/AbcSize
+
+      def self.help
+        <<~EOHELP
+          usage: aur info <file>...
+
+          Shows tag and bitrate information about the given file(s).
+        EOHELP
+      end
     end
   end
 end

@@ -25,6 +25,15 @@ module Aur
       def run_mp3
         warn 'MP3 files cannot be verified.'
       end
+
+      def self.help
+        <<~EOUSAGE
+          usage: aur verify <file>...
+
+          Verifies FLACs by calling out to the flac binary. Does not support
+          any other file types.
+        EOUSAGE
+      end
     end
   end
 end

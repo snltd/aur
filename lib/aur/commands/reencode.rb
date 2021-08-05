@@ -37,6 +37,16 @@ module Aur
 
         raise(Aur::Exception::MissingBinary, BIN[:ffmpeg])
       end
+
+      def self.help
+        <<~EOHELP
+          usage: aur reencode <file>...
+
+          Uses ffmpeg to re-encode a file. The resultant file overwrites the
+          original. This can be used to fix "broken" FLACs which have ID3 tags
+          and otherwise cannot be understood by aur.
+        EOHELP
+      end
     end
   end
 end
