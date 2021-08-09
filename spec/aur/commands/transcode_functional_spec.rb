@@ -41,4 +41,26 @@ class TestReencodeCommand < MiniTest::Test
       assert_equal(original_tags, new_tags)
     end
   end
+
+  def test_transcode_bad_flac
+    with_test_file('not_really_a.flac') do |f|
+      out, err = capture_io do
+        Aur::Action.new(:transcode, [f], '<newtype>': 'wav').run!
+      end
+
+      assert_equal("#{f} -> #{TMP_DIR}/not_really_a.wav\n", out)
+      assert_equal("ERROR: cannot process '#{f}'.\n", err)
+    end
+  end
+
+  def test_transcode_bad_mp3
+    with_test_file('not_really_a.mp3') do |f|
+      out, err = capture_io do
+        Aur::Action.new(:transcode, [f], '<newtype>': 'wav').run!
+      end
+
+      assert_equal("#{f} -> #{TMP_DIR}/not_really_a.wav\n", out)
+      assert_equal("ERROR: cannot process '#{f}'.\n", err)
+    end
+  end
 end

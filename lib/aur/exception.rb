@@ -5,6 +5,8 @@ module Aur
   # Nothing fancy here. Just named exceptions to make things clearer.
   #
   class Exception
+    class FailedOperation < RuntimeError; end
+
     class FileExists < RuntimeError; end
 
     class InvalidInput < RuntimeError; end

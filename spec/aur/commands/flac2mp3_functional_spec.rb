@@ -7,6 +7,8 @@ require_relative '../../../lib/aur/action'
 # Run 'aur flac2mp3' commands against things, and verify the results
 #
 class TestFlac2Mp3Command < MiniTest::Test
+  include Aur::CommandTests
+
   def test_flac2mp3
     skip unless BIN[:flac].exist?
     skip unless BIN[:lame].exist?
@@ -36,5 +38,9 @@ class TestFlac2Mp3Command < MiniTest::Test
         Aur::Action.new(:flac2mp3, [f]).run!
       end
     end
+  end
+
+  def action
+    :flac2mp3
   end
 end

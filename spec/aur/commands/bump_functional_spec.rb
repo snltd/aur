@@ -8,6 +8,8 @@ require_relative '../../../lib/aur/fileinfo'
 # Run 'aur bump' commands against things, and verify the results
 #
 class TestBumpCommand < MiniTest::Test
+  include Aur::CommandTests
+
   def test_flac_bump_up
     with_test_file('test_tone-100hz.flac') do |f|
       assert_tag(f, :t_num, '06')
@@ -74,6 +76,10 @@ class TestBumpCommand < MiniTest::Test
 
       assert_tag(TMP_DIR + '02.test_tone-100hz.mp3', :t_num, 2)
     end
+  end
+
+  def action
+    :bump
   end
 end
 

@@ -9,6 +9,8 @@ require_relative '../../../lib/aur/action'
 class TestInfoCommand < MiniTest::Test
   attr_reader :dir
 
+  include Aur::CommandTests
+
   def test_flac_info
     out, err = capture_io do
       Aur::Action.new(:info, [RES_DIR + 'bad_name.flac']).run!
@@ -25,6 +27,10 @@ class TestInfoCommand < MiniTest::Test
 
     assert_equal(bad_name_mp3_info, out)
     assert_empty(err)
+  end
+
+  def action
+    :info
   end
 end
 

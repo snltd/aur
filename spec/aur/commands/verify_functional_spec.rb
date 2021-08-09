@@ -10,6 +10,8 @@ require_relative '../../../lib/aur/constants'
 class TestVerifyCmd < MiniTest::Test
   attr_reader :dir
 
+  include Aur::CommandTests
+
   def test_verify_nothing
     out, err = capture_io do
       Aur::Action.new(:verify, [RES_DIR + 'front.png']).run!
@@ -37,5 +39,9 @@ class TestVerifyCmd < MiniTest::Test
 
     assert_empty(out)
     assert_equal("MP3 files cannot be verified.\n", err)
+  end
+
+  def action
+    :verify
   end
 end

@@ -24,7 +24,7 @@ module Aur
       end
 
       def construct_cmd(file1, file2)
-        "#{BIN[:ffmpeg]} -hide_banner -loglevel error -i #{escaped(file1)} " +
+        "#{BIN[:ffmpeg]} -hide_banner -loglevel panic -i #{escaped(file1)} " +
           escaped(file2)
       end
 

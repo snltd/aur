@@ -63,16 +63,11 @@ module Aur
       else
         raise Aur::Exception::UnsupportedFiletype
       end
-    rescue FlacInfoReadError => e
-      return if action == :Name2tag
+    rescue FlacInfoReadError, Mp3InfoEOFError, Aur::Exception::FailedOperation
+      # return if action == :Name2tag # why was this here?
 
-      warn "ERROR: cannot read FLAC info for '#{file}'."
-      puts e
+      warn "ERROR: cannot process '#{file}'."
       @errs.<< file
-      # rescue StandardError => e
-      # warn "Error handling
-      # puts e
-      # @errs.<< file
     rescue Aur::Exception::InvalidTagValue => e
       warn "'#{e}' is an invalid value."
     rescue Aur::Exception::InvalidTagName => e

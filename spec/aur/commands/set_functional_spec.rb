@@ -7,6 +7,8 @@ require_relative '../../../lib/aur/action'
 # Run 'aur set...' commands against things, and verify the results
 #
 class TestSetCommand < MiniTest::Test
+  include Aur::CommandTests
+
   def test_flac_set
     with_test_file('01.the_null_set.song_one.flac') do |f|
       out, err = capture_io { set_command(f, 'artist', 'My Rubbish Band') }
@@ -108,10 +110,14 @@ class TestSetCommand < MiniTest::Test
       assert_equal("'#{Time.now.year + 1}' is an invalid value.\n", err)
     end
   end
-end
 
-def set_command(file, tag, value)
-  opts = { '<file>': file, '<tag>': tag, '<value>': value }
+  def set_command(file, tag, value)
+    opts = { '<file>': file, '<tag>': tag, '<value>': value }
 
-  Aur::Action.new(:set, [file], opts).run!
+    Aur::Action.new(:set, [file], opts).run!
+  end
+
+  def action
+    :set
+  end
 end
