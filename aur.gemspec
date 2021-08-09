@@ -3,11 +3,12 @@
 require 'pathname'
 require 'date'
 
-require_relative 'lib/aur/version'
+# Github actions sets the RELEASE_VERSION environment variable
 
 Gem::Specification.new do |gem|
-  gem.name          = 'Aur'
-  gem.version       = AUR_VERSION
+  gem.name          = 'aur'
+  gem.version       = ENV['RELEASE_VERSION'] ||
+                      "0.0.#{Time.now.strftime('%Y%m%d')}"
 
   gem.summary       = 'audio file management tool'
   gem.description   = 'audio file management tool'
@@ -18,10 +19,9 @@ Gem::Specification.new do |gem|
   gem.license       = 'BSD-2-Clause'
 
   gem.bindir        = 'bin'
-  gem.files         = `git ls-files`.split("\n")
-  gem.executables   = 'aur'
-  gem.test_files    = gem.files.grep(/^spec/)
-  gem.require_paths = %w[lib]
+  gem.files = Dir['bin/*', 'aur.gemspec', 'Gemfile*', 'lib/**/*',
+                  'Rakefile']
+  gem.executables = 'aur'
 
   gem.add_runtime_dependency 'docopt', '~> 0.6.0'
   gem.add_runtime_dependency 'flacinfo-rb', '~> 1.0.0'
@@ -35,7 +35,6 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'rubocop-performance', '~> 1.11'
   gem.add_development_dependency 'rubocop-rake', '~> 0.6'
   gem.add_development_dependency 'spy', '~> 1.0.0'
-  gem.add_development_dependency 'yard', '~> 0.9.5'
 
-  gem.required_ruby_version = Gem::Requirement.new('>= 2.7.0')
+  gem.required_ruby_version = Gem::Requirement.new('>= 2.7.2')
 end
