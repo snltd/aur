@@ -7,6 +7,8 @@ require_relative '../../../lib/aur/action'
 # Run 'aur num2name' commands against things, and verify the results
 #
 class TestNum2NameCommand < MiniTest::Test
+  include Aur::CommandTests
+
   def test_flac_num2name
     with_test_file('bad_name.flac') do |f|
       expected_file = TMP_DIR + '02.bad_name.flac'
@@ -60,5 +62,9 @@ class TestNum2NameCommand < MiniTest::Test
       assert_empty(err)
       assert_equal("No change required.\n", out)
     end
+  end
+
+  def action
+    :num2name
   end
 end

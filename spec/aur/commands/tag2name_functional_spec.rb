@@ -7,6 +7,8 @@ require_relative '../../../lib/aur/action'
 # Run 'aur tag2name' commands against things, and verify the results
 #
 class TestTag2NameCommand < MiniTest::Test
+  include Aur::CommandTests
+
   def test_flac_tag2name
     with_test_file('bad_name.flac') do |f|
       out, err = capture_io { Aur::Action.new(:tag2name, [f]).run! }
@@ -35,5 +37,9 @@ class TestTag2NameCommand < MiniTest::Test
       refute(f.exist?)
       assert (TMP_DIR + '02.the_null_set.sammy_davis_jr-dancing.mp3').exist?
     end
+  end
+
+  def action
+    :tag2name
   end
 end

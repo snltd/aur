@@ -49,4 +49,8 @@ class TestReencodeCommand < MiniTest::Test
       assert_equal(original_tags, new_tags)
     end
   end
+
+  def action
+    :reencode
+  end
 end

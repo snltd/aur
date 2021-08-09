@@ -3,12 +3,15 @@
 require 'pathname'
 require 'minitest/autorun'
 require 'spy/integration'
+require_relative 'common_command_tests'
 
 RES_DIR = Pathname.new(__dir__) + 'resources'
 TMP_DIR = Pathname.new('/tmp/aurtest')
 
 FLAC_TEST = RES_DIR + 'test_tone-100hz.flac'
 MP3_TEST = RES_DIR + 'test_tone-100hz.mp3'
+BAD_FLAC = RES_DIR + 'not_really_a.flac'
+BAD_MP3 = RES_DIR + 'not_really_a.mp3'
 
 def setup_test_dir
   FileUtils.rm_r(TMP_DIR) if TMP_DIR.exist?

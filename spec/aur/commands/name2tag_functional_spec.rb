@@ -7,6 +7,8 @@ require_relative '../../../lib/aur/action'
 # Run 'aur tag2name' commands against things, and verify the results
 #
 class TestName2TagCommand < MiniTest::Test
+  include Aur::CommandTests
+
   def test_flac_name2tag
     with_test_file('01.the_null_set.song_one.flac') do |f|
       out, err = capture_io { Aur::Action.new(:name2tag, [f]).run! }
@@ -37,6 +39,10 @@ class TestName2TagCommand < MiniTest::Test
       assert_match('Title : Song One', out)
       assert_match('Track no : 1', out)
     end
+  end
+
+  def action
+    :name2tag
   end
 end
 

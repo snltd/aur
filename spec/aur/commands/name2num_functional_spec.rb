@@ -7,6 +7,8 @@ require_relative '../../../lib/aur/action'
 # Run 'aur num2name' commands against things, and verify the results
 #
 class TestName2NumCommand < MiniTest::Test
+  include Aur::CommandTests
+
   def test_flac_name2num
     with_test_file('01.the_null_set.song_one.flac') do |f|
       out, = capture_io { Aur::Action.new(:info, [f]).run! }
@@ -39,5 +41,9 @@ class TestName2NumCommand < MiniTest::Test
       assert_empty(err)
       assert_match(/Track no : 1/, out)
     end
+  end
+
+  def action
+    :name2num
   end
 end
