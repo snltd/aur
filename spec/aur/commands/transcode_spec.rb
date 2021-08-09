@@ -12,7 +12,7 @@ class TestTranscode < MiniTest::Test
     t = Aur::Command::Transcode.new(FLAC_TEST)
 
     assert_equal(
-      '/opt/sysdef/ffmpeg/bin/ffmpeg -hide_banner -loglevel error -i ' \
+      '/opt/sysdef/ffmpeg/bin/ffmpeg -hide_banner -loglevel panic -i ' \
       "\"#{RES_DIR}/test_tone-100hz.flac\" " \
       "\"#{RES_DIR}/test_tone-100hz.mp3\"",
       t.construct_cmd(FLAC_TEST, MP3_TEST)
