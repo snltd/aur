@@ -70,21 +70,21 @@ class TestTaggerFunctional < MiniTest::Test
 
   def test_mp3_tagging
     with_test_file('test_tone-100hz.mp3') do |f|
-      info = Aur::FileInfo::Mp3.new(f)
-      file = Aur::Tagger::Mp3.new(info)
+      original = Aur::FileInfo::Mp3.new(f)
+      file = Aur::Tagger::Mp3.new(original)
 
-      assert_equal('Test Tones', info.tags[:artist])
+      assert_equal('Test Tones', original.artist)
       out, err = capture_io { assert file.tag!(artist: 'My Band') }
       assert_equal("      artist -> My Band\n", out)
       assert_empty(err)
 
-      info2 = Aur::FileInfo::Mp3.new(f)
-      assert_equal('My Band', info2.tags[:artist])
+      new = Aur::FileInfo::Mp3.new(f)
+      assert_equal('My Band', new.artist)
 
-      assert_equal(6, info.our_tags[:t_num].to_i)
+      assert_equal('6', original.t_num)
       capture_io { assert file.tag!(t_num: 3) }
-      info3 = Aur::FileInfo::Mp3.new(f)
-      assert_equal(3, info3.our_tags[:t_num].to_i)
+      new = Aur::FileInfo::Mp3.new(f)
+      assert_equal('3', new.t_num)
     end
   end
 
@@ -101,7 +101,7 @@ class TestTaggerFunctional < MiniTest::Test
           title: nil,
           t_num: nil,
           year: nil,
-          genre: 'Blues' }, # I don't know why, yet.
+          genre: '(0)' },
         info.our_tags
       )
 
@@ -116,8 +116,8 @@ class TestTaggerFunctional < MiniTest::Test
         { artist: 'The Singer',
           album: 'Difficult Second Album',
           title: 'Their Song',
-          t_num: 5,
-          year: 2021,
+          t_num: '5',
+          year: '2021',
           genre: 'Pop' },
         info.our_tags
       )

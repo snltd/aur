@@ -138,8 +138,8 @@ module Aur
           genre: :genre }
       end
 
-      # This hash maps what we call tags to the names we have to use to
-      # manipulate them.
+      # This hash maps what we call tags to the names we have to pass to the
+      # tagging library to manipulate them.
       #
       def tag_names
         { artist: 'ARTIST',
@@ -185,6 +185,15 @@ module Aur
           t_num: :trck,
           year: :tyer,
           genre: :tcon }
+      end
+
+      def tag_names
+        { artist: 'TPE1',
+          album: 'TALB',
+          title: 'TIT2',
+          t_num: 'TRCK',
+          year: 'TYER',
+          genre: 'TCON' }
       end
 
       # The genre is a number in brackets. Look up its text value in a table
