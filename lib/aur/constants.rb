@@ -65,5 +65,5 @@ EXPAND = {
 REQ_TAGS = {
   flac: %i[album artist block_size date genre offset title tracknumber
            vendor_tag],
-  mp3: %i[artist album genre_s title tracknum year]
+  mp3: %i[talb tcon tit2 tpe1 trck tyer]
 }.freeze

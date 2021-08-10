@@ -47,36 +47,40 @@ class TestStripCommand < MiniTest::Test
   end
 
   def test_mp3
+    required_tags = { tit2: 'The Song',
+                      tpe1: 'Singer',
+                      trck: '3',
+                      talb: 'Their Album',
+                      tyer: '2021' }
+
     with_test_file('unstripped.mp3') do |f|
       original = Aur::FileInfo::Mp3.new(f)
 
+      assert_equal(11, original.tags.size)
+      refute_equal(required_tags, original.tags)
+      assert_equal('Someone Clever', original.tags[:tcom])
       assert original.picture?
 
-      pp original.raw.tag1
-      # assert_equal(12, original.tags.size)
-      # pp original.raw.tag2
-      # refute_equal(REQ_TAGS[:mp3], original.tags.keys)
-      # assert_equal('aur', original.tags[:encoder])
+      out, _err = capture_io { Aur::Action.new(:strip, [f]).run! }
 
-      # out, err = capture_io { Aur::Action.new(:strip, [f]).run! }
-      #
-      # assert_equal("Surplus tags: composer, encoder, tempo\n", out)
-      # assert_empty(err)
-      #
-      # new = Aur::FileInfo::Mp3.new(f)
-      # refute new.picture?
-      # assert_equal(REQ_TAGS[:mp3].sort, new.tags.keys.sort)
-      # assert_nil(new.tags[:encoder])
+      assert_equal("Surplus tags: apic, tcom, tenc, tlen, tsse, txxx\n", out)
+      # assert_empty(err) # the lib throws a warning on our test file
+
+      new = Aur::FileInfo::Mp3.new(f)
+
+      refute new.picture?
+      assert_equal(required_tags, new.tags)
+      refute(new.tags.key?(:tcom))
     end
   end
 
-  def _test_mp3_nothing_to_strip
+  def test_mp3_nothing_to_strip
     with_test_file('bad_name.mp3') do |f|
       original = Aur::FileInfo::Mp3.new(f)
       original_mtime = f.mtime
 
       refute original.picture?
-      assert_equal(REQ_TAGS[:mp3].sort, original.tags.keys.sort)
+      assert_equal(%i[tit2 tpe1 trck talb tcon tyer], original.tags.keys)
 
       out, err = capture_io { Aur::Action.new(:strip, [f]).run! }
       assert_empty(out)

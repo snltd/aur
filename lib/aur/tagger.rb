@@ -90,6 +90,20 @@ module Aur
         tags.each { |name| info.raw.comment_del(name.to_s.upcase) }
         info.raw.update!
       end
+
+      # flacinfo-rb doesn't appear to provide a way to manipulate blocks, so
+      # it can't remove a picture. We'll have to shell out to metaflac(1).
+      #
+      def remove_picture
+        res = system(remove_picture_cmd(file))
+
+        raise Aur::Exception::FailedOperation("strip #{file}") unless res
+      end
+
+      def remove_picture_cmd(file)
+        "#{BIN[:metaflac]} --remove --block-type=PICTURE,PADDING " \
+          "--dont-use-padding \"#{file}\""
+      end
     end
 
     # Set Tags for MP3s.
@@ -101,6 +115,28 @@ module Aur
             tag_msg(name, value)
             mp3.tag2[info.tag_name(name)] = value
           end
+        end
+      end
+
+      # Looks like the only way to remove ID3 tags, with this library at
+      # least, is to nuke them all and rewrite the ones you wanted to keep.
+      #
+      def untag!(tags)
+        original_tags = info.tags
+
+        Mp3Info.open(info.file) do |mp3|
+          mp3.removetag1
+          mp3.removetag2
+
+          original_tags.reject { |k, _v| tags.include?(k) }.each do |k, v|
+            mp3.tag2[k.upcase] = v
+          end
+        end
+      end
+
+      def remove_picture
+        Mp3Info.open(info.file) do |mp3|
+          mp3.tag2.remove_pictures
         end
       end
     end
