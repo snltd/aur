@@ -83,6 +83,13 @@ module Aur
 
         info.raw.update!
       end
+
+      # @param tags [Array] of tags to remove
+      #
+      def untag!(tags)
+        tags.each { |name| info.raw.comment_del(name.to_s.upcase) }
+        info.raw.update!
+      end
     end
 
     # Set Tags for MP3s.

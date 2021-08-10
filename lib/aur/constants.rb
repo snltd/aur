@@ -6,6 +6,7 @@ BIN = {
   ffmpeg: Pathname.new('/opt/sysdef/ffmpeg/bin/ffmpeg'),
   flac: Pathname.new('/opt/local/bin/flac'),
   lame: Pathname.new('/opt/local/bin/lame'),
+  metaflac: Pathname.new('/opt/local/bin/metaflac'),
   shnsplit: Pathname.new('/opt/local/bin/shnsplit')
 }.freeze
 
@@ -57,4 +58,12 @@ EXPAND = {
   youll: "you'll",
   youre: "you're",
   youve: "you've"
+}.freeze
+
+# These are the tags we wish a file to have.
+#
+REQ_TAGS = {
+  flac: %i[album artist block_size date genre offset title tracknumber
+           vendor_tag],
+  mp3: %i[artist album genre_s title tracknum year]
 }.freeze
