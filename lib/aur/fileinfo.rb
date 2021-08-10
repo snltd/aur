@@ -2,6 +2,7 @@
 
 require 'flacinfo'
 require 'mp3info'
+require_relative 'constants'
 require_relative 'stdlib/pathname'
 
 module Aur
@@ -15,6 +16,7 @@ module Aur
       def initialize(file)
         @file = file
         @info = @raw = read
+        post_initialize if respond_to?(:post_initialize)
       end
 
       def bitrate
@@ -74,6 +76,16 @@ module Aur
         end
       end
 
+      def required_tags
+        REQ_TAGS[filetype.to_sym]
+      end
+
+      # @return [Bool] whether the tags we see are the tags we expect
+      #
+      def incorrect_tags?
+        tags.keys.map(&:to_sym).sort != required_tags.sort
+      end
+
       private
 
       # @return [Array] dot-separated filename segments
@@ -90,10 +102,11 @@ module Aur
         hash.transform_keys(&:downcase).transform_keys(&:to_sym)
       end
 
-      def read
-        FlacInfo.new(file)
-      end
-
+      # To access tags can use a method with the name of the tag. This works
+      # by looking up the method name in tag_map and returning the tag with
+      # that key. If there's no such key in the tag map, chuck it up to the
+      # superclass.
+      #
       def method_missing(method, *_args)
         return tags[tag_map[method]] if tag_map.key?(method)
 
@@ -108,6 +121,10 @@ module Aur
     # Methods specific to FLACs
     #
     class Flac < Generic
+      def read
+        FlacInfo.new(file)
+      end
+
       # This hash maps our common tag names to the names the FLAC library
       # uses, presenting a consistent interface. There's one like it in the
       # MP3 class.
@@ -121,8 +138,8 @@ module Aur
           genre: :genre }
       end
 
-      # This hash maps what we call tags to the names we have to use to
-      # manipulate them.
+      # This hash maps what we call tags to the names we have to pass to the
+      # tagging library to manipulate them.
       #
       def tag_names
         { artist: 'ARTIST',
@@ -132,11 +149,21 @@ module Aur
           year: 'DATE',
           genre: 'GENRE' }
       end
+
+      # @return [Bool] whether there's an embedded image
+      #
+      def picture?
+        info.picture['n'].positive?
+      end
     end
 
-    # Methods specific to MP3s
+    # Methods specific to MP3s. We are all about id3v2. v1 is nowhere.
     #
     class Mp3 < Generic
+      def post_initialize
+        require_relative 'genre_list'
+      end
+
       def read
         Mp3Info.open(file)
       end
@@ -148,25 +175,35 @@ module Aur
       end
 
       def tags
-        flatten_keys(info.tag)
+        flatten_keys(info.tag2)
       end
 
       def tag_map
-        { artist: :artist,
-          album: :album,
-          title: :title,
-          t_num: :tracknum,
-          year: :year,
-          genre: :genre_s }
+        { artist: :tpe1,
+          album: :talb,
+          title: :tit2,
+          t_num: :trck,
+          year: :tyer,
+          genre: :tcon }
       end
 
       def tag_names
-        { artist: 'artist',
-          album: 'album',
-          title: 'title',
-          t_num: 'tracknum',
-          year: 'year',
-          genre: 'genre_s' }
+        { artist: 'TPE1',
+          album: 'TALB',
+          title: 'TIT2',
+          t_num: 'TRCK',
+          year: 'TYER',
+          genre: 'TCON' }
+      end
+
+      # The genre is a number in brackets. Look up its text value in a table
+      #
+      def genre
+        GENRE_LIST[tags[:tcon].delete('()').to_i]
+      end
+
+      def picture?
+        !info.tag2.pictures.empty?
       end
     end
   end

@@ -52,7 +52,7 @@ class TestBumpCommand < MiniTest::Test
 
   def test_mp3_bump_up
     with_test_file('test_tone-100hz.mp3') do |f|
-      assert_tag(f, :t_num, 6)
+      assert_tag(f, :t_num, '6')
 
       out, err = capture_io { bump_command(f, '3') }
       assert_empty(err)
@@ -60,13 +60,13 @@ class TestBumpCommand < MiniTest::Test
       assert_equal('       t_num -> 9', out.first)
       assert_equal('test_tone-100hz.mp3 -> 09.test_tone-100hz.mp3', out.last)
 
-      assert_tag(TMP_DIR + '09.test_tone-100hz.mp3', :t_num, 9)
+      assert_tag(TMP_DIR + '09.test_tone-100hz.mp3', :t_num, '9')
     end
   end
 
   def test_mp3_bump_down
     with_test_file('test_tone-100hz.mp3') do |f|
-      assert_tag(f, :t_num, 6)
+      assert_tag(f, :t_num, '6')
 
       out, err = capture_io { bump_command(f, '-4') }
       assert_empty(err)
@@ -74,7 +74,7 @@ class TestBumpCommand < MiniTest::Test
       assert_equal('       t_num -> 2', out.first)
       assert_equal('test_tone-100hz.mp3 -> 02.test_tone-100hz.mp3', out.last)
 
-      assert_tag(TMP_DIR + '02.test_tone-100hz.mp3', :t_num, 2)
+      assert_tag(TMP_DIR + '02.test_tone-100hz.mp3', :t_num, '2')
     end
   end
 

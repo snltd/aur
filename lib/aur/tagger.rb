@@ -99,7 +99,7 @@ module Aur
         Mp3Info.open(info.file) do |mp3|
           validate(tags).each_pair do |name, value|
             tag_msg(name, value)
-            mp3.tag[info.tag_name(name)] = value
+            mp3.tag2[info.tag_name(name)] = value
           end
         end
       end

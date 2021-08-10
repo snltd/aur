@@ -28,7 +28,7 @@ class TestFlac2Mp3Command < MiniTest::Test
       assert_tag(expected_file, :title, '100hz')
       assert_tag(expected_file, :artist, 'Test Tones')
       assert_tag(expected_file, :album, 'Test Tones')
-      assert_tag(expected_file, :t_num, 6)
+      assert_tag(expected_file, :t_num, '06')
     end
   end
 
