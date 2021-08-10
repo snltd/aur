@@ -27,6 +27,7 @@ module Aur
           usage: aur strip <file>...
 
           Removes embedded images and unwanted tags from the given file(s).
+          Stripping an MP3 also removes ID3v1 tags.
         EOHELP
       end
     end

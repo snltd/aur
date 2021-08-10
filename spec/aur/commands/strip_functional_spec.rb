@@ -10,7 +10,7 @@ require_relative '../../../lib/aur/fileinfo'
 class TestStripCommand < MiniTest::Test
   include Aur::CommandTests
 
-  def _test_flac
+  def test_flac
     with_test_file('unstripped.flac') do |f|
       original = Aur::FileInfo::Flac.new(f)
 
@@ -31,7 +31,7 @@ class TestStripCommand < MiniTest::Test
     end
   end
 
-  def _test_flac_nothing_to_strip
+  def test_flac_nothing_to_strip
     with_test_file('bad_name.flac') do |f|
       original = Aur::FileInfo::Flac.new(f)
       original_mtime = f.mtime

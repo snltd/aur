@@ -95,9 +95,9 @@ module Aur
       # it can't remove a picture. We'll have to shell out to metaflac(1).
       #
       def remove_picture
-        res = system(remove_picture_cmd(file))
+        res = system(remove_picture_cmd(info.file))
 
-        raise Aur::Exception::FailedOperation("strip #{file}") unless res
+        raise Aur::Exception::FailedOperation("strip #{info.file}") unless res
       end
 
       def remove_picture_cmd(file)

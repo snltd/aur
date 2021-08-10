@@ -86,7 +86,7 @@ class TestFileInfo < MiniTest::Test
                  Aur::FileInfo::Flac.new(FLAC_TEST).prt_name(12))
   end
 
-  def _test_picture?
+  def test_picture?
     refute(flac.picture?)
     with_pic = Aur::FileInfo::Flac.new(RES_DIR + 'unstripped.flac')
     assert(with_pic.picture?)
