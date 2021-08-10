@@ -11,6 +11,8 @@ class TestStripCommand < MiniTest::Test
   include Aur::CommandTests
 
   def test_flac
+    skip unless BIN[:metaflac].exist?
+
     with_test_file('unstripped.flac') do |f|
       original = Aur::FileInfo::Flac.new(f)
 
