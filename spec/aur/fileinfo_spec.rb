@@ -47,7 +47,8 @@ class TestFileInfo < MiniTest::Test
   end
 
   def test_mp3_bitrate
-    assert_equal('51kbps (variable)', mp3.bitrate)
+    assert_equal('64kbps', mp3.bitrate)
+    # assert_equal('51kbps (variable)', mp3.bitrate)
   end
 
   def test_mp3_artist
@@ -67,11 +68,11 @@ class TestFileInfo < MiniTest::Test
   end
 
   def test_mp3_genre
-    assert_nil(mp3.genre)
+    assert_equal('Noise', mp3.genre)
   end
 
   def test_mp3_year
-    assert_nil(mp3.year)
+    assert_equal('2021', mp3.year)
   end
 
   def test_mp3_missing
@@ -83,5 +84,11 @@ class TestFileInfo < MiniTest::Test
                  Aur::FileInfo::Flac.new(FLAC_TEST).prt_name)
     assert_equal('test_tone...',
                  Aur::FileInfo::Flac.new(FLAC_TEST).prt_name(12))
+  end
+
+  def test_picture?
+    refute(flac.picture?)
+    with_pic = Aur::FileInfo::Flac.new(RES_DIR + 'unstripped.flac')
+    assert(with_pic.picture?)
   end
 end
