@@ -68,13 +68,13 @@ class TestSetCommand < MiniTest::Test
       assert_equal("        year -> 2021\n", out)
       assert_empty(err)
       info = Aur::FileInfo::Mp3.new(f)
-      assert_equal(2021, info.our_tags[:year])
+      assert_equal('2021', info.our_tags[:year])
 
       out, err = capture_io { set_command(f, 't_num', '5') }
       assert_equal("       t_num -> 5\n", out)
       assert_empty(err)
       info = Aur::FileInfo::Mp3.new(f)
-      assert_equal(5, info.our_tags[:t_num])
+      assert_equal('5', info.our_tags[:t_num])
 
       out, err = capture_io { set_command(f, 'genre', 'Noise') }
       assert_equal("       genre -> Noise\n", out)
@@ -85,8 +85,8 @@ class TestSetCommand < MiniTest::Test
       assert_equal({ artist: 'My Rubbish Band',
                      album: nil,
                      title: 'Some Lousy Song',
-                     t_num: 5,
-                     year: 2021,
+                     t_num: '5',
+                     year: '2021',
                      genre: 'Noise' }, info.our_tags)
     end
   end
