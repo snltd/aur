@@ -68,7 +68,8 @@ class TestLintdirCommand < MiniTest::Test
       "Bad file(s) in #{MDIR + 'pram.meshes'}:\n" \
       "  #{MDIR + 'pram.meshes' + 'some_junk.txt'}\n" \
       "  #{MDIR + 'pram.meshes' + 'some_more_junk.txt'}\n",
-      err)
+      err
+    )
   end
 
   def test_directory_with_mixed_filetypes
@@ -77,7 +78,6 @@ class TestLintdirCommand < MiniTest::Test
     assert_equal("Different file types in #{MDIR + 'heavenly.atta_girl'}\n",
                  err)
   end
-
 
   private
 
