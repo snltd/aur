@@ -9,9 +9,9 @@ require_relative '../../../lib/aur/fileinfo'
 #
 class TestReencodeCommand < MiniTest::Test
   def test_transcode_flac_to_wav_and_back
-    with_test_file('test_tone-100hz.flac') do |f|
-      skip unless BIN[:ffmpeg].exist?
+    skip unless BIN[:ffmpeg].exist?
 
+    with_test_file('test_tone-100hz.flac') do |f|
       wav = TMP_DIR + 'test_tone-100hz.wav'
       original_tags = Aur::FileInfo::Flac.new(f).our_tags
 
@@ -43,6 +43,8 @@ class TestReencodeCommand < MiniTest::Test
   end
 
   def test_transcode_bad_flac
+    skip unless BIN[:ffmpeg].exist?
+
     with_test_file('not_really_a.flac') do |f|
       out, err = capture_io do
         Aur::Action.new(:transcode, [f], '<newtype>': 'wav').run!
@@ -54,6 +56,8 @@ class TestReencodeCommand < MiniTest::Test
   end
 
   def test_transcode_bad_mp3
+    skip unless BIN[:ffmpeg].exist?
+
     with_test_file('not_really_a.mp3') do |f|
       out, err = capture_io do
         Aur::Action.new(:transcode, [f], '<newtype>': 'wav').run!
