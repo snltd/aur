@@ -17,6 +17,16 @@ module Aur
 
     class InvalidValue < RuntimeError; end
 
+    class LintDirBadName < RuntimeError; end
+
+    class LintDirBadFile < RuntimeError; end
+
+    class LintDirMixedFiles < RuntimeError; end
+
+    class LintDirBadFileCount < RuntimeError; end
+
+    class LintDirUnsequencedFile < RuntimeError; end
+
     class MissingBinary < RuntimeError; end
 
     class UnsupportedFiletype < RuntimeError; end

@@ -2,51 +2,143 @@
 # frozen_string_literal: true
 
 require_relative '../../spec_helper'
-require_relative '../../../lib/aur/commands/name2tag'
+require_relative '../../../lib/aur/exception'
+require_relative '../../../lib/aur/commands/lintdir'
 
-# Test for name2tag command
+# Test for lintdir
 #
-class TestName2tag < MiniTest::Test
-  def test_flac
-    t1 = Aur::Command::Name2tag.new(FLAC_TEST)
+class TestLintdir < MiniTest::Test
+  attr_reader :t
 
-    assert_equal(
-      { artist: 'Unknown Artist',
-        title: 'Test Tone (100hz)',
-        album: 'Resources',
-        t_num: '00' },
-      t1.tags_from_filename
-    )
+  LINT_DIR = RES_DIR + 'lintdir'
 
-    t2 = Aur::Command::Name2tag.new(RES_DIR + '01.the_null_set.song_one.flac')
-
-    assert_equal(
-      { artist: 'The Null Set',
-        title: 'Song One',
-        album: 'Resources',
-        t_num: '01' },
-      t2.tags_from_filename
-    )
+  def setup
+    @t = Aur::Command::Lintdir.new
   end
 
-  def test_mp3
-    t1 = Aur::Command::Name2tag.new(MP3_TEST)
+  def test_correctly_named?
+    good = %w[disc_1 slint.spiderland smiths.the_smiths]
+    bad = %w[disc_11 Slint.Spiderland smiths.the.smiths the_smiths.the_smiths]
 
-    assert_equal(
-      { artist: 'Unknown Artist',
-        title: 'Test Tone (100hz)',
-        album: 'Resources',
-        t_num: '00' }, t1.tags_from_filename
-    )
+    good.each do |f|
+      assert(t.correctly_named?(Pathname.new(LINT_DIR + f)))
+    end
 
-    t2 = Aur::Command::Name2tag.new(RES_DIR + '01.the_null_set.song_one.mp3')
+    bad.each do |f|
+      assert_raises(Aur::Exception::LintDirBadName) do
+        t.correctly_named?(Pathname.new(LINT_DIR + f))
+      end
+    end
+  end
 
-    assert_equal(
-      { artist: 'The Null Set',
-        title: 'Song One',
-        album: 'Resources',
-        t_num: '01' },
-      t2.tags_from_filename
-    )
+  def test_no_junk?
+    assert t.no_junk?([Pathname.new('/a/04.a.b.flac'),
+                       Pathname.new('/a/01.a.b.flac')])
+
+    assert t.no_junk?([Pathname.new('/a/04.a.b.flac'),
+                       Pathname.new('/a/front.png'),
+                       Pathname.new('/a/01.a.b.flac')])
+
+    assert_raises(Aur::Exception::LintDirBadFile) do
+      t.no_junk?([Pathname.new('/a/04.a.b.flac'),
+                  Pathname.new('/a/stuff.txt'),
+                  Pathname.new('/a/01.a.b.flac')])
+    end
+  end
+
+  def test_sequential_files?
+    assert_raises(Aur::Exception::LintDirUnsequencedFile) do
+      t.sequential_files?([Pathname.new('/a/01.a.b.flac'),
+                           Pathname.new('/a/03.a.b.flac'),
+                           Pathname.new('/a/03.a.b.flac')])
+    end
+  end
+
+  def test_expected_files?
+    assert t.expected_files?([Pathname.new('/a/02.a.b.flac'),
+                              Pathname.new('/a/03.a.b.flac'),
+                              Pathname.new('/a/01.a.b.flac')])
+
+    assert t.expected_files?([Pathname.new('/a/02.a.b.flac'),
+                              Pathname.new('/a/front.png'),
+                              Pathname.new('/a/03.a.b.flac'),
+                              Pathname.new('/a/01.a.b.flac')])
+
+    err = assert_raises(Aur::Exception::LintDirBadFileCount) do
+      t.expected_files?([Pathname.new('/a/01.a.b.flac'),
+                         Pathname.new('/a/03.a.b.flac')])
+    end
+
+    assert_equal('expected 3, got 2', err.message)
+  end
+
+  def test_all_same_filetype?
+    assert t.all_same_filetype?([Pathname.new('/a/04.a.b.flac'),
+                                 Pathname.new('/a/01.a.b.flac')])
+
+    assert t.all_same_filetype?([Pathname.new('/a/04.a.b.flac'),
+                                 Pathname.new('/a/front.png'),
+                                 Pathname.new('/a/01.a.b.flac')])
+
+    assert_raises(Aur::Exception::LintDirMixedFiles) do
+      t.all_same_filetype?([Pathname.new('/a/04.a.b.flac'),
+                            Pathname.new('/a/01.a.b.mp3')])
+    end
+  end
+
+  def test_highest_num
+    assert_equal(11, t.highest_number([Pathname.new('/a/04.a.b.flac'),
+                                       Pathname.new('/a/01.a.b.flac'),
+                                       Pathname.new('/a/03.a.b.flac'),
+                                       Pathname.new('/a/11.a.b.flac')]))
+
+    assert_equal(11, t.highest_number([Pathname.new('/a/04.a.b.flac'),
+                                       Pathname.new('/a/01.a.b.flac'),
+                                       Pathname.new('/a/front.png'),
+                                       Pathname.new('/a/03.a.b.flac'),
+                                       Pathname.new('/a/11.a.b.flac')]))
+
+    assert_equal(0, t.highest_number([]))
+  end
+
+  def test_filenum
+    assert_equal(5, t.filenum(Pathname.new(LINT_DIR + '05.artist.song.flac')))
+    assert_equal(11, t.filenum(Pathname.new(LINT_DIR + '11.artist.song.mp3')))
+  end
+
+  def test_supported
+    assert_equal([Pathname.new('/a/04.a.b.flac'),
+                  Pathname.new('/a/01.a.b.mp3'),
+                  Pathname.new('/a/01.a.b.flac')],
+                 t.supported([Pathname.new('/a/04.a.b.flac'),
+                              Pathname.new('/a/01.a.b.mp3'),
+                              Pathname.new('/a/front.jpg'),
+                              Pathname.new('/a/01.a.b.flac')]))
+
+    assert_equal([], t.supported([Pathname.new('/a/03.a.b.wav'),
+                                  Pathname.new('/a/01.a.b.MP3')]))
+  end
+
+  def test_cover_art
+    assert t.cover_art?([Pathname.new('/a/04.a.b.flac'),
+                         Pathname.new('/a/front.jpg'),
+                         Pathname.new('/a/01.a.b.flac')])
+
+    assert_raises(Aur::Exception::LintDirBadFile) do
+      t.cover_art?([Pathname.new('/a/04.a.b.mp3'),
+                    Pathname.new('/a/front.jpg'),
+                    Pathname.new('/a/01.a.b.mp3')])
+    end
+  end
+
+  def test_cover_in
+    assert t.cover_in([Pathname.new('/a/04.a.b.flac'),
+                       Pathname.new('/a/front.jpg'),
+                       Pathname.new('/a/01.a.b.flac')])
+
+    refute t.cover_in([Pathname.new('/a/04.a.b.flac')])
+
+    refute t.cover_in([Pathname.new('/a/picture.jpg'),
+                       Pathname.new('/a/01.a.b.flac')])
   end
 end

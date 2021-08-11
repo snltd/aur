@@ -3,6 +3,7 @@
 require_relative 'exception'
 require_relative 'constants'
 require_relative 'stdlib/pathname'
+require_relative 'stdlib/array'
 
 module Aur
   #
@@ -24,9 +25,21 @@ module Aur
     def initialize(action, flist, opts = {})
       @action = action.capitalize
       @opts = opts
-      @flist = screen_flist(flist.map { |f| Pathname.new(f) })
-      load_library(action.to_s)
       @errs = []
+
+      action_handler = "handle_#{action}".to_sym
+
+      if respond_to?(action_handler)
+        send(action_handler)
+      else
+        @flist = screen_flist(flist.to_paths)
+        load_library(action.to_s)
+      end
+    end
+
+    def handle_lintdir
+      @flist = opts[:'<directory>'].to_paths
+      load_library('lintdir')
     end
 
     def run!
@@ -77,6 +90,8 @@ module Aur
 
     def special_method(file)
       "run_#{file.extclass.downcase}".to_sym
+    rescue NoMethodError
+      :nomethod
     end
 
     # @param libfile [String]

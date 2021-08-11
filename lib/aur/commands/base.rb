@@ -8,7 +8,9 @@ require_relative '../logger'
 module Aur
   module Command
     #
-    # Abstract class extended by all commands.
+    # Abstract class extended by all commands. Every command operates on a
+    # single file. New instances of the Aur::Command classes are created by a
+    # loop in Aur::Action#run!
     #
     class Base
       include Aur::Logger
