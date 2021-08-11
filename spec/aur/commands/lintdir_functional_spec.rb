@@ -32,7 +32,10 @@ class TestLintdirCommand < MiniTest::Test
   def test_directory_with_a_bad_name
     out, err = capture_io { act(MDIR + 'polvo.cor.crane_secret') }
     assert_empty(out)
-    assert_empty(err)
+    assert_equal(
+      "Invalid directory name: #{MDIR + 'polvo.cor.crane_secret'}\n",
+      err
+    )
   end
 
   def test_directory_with_a_missing_file
