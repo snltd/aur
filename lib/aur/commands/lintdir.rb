@@ -19,9 +19,14 @@ module Aur
       end
 
       def run
+        return if @dir.children.all?(&:directory?)
+
         lint(@dir)
       rescue Errno::ENOTDIR
         true
+      rescue Errno::ENOENT
+        warn "'#{@dir}' not found."
+        false
       end
 
       # rubocop:disable Metrics/MethodLength
@@ -30,16 +35,23 @@ module Aur
         correctly_named?(dir)
         no_junk?(files)
         all_same_filetype?(files)
+        expected_files?(files)
         sequential_files?(files)
         cover_art?(files)
       rescue Aur::Exception::LintDirBadName
-        puts "Invalid directory name: #{dir}"
+        warn "Invalid directory name: #{dir}"
       rescue Aur::Exception::LintDirBadFile => e
-        puts "Bad file(s) in #{dir}: #{e}"
+        warn "Bad file(s) in #{dir}:\n  #{e}"
       rescue Aur::Exception::LintDirMixedFiles
-        puts "Different filetypes found in #{dir}"
+        warn "Different file types in #{dir}"
       rescue Aur::Exception::LintDirBadFileCount => e
-        puts "Misssing files in #{dir}: #{e}"
+        warn "Missing files in #{dir}: #{e}"
+      rescue Aur::Exception::LintDirUnsequencedFile => e
+        warn "Track number '#{e}' not found"
+      rescue Aur::Exception::LintDirMissingCoverArt
+        warn "Missing cover art in #{dir}"
+      rescue Aur::Exception::LintDirUnwantedCoverArt
+        warn "Unwanted cover art in #{dir}"
       end
       # rubocop:enable Metrics/MethodLength
 
@@ -66,7 +78,7 @@ module Aur
 
         return true if uns.empty? || uns.all?(&:directory?)
 
-        raise Aur::Exception::LintDirBadFile, uns.join(', ')
+        raise Aur::Exception::LintDirBadFile, uns.join("\n  ")
       end
 
       # The number of audio files in the directory should be the same as the
@@ -89,7 +101,7 @@ module Aur
           index = format('%02d', n)
 
           unless files.any? { |f| f.basename.to_s.start_with?("#{index}.") }
-            raise Aur::Exception::LintDirUnsequencedFile
+            raise Aur::Exception::LintDirUnsequencedFile, index
           end
         end
 
@@ -114,11 +126,13 @@ module Aur
       # I have cover art for FLACs, but not MP3. This is a bit hacky
       #
       def cover_art?(files)
-        return true if files.first.extname == '.flac' && cover_in(files)
+        if files.first.extname == '.flac'
+          raise Aur::Exception::LintDirMissingCoverArt unless cover_in(files)
+        elsif cover_in(files)
+          raise Aur::Exception::LintDirUnwantedCoverArt
+        end
 
-        return true unless cover_in(files)
-
-        raise Aur::Exception::LintDirBadFile
+        true
       end
 
       # @param [Array[Pathname]] returns the highest track number in the given

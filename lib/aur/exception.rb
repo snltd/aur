@@ -15,6 +15,10 @@ module Aur
 
     class InvalidTagValue < RuntimeError; end
 
+    class LintDirMissingCoverArt < RuntimeError; end
+
+    class LintDirUnwantedCoverArt < RuntimeError; end
+
     class InvalidValue < RuntimeError; end
 
     class LintDirBadName < RuntimeError; end

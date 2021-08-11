@@ -120,23 +120,28 @@ class TestLintdir < MiniTest::Test
   end
 
   def test_cover_art
-    assert t.cover_art?([Pathname.new('/a/04.a.b.flac'),
+    assert t.cover_art?([Pathname.new('/a/01.a.b.flac'),
                          Pathname.new('/a/front.jpg'),
-                         Pathname.new('/a/01.a.b.flac')])
+                         Pathname.new('/a/02.a.b.flac')])
 
-    assert_raises(Aur::Exception::LintDirBadFile) do
-      t.cover_art?([Pathname.new('/a/04.a.b.mp3'),
+    assert_raises(Aur::Exception::LintDirMissingCoverArt) do
+      t.cover_art?([Pathname.new('/a/02.a.b.flac'),
+                    Pathname.new('/a/01.a.b.flac')])
+    end
+
+    assert_raises(Aur::Exception::LintDirUnwantedCoverArt) do
+      t.cover_art?([Pathname.new('/a/01.a.b.mp3'),
                     Pathname.new('/a/front.jpg'),
-                    Pathname.new('/a/01.a.b.mp3')])
+                    Pathname.new('/a/02.a.b.mp3')])
     end
   end
 
   def test_cover_in
-    assert t.cover_in([Pathname.new('/a/04.a.b.flac'),
+    assert t.cover_in([Pathname.new('/a/01.a.b.flac'),
                        Pathname.new('/a/front.jpg'),
-                       Pathname.new('/a/01.a.b.flac')])
+                       Pathname.new('/a/02.a.b.flac')])
 
-    refute t.cover_in([Pathname.new('/a/04.a.b.flac')])
+    refute t.cover_in([Pathname.new('/a/01.a.b.flac')])
 
     refute t.cover_in([Pathname.new('/a/picture.jpg'),
                        Pathname.new('/a/01.a.b.flac')])
