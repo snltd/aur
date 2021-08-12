@@ -37,9 +37,30 @@ module Aur
       end
     end
 
+    # Special handler for lintdir command, necessary because it operates on
+    # directories, and everything up to now operates on files. At the moment
+    # it's unique in that it's different. If we get another couple of oddballs
+    # we'll break them all out into something cleaner.
+    #
     def handle_lintdir
-      @flist = opts[:'<directory>'].to_paths
+      @flist = if opts[:recurse]
+                 recursive_dir_list(opts[:'<directory>'])
+               else
+                 opts[:'<directory>'].to_paths
+               end
+
       load_library('lintdir')
+    end
+
+    # Blows up an array of directories to an array of those directories and
+    # all the directories under them, uniquely sorted.
+    # @param roots [Array[Pathname]]
+    # @return [Array[Pathname]] all directories under all roots
+    #
+    def recursive_dir_list(dirs)
+      (dirs + dirs.map do |d|
+        Pathname.glob("#{d}/**/*/")
+      end.flatten).map(&:realpath).uniq.sort
     end
 
     def run!

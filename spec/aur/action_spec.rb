@@ -23,4 +23,28 @@ class CommandTest < MiniTest::Test
     assert(obj.flist.all? { |f| f.instance_of?(Pathname) })
     assert(obj.flist.all? { |f| suffixes.include?(f.extname) })
   end
+
+  def test_recursive_dir_list
+    assert_equal(lintdirs, obj.recursive_dir_list([RES_DIR + 'lintdir']))
+
+    assert_equal(lintdirs, obj.recursive_dir_list(
+                             [RES_DIR + 'lintdir', FDIR, MDIR]
+                           ))
+  end
+
+  def lintdirs
+    [RES_DIR + 'lintdir',
+     FDIR,
+     FDIR + 'slint.spiderland_remastered',
+     FDIR + 'slint.spiderland_remastered/slint.spiderland_bonus_disc',
+     FDIR + 'fall.eds_babe',
+     MDIR,
+     MDIR + 'heavenly.atta_girl',
+     MDIR + 'broadcast.pendulum',
+     MDIR + 'tegan_and_sara.the_con',
+     MDIR + 'seefeel.starethrough_ep',
+     MDIR + 'afx.analogue_bubblebath',
+     MDIR + 'polvo.cor.crane_secret',
+     MDIR + 'pram.meshes'].sort
+  end
 end

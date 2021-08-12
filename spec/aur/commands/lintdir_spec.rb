@@ -69,7 +69,7 @@ class TestLintdir < MiniTest::Test
                          Pathname.new('/a/03.a.b.flac')])
     end
 
-    assert_equal('expected 3, got 2', err.message)
+    assert_equal('2/3', err.message)
   end
 
   def test_all_same_filetype?

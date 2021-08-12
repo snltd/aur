@@ -4,9 +4,6 @@
 require_relative '../../spec_helper'
 require_relative '../../../lib/aur/action'
 
-FDIR = RES_DIR + 'lintdir' + 'flac'
-MDIR = RES_DIR + 'lintdir' + 'mp3'
-
 # Run 'aur lintdir' commands against a mock filesystem, and verify the
 # results.
 #
@@ -33,7 +30,7 @@ class TestLintdirCommand < MiniTest::Test
     out, err = capture_io { act(MDIR + 'polvo.cor.crane_secret') }
     assert_empty(out)
     assert_equal(
-      "Invalid directory name: #{MDIR + 'polvo.cor.crane_secret'}\n",
+      "#{MDIR + 'polvo.cor.crane_secret'}: Invalid directory name\n",
       err
     )
   end
@@ -41,26 +38,28 @@ class TestLintdirCommand < MiniTest::Test
   def test_directory_with_a_missing_file
     out, err = capture_io { act(MDIR + 'tegan_and_sara.the_con') }
     assert_empty(out)
-    assert_equal("Missing files in #{MDIR + 'tegan_and_sara.the_con'}: " \
-                 "expected 14, got 13\n", err)
+    assert_equal(
+      "#{MDIR + 'tegan_and_sara.the_con'}: Missing file(s) (13/14)\n",
+      err
+    )
   end
 
   def test_directory_with_a_wrongly_numbered_file
     out, err = capture_io { act(MDIR + 'seefeel.starethrough_ep') }
     assert_empty(out)
-    assert_equal("Track number '02' not found\n", err)
+    assert_equal("#{MDIR + 'seefeel.starethrough_ep'}: Missing track 02\n", err)
   end
 
   def test_directory_with_missing_artwork
     out, err = capture_io { act(FDIR + 'fall.eds_babe') }
     assert_empty(out)
-    assert_equal("Missing cover art in #{FDIR + 'fall.eds_babe'}\n", err)
+    assert_equal("#{FDIR + 'fall.eds_babe'}: Missing cover art\n", err)
   end
 
   def test_directory_with_artwork_that_should_not_be_there
     out, err = capture_io { act(MDIR + 'afx.analogue_bubblebath') }
     assert_empty(out)
-    assert_equal("Unwanted cover art in #{MDIR + 'afx.analogue_bubblebath'}\n",
+    assert_equal("#{MDIR + 'afx.analogue_bubblebath'}: Unwanted cover art\n",
                  err)
   end
 
@@ -68,7 +67,7 @@ class TestLintdirCommand < MiniTest::Test
     out, err = capture_io { act(MDIR + 'pram.meshes') }
     assert_empty(out)
     assert_equal(
-      "Bad file(s) in #{MDIR + 'pram.meshes'}:\n" \
+      "#{MDIR + 'pram.meshes'}: Bad file(s)\n" \
       "  #{MDIR + 'pram.meshes' + 'some_junk.txt'}\n" \
       "  #{MDIR + 'pram.meshes' + 'some_more_junk.txt'}\n",
       err
@@ -78,8 +77,31 @@ class TestLintdirCommand < MiniTest::Test
   def test_directory_with_mixed_filetypes
     out, err = capture_io { act(MDIR + 'heavenly.atta_girl') }
     assert_empty(out)
-    assert_equal("Different file types in #{MDIR + 'heavenly.atta_girl'}\n",
-                 err)
+    assert_equal("#{MDIR + 'heavenly.atta_girl'}: Different file types\n", err)
+  end
+
+  def test_recursion
+    expected = <<~EOOUT
+      #{MDIR}/afx.analogue_bubblebath: Unwanted cover art
+      #{MDIR}/heavenly.atta_girl: Different file types
+      #{MDIR}/polvo.cor.crane_secret: Invalid directory name
+      #{MDIR}/pram.meshes: Bad file(s)
+        #{MDIR}/pram.meshes/some_junk.txt
+        #{MDIR}/pram.meshes/some_more_junk.txt
+      #{MDIR}/seefeel.starethrough_ep: Missing track 02
+      #{MDIR}/tegan_and_sara.the_con: Missing file(s) (13/14)
+    EOOUT
+
+    out, err = capture_io do
+      Aur::Action.new(:lintdir, [], { '<directory>': [MDIR],
+                                      recurse: true }).run!
+    end
+
+    assert_empty(out)
+    assert_equal(
+      expected,
+      err
+    )
   end
 
   private

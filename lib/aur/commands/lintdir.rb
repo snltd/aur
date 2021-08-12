@@ -39,19 +39,19 @@ module Aur
         sequential_files?(files)
         cover_art?(files)
       rescue Aur::Exception::LintDirBadName
-        warn "Invalid directory name: #{dir}"
+        warn "#{dir}: Invalid directory name"
       rescue Aur::Exception::LintDirBadFile => e
-        warn "Bad file(s) in #{dir}:\n  #{e}"
+        warn "#{dir}: Bad file(s)\n  #{e}"
       rescue Aur::Exception::LintDirMixedFiles
-        warn "Different file types in #{dir}"
+        warn "#{dir}: Different file types"
       rescue Aur::Exception::LintDirBadFileCount => e
-        warn "Missing files in #{dir}: #{e}"
+        warn "#{dir}: Missing file(s) (#{e})"
       rescue Aur::Exception::LintDirUnsequencedFile => e
-        warn "Track number '#{e}' not found"
+        warn "#{dir}: Missing track #{e}"
       rescue Aur::Exception::LintDirMissingCoverArt
-        warn "Missing cover art in #{dir}"
+        warn "#{dir}: Missing cover art"
       rescue Aur::Exception::LintDirUnwantedCoverArt
-        warn "Unwanted cover art in #{dir}"
+        warn "#{dir}: Unwanted cover art"
       end
       # rubocop:enable Metrics/MethodLength
 
@@ -92,8 +92,7 @@ module Aur
 
         return true if hn == files.size
 
-        raise Aur::Exception::LintDirBadFileCount,
-              "expected #{hn}, got #{files.size}"
+        raise Aur::Exception::LintDirBadFileCount, "#{files.size}/#{hn}"
       end
 
       def sequential_files?(files)
@@ -169,7 +168,7 @@ module Aur
             - no non-audio files exist (except cover art)
 
           The contents of files are not examined. For that, use the 'lint'
-          command.
+          command. Nothing on-disk is changed.
         EOHELP
       end
     end
