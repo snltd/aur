@@ -52,6 +52,9 @@ module Aur
         warn "#{dir}: Missing cover art"
       rescue Aur::Exception::LintDirUnwantedCoverArt
         warn "#{dir}: Unwanted cover art"
+      rescue StandardError => e
+        warn "bombed in #{dir}"
+        pp e
       end
       # rubocop:enable Metrics/MethodLength
 

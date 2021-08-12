@@ -37,6 +37,8 @@ module Aur
         @flist = screen_flist(flist.to_paths)
         load_library(action.to_s)
       end
+    rescue Errno::ENOENT
+      abort 'File not found.'
     end
 
     # Special handler for lintdir command, necessary because it operates on
