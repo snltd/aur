@@ -122,13 +122,14 @@ module Aur
         fnames.include?('front.jpg') || fnames.include?('front.png')
       end
 
-      # I have cover art for FLACs, but not MP3. This is a bit hacky
+      # I want cover art for FLACs, but not MP3s.
       #
       def cover_art?(files)
-        if files.first.extname == '.flac'
+        case files.first.extname
+        when '.flac'
           raise Aur::Exception::LintDirMissingCoverArt unless cover_in(files)
-        elsif cover_in(files)
-          raise Aur::Exception::LintDirUnwantedCoverArt
+        when '.mp3'
+          raise Aur::Exception::LintDirUnwantedCoverArt if cover_in(files)
         end
 
         true
