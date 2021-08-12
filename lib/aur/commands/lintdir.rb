@@ -78,7 +78,7 @@ module Aur
 
         return true if uns.empty? || uns.all?(&:directory?)
 
-        raise Aur::Exception::LintDirBadFile, uns.join("\n  ")
+        raise Aur::Exception::LintDirBadFile, uns.sort.join("\n  ")
       end
 
       # The number of audio files in the directory should be the same as the
