@@ -24,6 +24,7 @@ module Aur
     # @param flist [Array[Pathname]] list of files to which the
     #   action must be applied.
     #
+    # rubocop:disable Metrics/MethodLength
     def initialize(action, flist, opts = {})
       @action = action.capitalize
       @opts = opts
@@ -40,6 +41,7 @@ module Aur
     rescue Errno::ENOENT
       abort 'File not found.'
     end
+    # rubocop:enable Metrics/MethodLength
 
     # Special handler for lintdir command, necessary because it operates on
     # directories, and everything up to now operates on files. At the moment

@@ -30,6 +30,7 @@ module Aur
       end
 
       # rubocop:disable Metrics/MethodLength
+      # rubocop:disable Metrics/AbcSize
       def lint(dir)
         files = dir.children.select(&:file?)
         correctly_named?(dir)
@@ -56,6 +57,7 @@ module Aur
         warn "bombed in #{dir}"
         pp e
       end
+      # rubocop:enable Metrics/AbcSize
       # rubocop:enable Metrics/MethodLength
 
       # A directory should be either 'disc_n' where n is an integer, or
