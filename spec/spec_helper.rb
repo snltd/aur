@@ -9,6 +9,7 @@ RES_DIR = Pathname.new(__dir__) + 'resources'
 TMP_DIR = Pathname.new('/tmp/aurtest')
 FDIR = RES_DIR + 'lintdir' + 'flac'
 MDIR = RES_DIR + 'lintdir' + 'mp3'
+AFDIR = RES_DIR + 'artfix'
 
 FLAC_TEST = RES_DIR + 'test_tone-100hz.flac'
 MP3_TEST = RES_DIR + 'test_tone-100hz.mp3'
