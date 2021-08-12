@@ -20,7 +20,7 @@ module Aur
       end
 
       def run
-        candidates(dir).each do |f|
+        candidates(dir).sort.each do |f|
           new = new_name(f)
           puts "renaming #{f} -> #{new.basename}"
           f.rename(new) unless opts[:noop]
