@@ -18,7 +18,7 @@ class TestArtfix < MiniTest::Test
       [AFDIR + 'albums/jesus_lizard.liar/cover.jpg',
        AFDIR + 'albums/windy_and_carl.portal/Front.JPG',
        AFDIR + 'eps/water_world.dead/front cover.Png'],
-      t.candidates(AFDIR)
+     t.candidates(AFDIR).sort
     )
 
     assert_equal([], t.candidates(FDIR))
