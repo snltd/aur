@@ -18,31 +18,19 @@ class TestArtfixCommand < MiniTest::Test
       Aur::Action.new(:artfix, [], { '<directory>': [AFDIR], noop: true }).run!
     end
 
-    expected = <<~EOOUT
-      renaming #{AFDIR}/albums/jesus_lizard.liar/cover.jpg
-      renaming #{AFDIR}/albums/windy_and_carl.portal/Front.JPG
-      renaming #{AFDIR}/eps/water_world.dead/front cover.Png
-    EOOUT
-
-    assert_equal(expected, out)
+    assert_equal(expected_output(AFDIR), out)
     assert_empty(err)
     assert (AFDIR + 'albums/jesus_lizard.liar/cover.jpg').exist?
     refute (AFDIR + 'albums/jesus_lizard.liar/front.jpg').exist?
   end
 
-  def _test_artfix
+  def test_artfix
     with_test_file(AFDIR) do |dir|
       out, err = capture_io do
         Aur::Action.new(:artfix, [], { '<directory>': [dir] }).run!
       end
 
-      expected = <<~EOOUT
-        renaming #{dir}/albums/jesus_lizard.liar/cover.jpg
-        renaming #{dir}/albums/windy_and_carl.portal/Front.JPG
-        renaming #{dir}/eps/water_world.dead/front cover.Png
-      EOOUT
-
-      assert_equal(expected, out)
+      assert_equal(expected_output(dir), out)
       assert_empty(err)
 
       refute (dir + 'albums/jesus_lizard.liar/cover.jpg').exist?
@@ -51,8 +39,8 @@ class TestArtfixCommand < MiniTest::Test
       refute (dir + 'albums/windy_and_carl.portal/Front.jpg').exist?
       assert (dir + 'albums/windy_and_carl.portal/front.jpg').exist?
 
-      refute (dir + 'albums/water_world.dead/front cover.Png').exist?
-      assert (dir + 'albums/water_world.dead/front.png').exist?
+      refute (dir + 'eps/water_world.dead/front cover.Png').exist?
+      assert (dir + 'eps/water_world.dead/front.png').exist?
     end
   end
 
@@ -60,5 +48,13 @@ class TestArtfixCommand < MiniTest::Test
 
   def act(*dirs)
     Aur::Action.new(:artfix, [], { '<directory>': dirs }).run!
+  end
+
+  def expected_output(dir)
+    <<~EOOUT
+      renaming #{dir}/albums/jesus_lizard.liar/cover.jpg -> front.jpg
+      renaming #{dir}/albums/windy_and_carl.portal/Front.JPG -> front.jpg
+      renaming #{dir}/eps/water_world.dead/front cover.Png -> front.png
+    EOOUT
   end
 end

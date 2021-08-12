@@ -32,6 +32,7 @@ end
 def with_test_file(file)
   setup_test_dir
   FileUtils.cp_r(RES_DIR + file, TMP_DIR)
+  file = file.basename if file.is_a?(Pathname)
   yield(TMP_DIR + file)
   cleanup_test_dir
 end

@@ -29,7 +29,7 @@ class TestArtfix < MiniTest::Test
       assert_equal(TMP_DIR + 'front.jpg', t.new_name(TMP_DIR + f))
     end
 
-    %w[something.png something.PNG].each do |f|
+    %w[something.png something.PNG front\ cover.Png].each do |f|
       assert_equal(TMP_DIR + 'front.png', t.new_name(TMP_DIR + f))
     end
 
