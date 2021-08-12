@@ -10,6 +10,7 @@ CMDS = %i[bump
           help
           info
           inumber
+          lintdir
           name2num
           name2tag
           num2name
@@ -39,7 +40,11 @@ docopt = <<~EOCMDS
     aur flac2mp3 <file>...
     aur transcode <newtype> <file>...
     aur reencode <file>...
+    aur lintdir [-r] <directory>...
     aur help <command>
+
+  Options:
+    -r, --recursive   lint directories recursively
 EOCMDS
 
 def sanitize_keys(options)
