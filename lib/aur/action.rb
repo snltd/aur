@@ -43,10 +43,12 @@ module Aur
     # we'll break them all out into something cleaner.
     #
     def handle_lintdir
-      @flist = if opts[:recurse]
-                 recursive_dir_list(opts[:'<directory>'])
+      dirs = opts[:'<directory>'].to_paths
+
+      @flist = if opts[:recursive]
+                 recursive_dir_list(dirs)
                else
-                 opts[:'<directory>'].to_paths
+                 dirs
                end
 
       load_library('lintdir')

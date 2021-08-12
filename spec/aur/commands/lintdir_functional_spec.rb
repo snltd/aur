@@ -93,8 +93,8 @@ class TestLintdirCommand < MiniTest::Test
     EOOUT
 
     out, err = capture_io do
-      Aur::Action.new(:lintdir, [], { '<directory>': [MDIR],
-                                      recurse: true }).run!
+      Aur::Action.new(:lintdir, [], { '<directory>': [MDIR.to_s],
+                                      recursive: true }).run!
     end
 
     assert_empty(out)
