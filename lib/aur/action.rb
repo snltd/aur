@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'flacinfo'
+require 'mp3info'
 require_relative 'exception'
 require_relative 'constants'
 require_relative 'stdlib/pathname'
@@ -45,11 +47,7 @@ module Aur
     def handle_lintdir
       dirs = opts[:'<directory>'].to_paths
 
-      @flist = if opts[:recursive]
-                 recursive_dir_list(dirs)
-               else
-                 dirs
-               end
+      @flist = opts[:recursive] ? recursive_dir_list(dirs) : dirs
 
       load_library('lintdir')
     end
@@ -58,6 +56,11 @@ module Aur
       require_relative 'commands/help'
       Aur::Command::Help.new(opts[:'<command>'])
       exit
+    end
+
+    def handle_artfix
+      @flist = opts[:'<directory>'].to_paths
+      load_library('artfix')
     end
 
     # Blows up an array of directories to an array of those directories and

@@ -9,6 +9,7 @@ RES_DIR = Pathname.new(__dir__) + 'resources'
 TMP_DIR = Pathname.new('/tmp/aurtest')
 FDIR = RES_DIR + 'lintdir' + 'flac'
 MDIR = RES_DIR + 'lintdir' + 'mp3'
+AFDIR = RES_DIR + 'artfix'
 
 FLAC_TEST = RES_DIR + 'test_tone-100hz.flac'
 MP3_TEST = RES_DIR + 'test_tone-100hz.mp3'
@@ -30,7 +31,8 @@ end
 # @return [Pathname] reference to the file in TMP_DIR
 def with_test_file(file)
   setup_test_dir
-  FileUtils.cp(RES_DIR + file, TMP_DIR)
+  FileUtils.cp_r(RES_DIR + file, TMP_DIR)
+  file = file.basename if file.is_a?(Pathname)
   yield(TMP_DIR + file)
   cleanup_test_dir
 end

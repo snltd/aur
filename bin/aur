@@ -5,7 +5,8 @@ require 'docopt'
 require 'pathname'
 require_relative '../lib/aur/action'
 
-CMDS = %i[bump
+CMDS = %i[artfix
+          bump
           flac2mp3
           help
           info
@@ -41,10 +42,12 @@ docopt = <<~EOCMDS
     aur transcode <newtype> <file>...
     aur reencode <file>...
     aur lintdir [-r] <directory>...
+    aur artfix [-n] <directory>...
     aur help <command>
 
   Options:
     -r, --recursive   lint directories recursively
+    -n, --noop        don't perform the requested operation
 EOCMDS
 
 def sanitize_keys(options)
