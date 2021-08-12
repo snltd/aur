@@ -15,21 +15,21 @@ module Aur
 
     class InvalidTagValue < RuntimeError; end
 
-    class LintDirMissingCoverArt < RuntimeError; end
-
-    class LintDirUnwantedCoverArt < RuntimeError; end
-
     class InvalidValue < RuntimeError; end
-
-    class LintDirBadName < RuntimeError; end
 
     class LintDirBadFile < RuntimeError; end
 
-    class LintDirMixedFiles < RuntimeError; end
-
     class LintDirBadFileCount < RuntimeError; end
 
+    class LintDirBadName < RuntimeError; end
+
+    class LintDirMissingCoverArt < RuntimeError; end
+
+    class LintDirMixedFiles < RuntimeError; end
+
     class LintDirUnsequencedFile < RuntimeError; end
+
+    class LintDirUnwantedCoverArt < RuntimeError; end
 
     class MissingBinary < RuntimeError; end
 
