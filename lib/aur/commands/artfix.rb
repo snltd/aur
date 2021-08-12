@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 require 'pathname'
-#require_relative 'base'
-#require_relative '../constants'
-#require_relative '../exception'
+require_relative '../exception'
 
 module Aur
   module Command
@@ -11,15 +9,33 @@ module Aur
     # If the given directory contains an image, ensure it is correctly named.
     #
     class Artfix
+      attr_reader :dir, :opts
+
+      SUFFIXES = %w[.jpg .png].freeze
+      OK_NAMES = %w[front.jpg front.png].freeze
+
       def initialize(dir = nil, opts = {})
         @dir = dir
         @opts = opts
       end
 
       def run
-        candidates(@dir).each do |f|
+        candidates(dir).each do |f|
           puts "renaming #{f}"
-          rename(f)
+          f.rename(new_name(f)) unless opts[:noop]
+        end
+      end
+
+      def new_name(old_name)
+        dir = old_name.dirname
+
+        case old_name.extname.downcase
+        when '.jpg', '.jpeg'
+          dir + 'front.jpg'
+        when '.png'
+          dir + 'front.png'
+        else
+          raise Aur::Exception::UnsupportedFiletype
         end
       end
 
@@ -29,8 +45,9 @@ module Aur
       #
       def candidates(dir)
         Pathname.glob("#{dir}/**/*").select do |f|
-          %w[.png .jpg].include?(f.extname.downcase)
-        end.reject { |f| %w[front.jpg front.png].include?(f.basename.to_s) }
+          SUFFIXES.include?(f.extname.downcase) && f.file? &&
+            !OK_NAMES.include?(f.basename.to_s)
+        end
       end
 
       def self.help

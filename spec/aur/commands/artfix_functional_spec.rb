@@ -13,6 +13,49 @@ class TestArtfixCommand < MiniTest::Test
     assert_empty(err)
   end
 
+  def test_artfix_noop
+    out, err = capture_io do
+      Aur::Action.new(:artfix, [], { '<directory>': [AFDIR], noop: true }).run!
+    end
+
+    expected = <<~EOOUT
+      renaming #{AFDIR}/albums/jesus_lizard.liar/cover.jpg
+      renaming #{AFDIR}/albums/windy_and_carl.portal/Front.JPG
+      renaming #{AFDIR}/eps/water_world.dead/front cover.Png
+    EOOUT
+
+    assert_equal(expected, out)
+    assert_empty(err)
+    assert (AFDIR + 'albums/jesus_lizard.liar/cover.jpg').exist?
+    refute (AFDIR + 'albums/jesus_lizard.liar/front.jpg').exist?
+  end
+
+  def _test_artfix
+    with_test_file(AFDIR) do |dir|
+      out, err = capture_io do
+        Aur::Action.new(:artfix, [], { '<directory>': [dir] }).run!
+      end
+
+      expected = <<~EOOUT
+        renaming #{dir}/albums/jesus_lizard.liar/cover.jpg
+        renaming #{dir}/albums/windy_and_carl.portal/Front.JPG
+        renaming #{dir}/eps/water_world.dead/front cover.Png
+      EOOUT
+
+      assert_equal(expected, out)
+      assert_empty(err)
+
+      refute (dir + 'albums/jesus_lizard.liar/cover.jpg').exist?
+      assert (dir + 'albums/jesus_lizard.liar/front.jpg').exist?
+
+      refute (dir + 'albums/windy_and_carl.portal/Front.jpg').exist?
+      assert (dir + 'albums/windy_and_carl.portal/front.jpg').exist?
+
+      refute (dir + 'albums/water_world.dead/front cover.Png').exist?
+      assert (dir + 'albums/water_world.dead/front.png').exist?
+    end
+  end
+
   private
 
   def act(*dirs)

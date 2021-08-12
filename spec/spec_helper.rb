@@ -31,7 +31,7 @@ end
 # @return [Pathname] reference to the file in TMP_DIR
 def with_test_file(file)
   setup_test_dir
-  FileUtils.cp(RES_DIR + file, TMP_DIR)
+  FileUtils.cp_r(RES_DIR + file, TMP_DIR)
   yield(TMP_DIR + file)
   cleanup_test_dir
 end
