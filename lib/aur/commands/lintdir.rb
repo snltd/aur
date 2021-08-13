@@ -61,7 +61,7 @@ module Aur
       # rubocop:enable Metrics/MethodLength
 
       def err(dir, msg)
-        warn(format('%-80<dir>s    %<msg>s', dir: dir, msg: msg))
+        warn(format('%-110<dir>s    %<msg>s', dir: dir, msg: msg))
       end
 
       # A "proper" album directory should be of the form
