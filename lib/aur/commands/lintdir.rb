@@ -40,36 +40,42 @@ module Aur
         sequential_files?(files)
         cover_art?(files)
       rescue Aur::Exception::LintDirBadName
-        warn "#{dir}: Invalid directory name"
+        err(dir, 'Invalid directory name')
       rescue Aur::Exception::LintDirBadFile => e
-        warn "#{dir}: Bad file(s)\n  #{e}"
+        err(dir, "Bad file(s)\n  #{e}")
       rescue Aur::Exception::LintDirMixedFiles
-        warn "#{dir}: Different file types"
+        err(dir, 'Different file types')
       rescue Aur::Exception::LintDirBadFileCount => e
-        warn "#{dir}: Missing file(s) (#{e})"
+        err(dir, "Missing file(s) (#{e})")
       rescue Aur::Exception::LintDirUnsequencedFile => e
-        warn "#{dir}: Missing track #{e}"
+        err(dir, "Missing track #{e}")
       rescue Aur::Exception::LintDirMissingCoverArt
-        warn "#{dir}: Missing cover art"
+        err(dir, 'Missing cover art')
       rescue Aur::Exception::LintDirUnwantedCoverArt
-        warn "#{dir}: Unwanted cover art"
+        err(dir, 'Unwanted cover art')
       rescue StandardError => e
-        warn "bombed in #{dir}"
+        warn "Bombed in #{dir}"
         pp e
       end
       # rubocop:enable Metrics/AbcSize
       # rubocop:enable Metrics/MethodLength
 
-      # A directory should be either 'disc_n' where n is an integer, or
-      # 'artist_name.album_name', or something_disc.
-      #
-      def correctly_named?(dir)
-        name = dir.basename.to_s
+      def err(dir, msg)
+        warn(format('%-110<dir>s    %<msg>s', dir: dir, msg: msg))
+      end
 
-        return true if name.match(/^disc_[0-9]$/) || name.match(/_disc$/)
+      # A "proper" album directory should be of the form
+      # 'artist_name.album_name', but these can have sub-directories. So, if
+      # we find content in an incorrectly named directory, we examine the
+      # parent, and return true if that looks okay.
+      #
+      def correctly_named?(dir, on_retry = false)
+        name = dir.basename.to_s
 
         return true if name.match(/^[a-z0-9][a-z\-._0-9]+[a-z0-9]$/) &&
                        name.split('.').size == 2 && !name.start_with?('the_')
+
+        return correctly_named?(dir.parent, true) if on_retry == false
 
         raise Aur::Exception::LintDirBadName
       end
@@ -145,9 +151,11 @@ module Aur
       # @return [Int]
       #
       def highest_number(files)
+        files = supported(files)
+
         return 0 if files.empty?
 
-        filenum(supported(files).max)
+        filenum(files.max)
       end
 
       def filenum(file)

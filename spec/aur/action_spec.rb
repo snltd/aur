@@ -41,6 +41,8 @@ class CommandTest < MiniTest::Test
      MDIR,
      MDIR + 'heavenly.atta_girl',
      MDIR + 'broadcast.pendulum',
+     MDIR + 'pet_shop_boys.very',
+     MDIR + 'pet_shop_boys.very/further_listening_1992-1994',
      MDIR + 'tegan_and_sara.the_con',
      MDIR + 'seefeel.starethrough_ep',
      MDIR + 'afx.analogue_bubblebath',

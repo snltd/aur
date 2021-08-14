@@ -9,99 +9,91 @@ require_relative '../../../lib/aur/action'
 #
 class TestLintdirCommand < MiniTest::Test
   def test_directory_which_is_good
-    out, err = capture_io { act(MDIR + 'broadcast.pendulum') }
-    assert_empty(out)
-    assert_empty(err)
+    assert_output { act(MDIR + 'broadcast.pendulum') }
   end
 
   def test_directory_which_only_holds_other_directories
-    out, err = capture_io { act(FDIR) }
-    assert_empty(out)
-    assert_empty(err)
+    assert_output { act(FDIR) }
+  end
+
+  def test_directory_with_two_discs
+    assert_output do
+      act(MDIR + 'pet_shop_boys.very' + 'further_listening_1992-1994')
+    end
   end
 
   def test_directory_which_does_not_exist
-    out, err = capture_io { act(RES_DIR + 'no_such_dir') }
-    assert_empty(out)
-    assert_equal("'#{RES_DIR}/no_such_dir' not found.\n", err)
+    assert_output(nil, "'#{RES_DIR}/no_such_dir' not found.\n") do
+      act(RES_DIR + 'no_such_dir')
+    end
   end
 
   def test_directory_with_a_bad_name
-    out, err = capture_io { act(MDIR + 'polvo.cor.crane_secret') }
-    assert_empty(out)
-    assert_equal(
-      "#{MDIR + 'polvo.cor.crane_secret'}: Invalid directory name\n",
-      err
-    )
+    assert_output(nil, /polvo.cor.crane_secret\s+Invalid directory name\n/) do
+      act(MDIR + 'polvo.cor.crane_secret')
+    end
   end
 
   def test_directory_with_a_missing_file
-    out, err = capture_io { act(MDIR + 'tegan_and_sara.the_con') }
-    assert_empty(out)
-    assert_equal(
-      "#{MDIR + 'tegan_and_sara.the_con'}: Missing file(s) (13/14)\n",
-      err
-    )
+    assert_output(
+      nil, %r{tegan_and_sara.the_con\s+Missing file\(s\) \(13/14\)\n}
+    ) do
+      act(MDIR + 'tegan_and_sara.the_con')
+    end
   end
 
   def test_directory_with_a_wrongly_numbered_file
-    out, err = capture_io { act(MDIR + 'seefeel.starethrough_ep') }
-    assert_empty(out)
-    assert_equal("#{MDIR + 'seefeel.starethrough_ep'}: Missing track 02\n", err)
+    assert_output(nil, /seefeel.starethrough_ep\s+Missing track 02\n/) do
+      act(MDIR + 'seefeel.starethrough_ep')
+    end
   end
 
   def test_directory_with_missing_artwork
-    out, err = capture_io { act(FDIR + 'fall.eds_babe') }
-    assert_empty(out)
-    assert_equal("#{FDIR + 'fall.eds_babe'}: Missing cover art\n", err)
+    assert_output(nil, /#{FDIR + 'fall.eds_babe'}\s+Missing cover art\n/) do
+      act(FDIR + 'fall.eds_babe')
+    end
   end
 
   def test_directory_with_artwork_that_should_not_be_there
-    out, err = capture_io { act(MDIR + 'afx.analogue_bubblebath') }
-    assert_empty(out)
-    assert_equal("#{MDIR + 'afx.analogue_bubblebath'}: Unwanted cover art\n",
-                 err)
+    assert_output(nil, /afx.analogue_bubblebath\s+Unwanted cover art\n/) do
+      act(MDIR + 'afx.analogue_bubblebath')
+    end
   end
 
   def test_directory_with_junk_in
-    out, err = capture_io { act(MDIR + 'pram.meshes') }
-    assert_empty(out)
-    assert_equal(
-      "#{MDIR + 'pram.meshes'}: Bad file(s)\n" \
-      "  #{MDIR + 'pram.meshes' + 'some_junk.txt'}\n" \
-      "  #{MDIR + 'pram.meshes' + 'some_more_junk.txt'}\n",
-      err
-    )
+    expected = <<~EOOUT
+      #{MDIR}\/pram.meshes\\s+Bad file\\(s\\)
+        #{MDIR}\/pram.meshes/some_junk.txt
+        #{MDIR}\/pram.meshes/some_more_junk.txt
+    EOOUT
+
+    assert_output(nil, Regexp.new(expected, Regexp::MULTILINE)) do
+      act(MDIR + 'pram.meshes')
+    end
   end
 
   def test_directory_with_mixed_filetypes
-    out, err = capture_io { act(MDIR + 'heavenly.atta_girl') }
-    assert_empty(out)
-    assert_equal("#{MDIR + 'heavenly.atta_girl'}: Different file types\n", err)
+    assert_output(nil, /heavenly.atta_girl\s+Different file types\n/) do
+      act(MDIR + 'heavenly.atta_girl')
+    end
   end
 
   def test_recursion
     expected = <<~EOOUT
-      #{MDIR}/afx.analogue_bubblebath: Unwanted cover art
-      #{MDIR}/heavenly.atta_girl: Different file types
-      #{MDIR}/polvo.cor.crane_secret: Invalid directory name
-      #{MDIR}/pram.meshes: Bad file(s)
-        #{MDIR}/pram.meshes/some_junk.txt
-        #{MDIR}/pram.meshes/some_more_junk.txt
-      #{MDIR}/seefeel.starethrough_ep: Missing track 02
-      #{MDIR}/tegan_and_sara.the_con: Missing file(s) (13/14)
+      #{MDIR}\/afx.analogue_bubblebath\\s+Unwanted cover art
+      #{MDIR}\/heavenly.atta_girl\\s+Different file types
+      #{MDIR}\/polvo.cor.crane_secret\\s+Invalid directory name
+      #{MDIR}\/pram.meshes\\s+Bad file\\(s\\)
+        #{MDIR}\/pram.meshes/some_junk.txt
+        #{MDIR}\/pram.meshes/some_more_junk.txt
+      #{MDIR}\/seefeel.starethrough_ep\\s+Missing track 02
+      #{MDIR}\/tegan_and_sara.the_con\\s+Missing file\\(s\\) \\(13\\/14\\)
     EOOUT
 
-    out, err = capture_io do
+    assert_output(nil, Regexp.new(expected, Regexp::MULTILINE)) do
       Aur::Action.new(:lintdir, [], { '<directory>': [MDIR.to_s],
                                       recursive: true }).run!
     end
-
-    assert_empty(out)
-    assert_equal(
-      expected,
-      err
-    )
   end
 
   private

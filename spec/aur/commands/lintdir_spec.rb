@@ -17,8 +17,8 @@ class TestLintdir < MiniTest::Test
   end
 
   def test_correctly_named?
-    good = %w[disc_1 slint.spiderland smiths.the_smiths]
-    bad = %w[disc_11 Slint.Spiderland smiths.the.smiths the_smiths.the_smiths]
+    good = %w[slint.spiderland smiths.the_smiths]
+    bad = %w[Slint.Spiderland smiths.the.smiths the_smiths.the_smiths]
 
     good.each do |f|
       assert(t.correctly_named?(Pathname.new(LINT_DIR + f)))
