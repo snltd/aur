@@ -8,30 +8,23 @@ require_relative '../../../lib/aur/action'
 #
 class TestArtfixCommand < MiniTest::Test
   def test_directory_nothing_to_do
-    out, err = capture_io { act(MDIR, FDIR) }
-    assert_empty(out)
-    assert_empty(err)
+    assert_silent { act(MDIR, FDIR) }
   end
 
   def test_artfix_noop
-    out, err = capture_io do
+    assert_output(expected_output(AFDIR), '') do
       Aur::Action.new(:artfix, [], { '<directory>': [AFDIR], noop: true }).run!
     end
 
-    assert_equal(expected_output(AFDIR), out)
-    assert_empty(err)
     assert (AFDIR + 'albums/jesus_lizard.liar/cover.jpg').exist?
     refute (AFDIR + 'albums/jesus_lizard.liar/front.jpg').exist?
   end
 
   def test_artfix
     with_test_file(AFDIR) do |dir|
-      out, err = capture_io do
+      assert_output(expected_output(dir), '') do
         Aur::Action.new(:artfix, [], { '<directory>': [dir] }).run!
       end
-
-      assert_equal(expected_output(dir), out)
-      assert_empty(err)
 
       refute (dir + 'albums/jesus_lizard.liar/cover.jpg').exist?
       assert (dir + 'albums/jesus_lizard.liar/front.jpg').exist?

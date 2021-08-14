@@ -11,33 +11,36 @@ class TestSetCommand < MiniTest::Test
 
   def test_flac_set
     with_test_file('01.the_null_set.song_one.flac') do |f|
-      out, err = capture_io { set_command(f, 'artist', 'My Rubbish Band') }
-      assert_equal("      artist -> My Rubbish Band\n", out)
-      assert_empty(err)
+      assert_output("      artist -> My Rubbish Band\n", '') do
+        set_command(f, 'artist', 'My Rubbish Band')
+      end
+
       info = Aur::FileInfo::Flac.new(f)
       assert_equal('My Rubbish Band', info.our_tags[:artist])
 
-      out, err = capture_io { set_command(f, 'title', 'Some Lousy Song') }
-      assert_equal("       title -> Some Lousy Song\n", out)
-      assert_empty(err)
+      assert_output("       title -> Some Lousy Song\n", '') do
+        set_command(f, 'title', 'Some Lousy Song')
+      end
+
       info = Aur::FileInfo::Flac.new(f)
       assert_equal('Some Lousy Song', info.our_tags[:title])
 
-      out, err = capture_io { set_command(f, 'year', '2021') }
-      assert_equal("        year -> 2021\n", out)
-      assert_empty(err)
+      assert_output("        year -> 2021\n", '') do
+        set_command(f, 'year', '2021')
+      end
+
       info = Aur::FileInfo::Flac.new(f)
       assert_equal('2021', info.our_tags[:year])
 
-      out, err = capture_io { set_command(f, 't_num', '5') }
-      assert_equal("       t_num -> 5\n", out)
-      assert_empty(err)
+      assert_output("       t_num -> 5\n", '') { set_command(f, 't_num', '5') }
+
       info = Aur::FileInfo::Flac.new(f)
       assert_equal('5', info.our_tags[:t_num])
 
-      out, err = capture_io { set_command(f, 'genre', 'Noise') }
-      assert_equal("       genre -> Noise\n", out)
-      assert_empty(err)
+      assert_output("       genre -> Noise\n", '') do
+        set_command(f, 'genre', 'Noise')
+      end
+
       info = Aur::FileInfo::Flac.new(f)
       assert_equal('Noise', info.our_tags[:genre])
 
@@ -52,33 +55,36 @@ class TestSetCommand < MiniTest::Test
 
   def test_mp3_set
     with_test_file('01.the_null_set.song_one.mp3') do |f|
-      out, err = capture_io { set_command(f, 'artist', 'My Rubbish Band') }
-      assert_equal("      artist -> My Rubbish Band\n", out)
-      assert_empty(err)
+      assert_output("      artist -> My Rubbish Band\n", '') do
+        set_command(f, 'artist', 'My Rubbish Band')
+      end
+
       info = Aur::FileInfo::Mp3.new(f)
       assert_equal('My Rubbish Band', info.our_tags[:artist])
 
-      out, err = capture_io { set_command(f, 'title', 'Some Lousy Song') }
-      assert_equal("       title -> Some Lousy Song\n", out)
-      assert_empty(err)
+      assert_output("       title -> Some Lousy Song\n", '') do
+        set_command(f, 'title', 'Some Lousy Song')
+      end
+
       info = Aur::FileInfo::Mp3.new(f)
       assert_equal('Some Lousy Song', info.our_tags[:title])
 
-      out, err = capture_io { set_command(f, 'year', '2021') }
-      assert_equal("        year -> 2021\n", out)
-      assert_empty(err)
+      assert_output("        year -> 2021\n", '') do
+        set_command(f, 'year', '2021')
+      end
+
       info = Aur::FileInfo::Mp3.new(f)
       assert_equal('2021', info.our_tags[:year])
 
-      out, err = capture_io { set_command(f, 't_num', '5') }
-      assert_equal("       t_num -> 5\n", out)
-      assert_empty(err)
+      assert_output("       t_num -> 5\n", '') { set_command(f, 't_num', '5') }
+
       info = Aur::FileInfo::Mp3.new(f)
       assert_equal('5', info.our_tags[:t_num])
 
-      out, err = capture_io { set_command(f, 'genre', 'Noise') }
-      assert_equal("       genre -> Noise\n", out)
-      assert_empty(err)
+      assert_output("       genre -> Noise\n", '') do
+        set_command(f, 'genre', 'Noise')
+      end
+
       info = Aur::FileInfo::Mp3.new(f)
       assert_equal('Noise', info.our_tags[:genre])
 
@@ -93,21 +99,21 @@ class TestSetCommand < MiniTest::Test
 
   def test_set_bad_tag
     with_test_file('01.the_null_set.song_one.mp3') do |f|
-      out, err = capture_io { set_command(f, 'singer', 'Mouse Melon') }
-      assert_empty(out)
-      assert_equal("'singer' is not a valid tag name.\n", err)
+      assert_output('', "'singer' is not a valid tag name.\n") do
+        set_command(f, 'singer', 'Mouse Melon')
+      end
     end
   end
 
   def test_set_invalid_tag
     with_test_file('01.the_null_set.song_one.mp3') do |f|
-      out, err = capture_io { set_command(f, 't_num', 'Five') }
-      assert_empty(out)
-      assert_equal("'Five' is an invalid value.\n", err)
+      assert_outout('', "'Five' is an invalid value.\n") do
+        set_command(f, 't_num', 'Five')
+      end
 
-      out, err = capture_io { set_command(f, 'year', Time.now.year + 1) }
-      assert_empty(out)
-      assert_equal("'#{Time.now.year + 1}' is an invalid value.\n", err)
+      assert_output('', "'#{Time.now.year + 1}' is an invalid value.\n") do
+        set_command(f, 'year', Time.now.year + 1)
+      end
     end
   end
 

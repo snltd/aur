@@ -17,10 +17,9 @@ class TestTag2name < MiniTest::Test
 
   def test_run
     mv = Spy.on(FileUtils, :mv)
-    out, err = capture_io { flac.run }
-
-    assert_empty(err)
-    assert_equal("test_tone-100hz.flac -> 06.test_tones.100hz.flac\n", out)
+    assert_output("test_tone-100hz.flac -> 06.test_tones.100hz.flac\n", '') do
+      flac.run
+    end
 
     assert(mv.has_been_called?)
     assert_equal([FLAC_TEST, RES_DIR + '06.test_tones.100hz.flac'],

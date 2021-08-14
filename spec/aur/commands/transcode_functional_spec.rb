@@ -15,24 +15,20 @@ class TestReencodeCommand < MiniTest::Test
       wav = TMP_DIR + 'test_tone-100hz.wav'
       original_tags = Aur::FileInfo::Flac.new(f).our_tags
 
-      out, err = capture_io do
+      assert_output("#{f} -> #{wav}\n", '') do
         Aur::Action.new(:transcode, [f], '<newtype>': 'wav').run!
       end
 
-      assert_equal("#{f} -> #{wav}\n", out)
-      assert_empty(err)
       assert(f.exist?)
       assert(wav.exist?)
 
       f.unlink
       refute(f.exist?)
 
-      out, err = capture_io do
+      assert_output("#{wav} -> #{f}\n", '') do
         Aur::Action.new(:transcode, [wav], '<newtype>': 'flac').run!
       end
 
-      assert_equal("#{wav} -> #{f}\n", out)
-      assert_empty(err)
       assert(f.exist?)
       assert(wav.exist?)
 
@@ -46,12 +42,10 @@ class TestReencodeCommand < MiniTest::Test
     skip unless BIN[:ffmpeg].exist?
 
     with_test_file('not_really_a.flac') do |f|
-      out, err = capture_io do
+      assert_output("#{f} -> #{TMP_DIR}/not_really_a.wav\n",
+                    "ERROR: cannot process '#{f}'.\n") do
         Aur::Action.new(:transcode, [f], '<newtype>': 'wav').run!
       end
-
-      assert_equal("#{f} -> #{TMP_DIR}/not_really_a.wav\n", out)
-      assert_equal("ERROR: cannot process '#{f}'.\n", err)
     end
   end
 
@@ -59,12 +53,10 @@ class TestReencodeCommand < MiniTest::Test
     skip unless BIN[:ffmpeg].exist?
 
     with_test_file('not_really_a.mp3') do |f|
-      out, err = capture_io do
+      assert_output("#{f} -> #{TMP_DIR}/not_really_a.wav\n",
+                    "ERROR: cannot process '#{f}'.\n") do
         Aur::Action.new(:transcode, [f], '<newtype>': 'wav').run!
       end
-
-      assert_equal("#{f} -> #{TMP_DIR}/not_really_a.wav\n", out)
-      assert_equal("ERROR: cannot process '#{f}'.\n", err)
     end
   end
 end

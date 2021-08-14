@@ -12,21 +12,15 @@ class TestInfoCommand < MiniTest::Test
   include Aur::CommandTests
 
   def test_flac_info
-    out, err = capture_io do
+    assert_output(bad_name_flac_info, '') do
       Aur::Action.new(:info, [RES_DIR + 'bad_name.flac']).run!
     end
-
-    assert_equal(bad_name_flac_info, out)
-    assert_empty(err)
   end
 
   def test_mp3_info
-    out, err = capture_io do
+    assert_output(bad_name_mp3_info, '') do
       Aur::Action.new(:info, [RES_DIR + 'bad_name.mp3']).run!
     end
-
-    assert_equal(bad_name_mp3_info, out)
-    assert_empty(err)
   end
 
   def action
@@ -34,6 +28,9 @@ class TestInfoCommand < MiniTest::Test
   end
 end
 
+# Ruby absolutely will not have these as heredocs. That single leading space
+# trips it up.
+#
 def bad_name_flac_info
   %( Filename : bad_name.flac
      Type : FLAC

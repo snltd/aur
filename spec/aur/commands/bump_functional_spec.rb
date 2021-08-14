@@ -13,28 +13,28 @@ class TestBumpCommand < MiniTest::Test
   def test_flac_bump_up
     with_test_file('test_tone-100hz.flac') do |f|
       assert_tag(f, :t_num, '06')
+      outfile = '09.test_tone-100hz.flac'
 
-      out, err = capture_io { bump_command(f, '3') }
-      assert_empty(err)
-      out = out.split("\n")
-      assert_equal('       t_num -> 9', out.first)
-      assert_equal('test_tone-100hz.flac -> 09.test_tone-100hz.flac', out.last)
+      assert_output("       t_num -> 9\ntest_tone-100hz.flac -> #{outfile}\n",
+                    '') do
+        bump_command(f, '3')
+      end
 
-      assert_tag(TMP_DIR + '09.test_tone-100hz.flac', :t_num, '9')
+      assert_tag(TMP_DIR + outfile, :t_num, '9')
     end
   end
 
   def test_flac_bump_down
     with_test_file('test_tone-100hz.flac') do |f|
       assert_tag(f, :t_num, '06')
+      outfile = '02.test_tone-100hz.flac'
 
-      out, err = capture_io { bump_command(f, '-4') }
-      assert_empty(err)
-      out = out.split("\n")
-      assert_equal('       t_num -> 2', out.first)
-      assert_equal('test_tone-100hz.flac -> 02.test_tone-100hz.flac', out.last)
+      assert_output("       t_num -> 2\ntest_tone-100hz.flac -> #{outfile}\n",
+                    '') do
+        bump_command(f, '-4')
+      end
 
-      assert_tag(TMP_DIR + '02.test_tone-100hz.flac', :t_num, '2')
+      assert_tag(TMP_DIR + outfile, :t_num, '2')
     end
   end
 
@@ -42,9 +42,10 @@ class TestBumpCommand < MiniTest::Test
     with_test_file('test_tone-100hz.flac') do |f|
       assert_tag(f, :t_num, '06')
 
-      out, err = capture_io { bump_command(f, '-15') }
-      assert_empty(out)
-      assert_equal("'-9' is an invalid value.\n", err)
+      assert_output('', "'-9' is an invalid value.\n") do
+        bump_command(f, '-15')
+      end
+
       assert_tag(f, :t_num, '06')
       assert f.exist?
     end
@@ -54,13 +55,14 @@ class TestBumpCommand < MiniTest::Test
     with_test_file('test_tone-100hz.mp3') do |f|
       assert_tag(f, :t_num, '6')
 
-      out, err = capture_io { bump_command(f, '3') }
-      assert_empty(err)
-      out = out.split("\n")
-      assert_equal('       t_num -> 9', out.first)
-      assert_equal('test_tone-100hz.mp3 -> 09.test_tone-100hz.mp3', out.last)
+      outfile = '09.test_tone-100hz.mp3'
 
-      assert_tag(TMP_DIR + '09.test_tone-100hz.mp3', :t_num, '9')
+      assert_output("       t_num -> 9\ntest_tone-100hz.mp3 -> #{outfile}\n",
+                    '') do
+        bump_command(f, '3')
+      end
+
+      assert_tag(TMP_DIR + outfile, :t_num, '9')
     end
   end
 
@@ -68,13 +70,14 @@ class TestBumpCommand < MiniTest::Test
     with_test_file('test_tone-100hz.mp3') do |f|
       assert_tag(f, :t_num, '6')
 
-      out, err = capture_io { bump_command(f, '-4') }
-      assert_empty(err)
-      out = out.split("\n")
-      assert_equal('       t_num -> 2', out.first)
-      assert_equal('test_tone-100hz.mp3 -> 02.test_tone-100hz.mp3', out.last)
+      outfile = '02.test_tone-100hz.mp3'
 
-      assert_tag(TMP_DIR + '02.test_tone-100hz.mp3', :t_num, '2')
+      assert_output("       t_num -> 2\ntest_tone-100hz.mp3 -> #{outfile}\n",
+                    '') do
+        bump_command(f, '-4')
+      end
+
+      assert_tag(TMP_DIR + outfile, :t_num, '2')
     end
   end
 

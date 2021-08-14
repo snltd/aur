@@ -17,14 +17,12 @@ class TestFlac2Mp3Command < MiniTest::Test
       expected_file = TMP_DIR + 'test_tone-100hz.mp3'
       refute(expected_file.exist?)
 
-      out, err = capture_io { Aur::Action.new(:flac2mp3, [f]).run! }
-
-      assert_equal("#{f} -> #{TMP_DIR}/test_tone-100hz.mp3\n", out)
-      assert_empty(err)
+      assert_output("#{f} -> #{TMP_DIR}/test_tone-100hz.mp3\n", '') do
+        Aur::Action.new(:flac2mp3, [f]).run!
+      end
 
       assert(f.exist?)
       assert(expected_file.exist?)
-
       assert_tag(expected_file, :title, '100hz')
       assert_tag(expected_file, :artist, 'Test Tones')
       assert_tag(expected_file, :album, 'Test Tones')

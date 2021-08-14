@@ -11,13 +11,10 @@ class TestTag2NameCommand < MiniTest::Test
 
   def test_flac_tag2name
     with_test_file('bad_name.flac') do |f|
-      out, err = capture_io { Aur::Action.new(:tag2name, [f]).run! }
-
-      assert_empty(err)
-      assert_equal(
-        'bad_name.flac -> 02.the_null_set.sammy_davis_jr-dancing.flac',
-        out.strip
-      )
+      assert_output(
+        "bad_name.flac -> 02.the_null_set.sammy_davis_jr-dancing.flac\n",
+        ''
+      ) { Aur::Action.new(:tag2name, [f]).run! }
 
       refute(f.exist?)
       assert (TMP_DIR + '02.the_null_set.sammy_davis_jr-dancing.flac').exist?
@@ -26,13 +23,10 @@ class TestTag2NameCommand < MiniTest::Test
 
   def test_mp3_tag2name
     with_test_file('bad_name.mp3') do |f|
-      out, err = capture_io { Aur::Action.new(:tag2name, [f]).run! }
-
-      assert_empty(err)
-      assert_equal(
+      assert_output(
         "bad_name.mp3 -> 02.the_null_set.sammy_davis_jr-dancing.mp3\n",
-        out
-      )
+        ''
+      ) { Aur::Action.new(:tag2name, [f]).run! }
 
       refute(f.exist?)
       assert (TMP_DIR + '02.the_null_set.sammy_davis_jr-dancing.mp3').exist?
