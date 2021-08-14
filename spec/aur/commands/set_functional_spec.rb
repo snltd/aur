@@ -107,7 +107,7 @@ class TestSetCommand < MiniTest::Test
 
   def test_set_invalid_tag
     with_test_file('01.the_null_set.song_one.mp3') do |f|
-      assert_outout('', "'Five' is an invalid value.\n") do
+      assert_output('', "'Five' is an invalid value.\n") do
         set_command(f, 't_num', 'Five')
       end
 

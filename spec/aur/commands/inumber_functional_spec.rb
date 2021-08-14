@@ -53,7 +53,9 @@ class TestNumberCommand < MiniTest::Test
       new_file = TMP_DIR + '11.bad_name.mp3'
       assert new_file.exist?
 
-      assert_output(/Track no : 11/, '') { Aur::Action.new(:info, [f]).run! }
+      assert_output(/Track no : 11/, '') do
+        Aur::Action.new(:info, [new_file]).run!
+      end
     end
   end
 
