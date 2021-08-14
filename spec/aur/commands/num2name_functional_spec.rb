@@ -12,11 +12,11 @@ class TestNum2NameCommand < MiniTest::Test
   def test_flac_num2name
     with_test_file('bad_name.flac') do |f|
       expected_file = TMP_DIR + '02.bad_name.flac'
-
       refute(expected_file.exist?)
-      out, err = capture_io { Aur::Action.new(:num2name, [f]).run! }
-      assert_empty(err)
-      assert_equal('bad_name.flac -> 02.bad_name.flac', out.strip)
+
+      assert_output("bad_name.flac -> 02.bad_name.flac\n", '') do
+        Aur::Action.new(:num2name, [f]).run!
+      end
 
       refute(f.exist?)
       assert(expected_file.exist?)
@@ -37,9 +37,10 @@ class TestNum2NameCommand < MiniTest::Test
 
     assert(source_file.exist?)
 
-    out, err = capture_io { Aur::Action.new(:num2name, [source_file]).run! }
-    assert_equal("untagged_file.flac -> 00.untagged_file.flac\n", out)
-    assert_empty(err)
+    assert_output("untagged_file.flac -> 00.untagged_file.flac\n", '') do
+      Aur::Action.new(:num2name, [source_file]).run!
+    end
+
     refute(source_file.exist?)
     assert (TMP_DIR + '00.untagged_file.flac').exist?
     cleanup_test_dir
@@ -47,20 +48,16 @@ class TestNum2NameCommand < MiniTest::Test
 
   def test_mp3_num2name
     with_test_file('bad_name.mp3') do |f|
-      out, err = capture_io { Aur::Action.new(:num2name, [f]).run! }
-
-      assert_empty(err)
-      assert_equal('bad_name.mp3 -> 02.bad_name.mp3', out.strip)
+      assert_output("bad_name.mp3 -> 02.bad_name.mp3\n", '') do
+        Aur::Action.new(:num2name, [f]).run!
+      end
 
       refute(f.exist?)
       assert (TMP_DIR + '02.bad_name.mp3').exist?
 
-      out, err = capture_io do
+      assert_output("No change required.\n", '') do
         Aur::Action.new(:num2name, [TMP_DIR + '02.bad_name.mp3']).run!
       end
-
-      assert_empty(err)
-      assert_equal("No change required.\n", out)
     end
   end
 

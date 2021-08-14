@@ -21,10 +21,9 @@ class TestStripCommand < MiniTest::Test
       refute_equal(REQ_TAGS[:flac], original.tags.keys)
       assert_equal('aur', original.tags[:encoder])
 
-      out, err = capture_io { Aur::Action.new(:strip, [f]).run! }
-
-      assert_equal("Surplus tags: composer, encoder, tempo\n", out)
-      assert_empty(err)
+      assert_output("Surplus tags: composer, encoder, tempo\n", '') do
+        Aur::Action.new(:strip, [f]).run!
+      end
 
       new = Aur::FileInfo::Flac.new(f)
       refute new.picture?
@@ -41,9 +40,7 @@ class TestStripCommand < MiniTest::Test
       refute original.picture?
       assert_equal(REQ_TAGS[:flac].sort, original.tags.keys.sort)
 
-      out, err = capture_io { Aur::Action.new(:strip, [f]).run! }
-      assert_empty(out)
-      assert_empty(err)
+      assert_output('', '') { Aur::Action.new(:strip, [f]).run! }
       assert_equal(original_mtime, f.mtime)
     end
   end
@@ -63,10 +60,10 @@ class TestStripCommand < MiniTest::Test
       assert_equal('Someone Clever', original.tags[:tcom])
       assert original.picture?
 
-      out, _err = capture_io { Aur::Action.new(:strip, [f]).run! }
-
-      assert_equal("Surplus tags: apic, tcom, tenc, tlen, tsse, txxx\n", out)
-      # assert_empty(err) # the lib throws a warning on our test file
+      # the lib throws a warning on our test file so we ignore stderr
+      assert_output("Surplus tags: apic, tcom, tenc, tlen, tsse, txxx\n") do
+        Aur::Action.new(:strip, [f]).run!
+      end
 
       new = Aur::FileInfo::Mp3.new(f)
 
@@ -84,9 +81,7 @@ class TestStripCommand < MiniTest::Test
       refute original.picture?
       assert_equal(%i[tit2 tpe1 trck talb tcon tyer], original.tags.keys)
 
-      out, err = capture_io { Aur::Action.new(:strip, [f]).run! }
-      assert_empty(out)
-      assert_empty(err)
+      assert_output('', '') { Aur::Action.new(:strip, [f]).run! }
       assert_equal(original_mtime, f.mtime)
     end
   end

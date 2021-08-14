@@ -14,9 +14,7 @@ class TestName2num < MiniTest::Test
     add = Spy.on(t.info.raw, :comment_add)
     upd = Spy.on(t.info.raw, :update!)
 
-    out, err = capture_io { t.run }
-    assert_empty(err)
-    assert_equal('t_num -> 1', out.strip)
+    assert_output(/^\s+t_num -> 1\n/, '') { t.run }
     assert_equal(%w[TRACKNUMBER], del.calls.map(&:args).flatten)
     assert_equal(['TRACKNUMBER=1'], add.calls.map(&:args).flatten)
     assert upd.has_been_called?
@@ -28,10 +26,7 @@ class TestName2num < MiniTest::Test
     add = Spy.on(t.info.raw, :comment_add)
     upd = Spy.on(t.info.raw, :update!)
 
-    out, err = capture_io { t.run }
-    assert_empty(out)
-    assert_equal("No number found at start of filename\n", err)
-
+    assert_output('', "No number found at start of filename\n") { t.run }
     assert_empty(del.calls.map(&:args).flatten)
     assert_empty(add.calls.map(&:args).flatten)
     refute upd.has_been_called?
@@ -49,9 +44,7 @@ class TestName2num < MiniTest::Test
   def test_mp3_no_number
     t = Aur::Command::Name2num.new(RES_DIR + 'bad_name.mp3')
     spy = Spy.on(Mp3Info, :open)
-    out, err = capture_io { t.run }
-    assert_empty(out)
-    assert_equal("No number found at start of filename\n", err)
+    assert_output('', "No number found at start of filename\n") { t.run }
     refute spy.has_been_called?
   end
 end

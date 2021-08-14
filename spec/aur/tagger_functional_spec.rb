@@ -14,9 +14,7 @@ class TestTaggerFunctional < MiniTest::Test
       file = Aur::Tagger::Flac.new(info)
 
       assert_equal('Test Tones', info.tags[:artist])
-      out, err = capture_io { assert file.tag!(artist: 'My Band') }
-      assert_equal("      artist -> My Band\n", out)
-      assert_empty(err)
+      assert_output(/\s+artist -> My Band\n/) { file.tag!(artist: 'My Band') }
       info = Aur::FileInfo::Flac.new(f)
       assert_equal('My Band', info.tags[:artist])
 
@@ -27,7 +25,7 @@ class TestTaggerFunctional < MiniTest::Test
       assert_equal('tracknumber', e.message)
 
       assert_equal(6, info.our_tags[:t_num].to_i)
-      capture_io { assert file.tag!(t_num: 3) }
+      assert_output(/t_num -> 3/) { file.tag!(t_num: 3) }
       info = Aur::FileInfo::Flac.new(f)
       assert_equal(3, info.our_tags[:t_num].to_i)
     end
@@ -74,15 +72,13 @@ class TestTaggerFunctional < MiniTest::Test
       file = Aur::Tagger::Mp3.new(original)
 
       assert_equal('Test Tones', original.artist)
-      out, err = capture_io { assert file.tag!(artist: 'My Band') }
-      assert_equal("      artist -> My Band\n", out)
-      assert_empty(err)
+      assert_output(/\s+artist -> My Band\n/) { file.tag!(artist: 'My Band') }
 
       new = Aur::FileInfo::Mp3.new(f)
       assert_equal('My Band', new.artist)
 
       assert_equal('6', original.t_num)
-      capture_io { assert file.tag!(t_num: 3) }
+      assert_output(/t_num -> 3/) { file.tag!(t_num: 3) }
       new = Aur::FileInfo::Mp3.new(f)
       assert_equal('3', new.t_num)
     end

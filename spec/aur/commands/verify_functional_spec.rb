@@ -13,32 +13,23 @@ class TestVerifyCmd < MiniTest::Test
   include Aur::CommandTests
 
   def test_verify_nothing
-    out, err = capture_io do
+    assert_output('', "No valid files supplied.\n") do
       Aur::Action.new(:verify, [RES_DIR + 'front.png']).run!
     end
-
-    assert_equal("No valid files supplied.\n", err)
-    assert_empty(out)
   end
 
   def test_flac_verify
     skip unless BIN[:flac].exist?
 
-    out, err = capture_io do
+    assert_output(/^bad_name.flac\s+OK$/, '') do
       Aur::Action.new(:verify, [RES_DIR + 'bad_name.flac']).run!
     end
-
-    assert_match(/^bad_name.flac\s+OK$/, out)
-    assert_empty(err)
   end
 
   def test_mp3_verify
-    out, err = capture_io do
+    assert_output('', "MP3 files cannot be verified.\n") do
       Aur::Action.new(:verify, [RES_DIR + 'bad_name.mp3']).run!
     end
-
-    assert_empty(out)
-    assert_equal("MP3 files cannot be verified.\n", err)
   end
 
   def action

@@ -14,10 +14,7 @@ class TestTagger < MiniTest::Test
     add = Spy.on(t.info.raw, :comment_add)
     upd = Spy.on(t.info.raw, :update!)
 
-    out, err = capture_io { t.tag!(test_tags) }
-
-    assert_empty(err)
-    assert_equal(expected_output, out)
+    assert_output(expected_output) { t.tag!(test_tags) }
 
     assert_equal(%w[ARTIST TITLE ALBUM TRACKNUMBER],
                  del.calls.map(&:args).flatten)

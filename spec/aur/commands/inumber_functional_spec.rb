@@ -16,51 +16,46 @@ class TestNumberCommand < MiniTest::Test
 
       with_stdin do |input|
         input.puts "4\n"
-        out, err = capture_io { Aur::Action.new(:inumber, [f]).run! }
-        assert_empty(err)
-        assert_equal(
+        assert_output(
           '01.the_null_set.song_one.flac > ' \
           "       t_num -> 4\n" \
           "01.the_null_set.song_one.flac -> 04.the_null_set.song_one.flac\n",
-          out
-        )
+          ''
+        ) do
+          Aur::Action.new(:inumber, [f]).run!
+        end
       end
 
       refute(f.exist?)
       new_file = TMP_DIR + '04.the_null_set.song_one.flac'
       assert new_file.exist?
 
-      out, err = capture_io { Aur::Action.new(:info, [new_file]).run! }
-      assert_empty(err)
-      assert_match(/Track no : 4$/, out)
+      assert_output(/Track no : 4$/, '') do
+        Aur::Action.new(:info, [new_file]).run!
+      end
     end
   end
 
   def test_mp3_inumber
     with_test_file('bad_name.mp3') do |f|
-      out, = capture_io { Aur::Action.new(:info, [f]).run! }
-      assert_match(/Track no : 2/, out)
-      refute_match(/Track no : 11/, out)
+      assert_output(/Track no : 2/, '') { Aur::Action.new(:info, [f]).run! }
 
       with_stdin do |input|
         input.puts "11\n"
-        out, err = capture_io { Aur::Action.new(:inumber, [f]).run! }
-        assert_empty(err)
-        assert_equal(
-          'bad_name.mp3 > ' \
-          "       t_num -> 11\n" \
-          "bad_name.mp3 -> 11.bad_name.mp3\n", out
-        )
+        assert_output('bad_name.mp3 > ' \
+                      "       t_num -> 11\n" \
+                      "bad_name.mp3 -> 11.bad_name.mp3\n", '') do
+                        Aur::Action.new(:inumber, [f]).run!
+                      end
       end
 
       refute(f.exist?)
       new_file = TMP_DIR + '11.bad_name.mp3'
       assert new_file.exist?
 
-      out, err = capture_io { Aur::Action.new(:info, [new_file]).run! }
-      assert_empty(err)
-      refute_match(/Track no : 2/, out)
-      assert_match(/Track no : 11/, out)
+      assert_output(/Track no : 11/, '') do
+        Aur::Action.new(:info, [new_file]).run!
+      end
     end
   end
 

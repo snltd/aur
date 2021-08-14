@@ -15,11 +15,9 @@ class TestReencodeCommand < MiniTest::Test
       original_mtime = f.mtime
       original_tags = Aur::FileInfo::Flac.new(f).our_tags
 
-      out, err = capture_io { Aur::Action.new(:reencode, [f]).run! }
-
-      assert_equal("#{f} -> #{f} [re-encoded]\n", out)
-      assert_empty(err)
-      assert(f.exist?)
+      assert_output("#{f} -> #{f} [re-encoded]\n", '') do
+        Aur::Action.new(:reencode, [f]).run!
+      end
 
       new_mtime = f.mtime
       new_tags = Aur::FileInfo::Flac.new(f).our_tags
@@ -36,9 +34,10 @@ class TestReencodeCommand < MiniTest::Test
       original_mtime = f.mtime
       original_tags = Aur::FileInfo::Mp3.new(f).our_tags
 
-      out, err = capture_io { Aur::Action.new(:reencode, [f]).run! }
-      assert_equal("#{f} -> #{f} [re-encoded]\n", out)
-      assert_empty(err)
+      assert_output("#{f} -> #{f} [re-encoded]\n", '') do
+        Aur::Action.new(:reencode, [f]).run!
+      end
+
       assert(f.exist?)
 
       new_mtime = f.mtime
