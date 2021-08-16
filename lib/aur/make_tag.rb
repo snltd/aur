@@ -26,7 +26,7 @@ module Aur
 
         if w.include?('--')
           ws = w.split('--')
-          ws.map { |e| smart_capitalize(e.expand, i, words.size) }.join(' - ')
+          ws.map { |e| smart_capitalize(e.expand, i, words.size) }.join('-')
         elsif w.include?('-')
           ws = w.split('-')
           bw, in_brackets = in_brackets ? close_brackets(ws) : open_brackets(ws)

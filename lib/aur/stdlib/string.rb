@@ -10,15 +10,16 @@ class String
   #   - replace accented characters with basic Latin
   #   - make lowercase
   #   - remove anything that's not a letter, number, underscore or hyphen
-  #   - things in brackets have the brackets removed and a dash put
-  #       in front and/or behind
+  #   - things in brackets have the brackets removed and a dash put in front
+  #     and/or behind
   #   - turn all whitespace to a single underscore
   #   - turn '_-_' into a single hyphen
+  #   - turn a hyphenated word into word--word
   #
   def to_safe
     I18n.transliterate(self)
         .downcase
-        .gsub(/ - /, '--')
+        .gsub(/(\S)-(\S)/, '\1--\2')
         .gsub(/\s+\(/, '-')
         .gsub(/\)\s+/, '-')
         .gsub(/\s+/, '_')
