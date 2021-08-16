@@ -14,6 +14,9 @@ module Aur
     #
     # rubocop:disable Metrics/MethodLength
     # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/CyclomaticComplexity
+    # rubocop:disable Metrics/PerceivedComplexity
+    #
     def mk_title(string)
       words = string.split('_')
       in_brackets = false
@@ -23,7 +26,7 @@ module Aur
 
         if w.include?('--')
           ws = w.split('--')
-          ws.map { |w| smart_capitalize(w.expand, i, words.size) }.join(' - ')
+          ws.map { |e| smart_capitalize(e.expand, i, words.size) }.join(' - ')
         elsif w.include?('-')
           ws = w.split('-')
           bw, in_brackets = in_brackets ? close_brackets(ws) : open_brackets(ws)
@@ -35,6 +38,8 @@ module Aur
 
       new_words.flatten.join(' ').tap { |str| str.<< ')' if in_brackets }
     end
+    # rubocop:enable Metrics/PerceivedComplexity
+    # rubocop:enable Metrics/CyclomaticComplexity
     # rubocop:enable Metrics/AbcSize
     # rubocop:enable Metrics/MethodLength
 
