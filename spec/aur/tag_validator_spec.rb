@@ -34,6 +34,9 @@ class TestTagValidator < MiniTest::Test
     refute t.t_num('-1')
     refute t.t_num('')
     refute t.t_num('0')
+    refute t.t_num('1/14')
+    refute t.t_num('01/14')
+    refute t.t_num('1 (disc 1)')
   end
 
   def test_genre
