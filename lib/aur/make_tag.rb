@@ -21,7 +21,10 @@ module Aur
       new_words = words.map.with_index do |w, i|
         w = w.initials if w.match?(/^(\w-)+\w?/)
 
-        if w.include?('-')
+        if w.include?('--')
+          ws = w.split('--')
+          ws.map { |w| smart_capitalize(w.expand, i, words.size) }.join(' - ')
+        elsif w.include?('-')
           ws = w.split('-')
           bw, in_brackets = in_brackets ? close_brackets(ws) : open_brackets(ws)
           bw

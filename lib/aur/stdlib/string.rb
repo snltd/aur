@@ -18,6 +18,7 @@ class String
   def to_safe
     I18n.transliterate(self)
         .downcase
+        .gsub(/ - /, '--')
         .gsub(/\s+\(/, '-')
         .gsub(/\)\s+/, '-')
         .gsub(/\s+/, '_')
