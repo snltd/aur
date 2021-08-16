@@ -41,4 +41,18 @@ class String
   def initials
     (tr('-', '.') + '.').upcase
   end
+
+  # Checks a string is a safe filename segment
+  #
+  def safe?
+    return true if match?(/^[a-z0-9]$/)
+
+    match?(/^[a-z0-9][\w\-]*[a-z0-9]$/) && squeeze('_-') == self
+  end
+
+  # Checks a string is 01-99
+  #
+  def safenum?
+    match?(/^[0-9][0-9]$/) && to_i.positive?
+  end
 end

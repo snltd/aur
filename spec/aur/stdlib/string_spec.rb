@@ -40,4 +40,37 @@ class StringTest < MiniTest::Test
     assert_equal('C.R.E.E.P.', 'c-r-e-e-p'.initials)
     assert_equal('X.', 'x'.initials)
   end
+
+  def test_safe?
+    %w[
+      artist
+      01
+      a
+      7
+      me
+      two_words
+      and_three_words
+      with-hyphen
+      1_two_3
+      one_2_3
+    ].each { |c| assert(c.safe?, "#{c} should pass") }
+
+    %w[
+      _word
+      -word
+      _
+      -
+      word_
+      two__words
+      too--many--dashes
+      tres,comma
+      Word
+    ].each { |c| refute(c.safe?, "#{c} should fail") }
+  end
+
+  def test_safenum
+    assert '01'.safenum?
+    assert '99'.safenum?
+    refute '00'.safenum?
+  end
 end
