@@ -13,6 +13,11 @@ module Aur
     class Reencode < Base
       include Aur::Renamers
 
+      # Overridden so we can reencode files which flacinfo-rb can't parse,
+      # which is kind of the point of this command.
+      #
+      def setup_tagger; end
+
       def run
         intermediate_file = file.prefixed
 
