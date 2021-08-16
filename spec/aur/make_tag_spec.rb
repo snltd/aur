@@ -44,7 +44,7 @@ class TestName2Tag < MiniTest::Test
                  mk_title('tick--tock--tick--tock'))
   end
 
-  def _test_mk_title_brackets_in_middle
+  def test_mk_title_brackets_in_middle
     assert_equal('This Is (Almost) Too Easy',
                  mk_title('this_is-almost-too_easy'))
     assert_equal('Can We Make It (Just a Little Bit) Harder',
@@ -57,7 +57,7 @@ class TestName2Tag < MiniTest::Test
                  mk_title('two-lots-of_brackets-is_tricky'))
   end
 
-  def _test_mk_title_initials
+  def test_mk_title_initials
     assert_equal('C.R.E.E.P.', mk_title('c-r-e-e-p'))
     assert_equal('The N.W.R.A.', mk_title('the_n-w-r-a'))
     assert_equal('W.M.C. Blob 59', mk_title('w-m-c_blob_59'))
