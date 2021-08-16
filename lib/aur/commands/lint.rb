@@ -5,7 +5,11 @@ require_relative 'base'
 require_relative '../fileinfo'
 require_relative '../constants'
 require_relative '../exception'
+<<<<<<< HEAD
 require_relative '../tag_validator'
+=======
+require_relative '../validator'
+>>>>>>> e96dcd04b664730d5f277c3a02c4808afef8390c
 require_relative '../stdlib/string'
 
 module Aur
