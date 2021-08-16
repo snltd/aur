@@ -49,6 +49,7 @@ class StringTest < MiniTest::Test
       me
       two_words
       and_three_words
+      some--hyphenated--words
       with-hyphen
       1_two_3
       one_2_3
@@ -61,7 +62,6 @@ class StringTest < MiniTest::Test
       -
       word_
       two__words
-      too--many--dashes
       tres,comma
       Word
     ].each { |c| refute(c.safe?, "#{c} should fail") }
