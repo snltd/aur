@@ -17,6 +17,10 @@ module Aur
 
     class InvalidValue < RuntimeError; end
 
+    class LintBadName < RuntimeError; end
+
+    class LintBadTags < RuntimeError; end
+
     class LintDirBadFile < RuntimeError; end
 
     class LintDirBadFileCount < RuntimeError; end
