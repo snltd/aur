@@ -107,8 +107,6 @@ module Aur
     rescue FlacInfoReadError,
            Mp3InfoEOFError,
            Aur::Exception::FailedOperation => e
-      return if action == :Name2tag || action == :Reencode
-
       warn "ERROR: cannot process '#{file}'."
       pp e
       @errs.<< file
