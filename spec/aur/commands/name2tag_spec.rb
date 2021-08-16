@@ -7,6 +7,8 @@ require_relative '../../../lib/aur/commands/name2tag'
 # Test for name2tag command
 #
 class TestName2tag < MiniTest::Test
+  N2T_DIR = RES_DIR + 'name2tag' + 'null_set.some_stuff_by'
+
   def test_flac
     t1 = Aur::Command::Name2tag.new(FLAC_TEST)
 
@@ -18,12 +20,12 @@ class TestName2tag < MiniTest::Test
       t1.tags_from_filename
     )
 
-    t2 = Aur::Command::Name2tag.new(RES_DIR + '01.the_null_set.song_one.flac')
+    t2 = Aur::Command::Name2tag.new(N2T_DIR + '01.the_null_set.song_one.flac')
 
     assert_equal(
       { artist: 'The Null Set',
         title: 'Song One',
-        album: 'Resources',
+        album: 'Some Stuff By',
         t_num: '01' },
       t2.tags_from_filename
     )
@@ -39,12 +41,12 @@ class TestName2tag < MiniTest::Test
         t_num: '00' }, t1.tags_from_filename
     )
 
-    t2 = Aur::Command::Name2tag.new(RES_DIR + '01.the_null_set.song_one.mp3')
+    t2 = Aur::Command::Name2tag.new(N2T_DIR + '01.the_null_set.song_one.mp3')
 
     assert_equal(
       { artist: 'The Null Set',
         title: 'Song One',
-        album: 'Resources',
+        album: 'Some Stuff By',
         t_num: '01' },
       t2.tags_from_filename
     )

@@ -50,7 +50,7 @@ module Aur
       end
 
       def f_album
-        file.dirname.realpath.basename.to_s
+        file.dirname.realpath.basename.to_s.split('.', 2).last
       end
 
       def f_title
