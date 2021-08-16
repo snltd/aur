@@ -51,10 +51,6 @@ class TestLint < MiniTest::Test
     assert t.correct_tags?(RES_DIR + 'bad_name.mp3')
 
     assert_raises(Aur::Exception::LintBadTags) do
-      t.correct_tags?(RES_DIR + 'unstripped.flac')
-    end
-
-    assert_raises(Aur::Exception::LintBadTags) do
       t.correct_tags?(RES_DIR + 'unstripped.mp3')
     end
   end

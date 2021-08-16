@@ -5,7 +5,7 @@ require_relative 'base'
 require_relative '../fileinfo'
 require_relative '../constants'
 require_relative '../exception'
-require_relative '../validator'
+require_relative '../tag_validator'
 require_relative '../stdlib/string'
 
 module Aur
@@ -32,10 +32,13 @@ module Aur
       def lint(file)
         correctly_named?(file)
         correct_tags?(file)
+        correct_tag_values?(file)
       rescue Aur::Exception::LintBadName
         err(file, 'Invalid file name')
       rescue Aur::Exception::LintBadTags => e
-        err(file, 'Bad tags')
+        err(file, "Bad tags: #{e}")
+      rescue Aur::Exception::InvalidTagValue => e
+        err(file, "Bad tag value: #{e}")
       rescue StandardError => e
         warn "Bombed on #{file}"
         pp e
@@ -61,13 +64,17 @@ module Aur
         raise Aur::Exception::LintBadName
       end
 
-      # Do we have the tags we expect to have?
+      # Do we have the tags we expect to have? For now, at least, we're not
+      # going to worry about additional tags.
+      #
       def correct_tags?(file)
         info, type = fileinfo(file)
 
-        return true if (info.tags.keys - REQ_TAGS[type]).empty?
+        missing_tags = REQ_TAGS[type] - info.tags.keys
 
-        raise Aur::Exception::LintBadTags
+        return true if missing_tags.empty?
+
+        raise Aur::Exception::LintBadTags, missing_tags.join(', ')
       end
 
       # Are tags (reasonably) correctly populated?
@@ -78,7 +85,7 @@ module Aur
 
         info.our_tags.each do |tag, value|
           unless validator.send(tag, value)
-            raise Aur::Exception::InvalidTagValue, "#{tag}: #{value}"
+            err(file, "Bad tag value: #{tag}: #{value}")
           end
         end
       end
