@@ -21,8 +21,7 @@ class TestName2Tag < MiniTest::Test
   end
 
   def test_mk_title_contraction
-    assert_equal("Don't Let Our Youth Go to Waste",
-                 mk_title('dont_let_our_youth_go_to_waste'))
+    assert_equal("Don't Go", mk_title('dont_go'))
     assert_equal("You Can't Hold What You Haven't Got in Your Hand",
                  mk_title('you_cant_hold_what_you_havent_got_in_your_hand'))
   end
@@ -30,6 +29,19 @@ class TestName2Tag < MiniTest::Test
   def test_mk_title_brackets_at_end
     assert_equal('Suburbia (The Full Horror)',
                  mk_title('suburbia-the_full_horror'))
+  end
+
+  def test_inches
+    assert_equal('I Feel Love (12" Mix)', mk_title('i_feel_love-12inch_mix'))
+    assert_equal('Fugitive (7" Mix)', mk_title('fugitive-7inch_mix'))
+  end
+
+  def test_long_dash
+    assert_equal('When - Never', mk_title('when--never'))
+    assert_equal('Who - What and Maybe - Not',
+                 mk_title('who--what_and_maybe--not'))
+    assert_equal('Tick - Tock - Tick - Tock',
+                 mk_title('tick--tock--tick--tock'))
   end
 
   def test_mk_title_brackets_in_middle

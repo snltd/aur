@@ -34,6 +34,9 @@ NO_CAPS = %w[a aboard about above absent across after against along
 # are less certain, but I think they're more commonly expanded than not.
 #
 EXPAND = {
+  '12inch': '12"',
+  '7inch': '7"',
+  '--': ' - ',
   '&': 'and',
   aint: "ain't",
   cant: "can't",

@@ -35,7 +35,7 @@ module Aur
             <track_num>.<artist>.<title>.suffix
 
           track_num is two zero-padded digits; artist is turned to lower
-          snakd-case with non-alnum characters removed, and any leading 'the_'
+          snake-case with non-alnum characters removed, and any leading 'the_'
           stripped off; title is lower snake-cased
         EOHELP
       end
