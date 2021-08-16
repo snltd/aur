@@ -37,10 +37,10 @@ class TestName2Tag < MiniTest::Test
   end
 
   def test_long_dash
-    assert_equal('When - Never', mk_title('when--never'))
-    assert_equal('Who - What and Maybe - Not',
+    assert_equal('When-Never', mk_title('when--never'))
+    assert_equal('Who-What and Maybe-Not',
                  mk_title('who--what_and_maybe--not'))
-    assert_equal('Tick - Tock - Tick - Tock',
+    assert_equal('Tick-Tock-Tick-Tock',
                  mk_title('tick--tock--tick--tock'))
   end
 

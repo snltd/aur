@@ -13,10 +13,9 @@ class StringTest < MiniTest::Test
     assert_equal('basic', 'basic'.to_safe)
     assert_equal('fuxa', 'Füxa'.to_safe)
     assert_equal('say_yes', 'Say "Yes!"'.to_safe)
-    assert_equal('simple-string', 'simple-String'.to_safe)
+    assert_equal('simple--string', 'simple-String'.to_safe)
     assert_equal('simple_string', 'Simple String'.to_safe)
-    assert_equal('simple--string', 'Simple - String'.to_safe)
-    assert_equal('a_long_complicated_string-type-thing',
+    assert_equal('a_long_complicated_string--type--thing',
                  'a long, complicated string-type-thing.'.to_safe)
     assert_equal('content', '!|~~c*o*n*t*e*n*t~~;:'.to_safe)
     assert_equal('looking_for_love-in_the_hall_of_mirrors',
