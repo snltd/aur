@@ -39,13 +39,14 @@ module Aur
         err(file, "Bad tags: #{e}")
       rescue Aur::Exception::InvalidTagValue => e
         err(file, "Bad tag value: #{e}")
-      rescue StandardError => e
-        warn "Bombed on #{file}"
-        pp e
       end
 
       def err(file, msg)
-        warn(format('%-110<file>s    %<msg>s', file: file, msg: msg))
+        if opts[:summary]
+          raise Aur::Exception::Collector, "#{file.dirname}: #{msg}"
+        else
+          warn(format('%-110<file>s    %<msg>s', file: file, msg: msg))
+        end
       end
 
       # A "proper" file name should be of the form
@@ -85,7 +86,8 @@ module Aur
 
         info.our_tags.each do |tag, value|
           unless validator.send(tag, value)
-            err(file, "Bad tag value: #{tag}: #{value}")
+            msg = opts[:summary] ? tag : "#{tag}: #{value}"
+            err(file, "Bad tag value: #{msg}")
           end
         end
       end
