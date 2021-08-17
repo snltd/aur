@@ -11,6 +11,7 @@ CMDS = %i[artfix
           help
           info
           inumber
+          lint
           lintdir
           name2num
           name2tag
@@ -41,13 +42,15 @@ docopt = <<~EOCMDS
     aur flac2mp3 <file>...
     aur transcode <newtype> <file>...
     aur reencode <file>...
+    aur lint [-s] <file>...
     aur lintdir [-r] <directory>...
     aur artfix [-n] <directory>...
     aur help <command>
 
   Options:
-    -r, --recursive   lint directories recursively
     -n, --noop        don't perform the requested operation
+    -r, --recursive   lint directories recursively
+    -s, --summary     summarise results
 EOCMDS
 
 def sanitize_keys(options)
@@ -56,6 +59,8 @@ end
 
 def errors(errs)
   return if errs.empty?
+
+  errs = errs.sort.uniq
 
   warn "Completed with #{errs.size} errors."
   errs.each { |err| warn "  #{err}" }

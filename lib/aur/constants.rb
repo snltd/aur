@@ -19,9 +19,9 @@ LAME_FLAGS = '-h --vbr-new --preset 128 --id3v2-only --add-id3v2 --silent'
 NO_CAPS = %w[a aboard about above absent across after against along
              alongside amid amidst among amongst an and around as as
              aslant astride at athwart atop barring before behind
-             below beneath beside besides between beyond but by
+             below beneath beside besides between beyond but by de
              despite down during except failing following for for
-             from in is inside into like mid minus near next nor
+             from in is inside into la le like mid minus near next nor
              notwithstanding of off on onto opposite or out outside
              over past per plus regarding round save since so than
              the through throughout till times to too toward towards
@@ -42,10 +42,14 @@ EXPAND = {
   cant: "can't",
   couldnt: "couldn't",
   didnt: "didn't",
+  doesnt: "doesn't",
   dont: "don't",
   etc: 'etc.',
   hes: "he's",
   havent: "haven't",
+  ii: 'II',
+  iii: 'III',
+  iv: 'IV',
   im: "I'm",
   isnt: "isn't",
   its: "it's",

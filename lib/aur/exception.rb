@@ -5,6 +5,8 @@ module Aur
   # Nothing fancy here. Just named exceptions to make things clearer.
   #
   class Exception
+    class Collector < RuntimeError; end
+
     class FailedOperation < RuntimeError; end
 
     class FileExists < RuntimeError; end
@@ -16,6 +18,10 @@ module Aur
     class InvalidTagValue < RuntimeError; end
 
     class InvalidValue < RuntimeError; end
+
+    class LintBadName < RuntimeError; end
+
+    class LintBadTags < RuntimeError; end
 
     class LintDirBadFile < RuntimeError; end
 

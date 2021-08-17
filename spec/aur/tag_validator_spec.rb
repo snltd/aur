@@ -15,7 +15,6 @@ class TestTagValidator < MiniTest::Test
     assert t.artist('!!!')
     assert t.artist('Broadcast')
     assert t.artist('Simon and Garfunkel')
-    refute t.artist('simon_and_garfunkel')
     refute t.artist('Simon & Garfunkel')
     refute t.artist('')
   end

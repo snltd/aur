@@ -9,53 +9,52 @@ require_relative '../../../lib/aur/action'
 #
 class TestLintdirCommand < MiniTest::Test
   def test_directory_which_is_good
-    assert_output { act(MDIR + 'broadcast.pendulum') }
+    assert_silent { act(MDIR + 'broadcast.pendulum') }
   end
 
   def test_directory_which_only_holds_other_directories
-    assert_output { act(FDIR) }
+    assert_silent { act(FDIR) }
   end
 
   def test_directory_with_two_discs
-    assert_output do
+    assert_silent do
       act(MDIR + 'pet_shop_boys.very' + 'further_listening_1992-1994')
     end
   end
 
   def test_directory_which_does_not_exist
-    assert_output(nil, "'#{RES_DIR}/no_such_dir' not found.\n") do
+    assert_output('', "'#{RES_DIR}/no_such_dir' not found.\n") do
       act(RES_DIR + 'no_such_dir')
     end
   end
 
   def test_directory_with_a_bad_name
-    assert_output(nil, /polvo.cor.crane_secret\s+Invalid directory name\n/) do
+    assert_output('', /polvo.cor.crane_secret\s+Invalid directory name\n/) do
       act(MDIR + 'polvo.cor.crane_secret')
     end
   end
 
   def test_directory_with_a_missing_file
-    assert_output(
-      nil, %r{tegan_and_sara.the_con\s+Missing file\(s\) \(13/14\)\n}
-    ) do
+    assert_output('',
+                  %r{tegan_and_sara.the_con\s+Missing file\(s\) \(13/14\)\n}) do
       act(MDIR + 'tegan_and_sara.the_con')
     end
   end
 
   def test_directory_with_a_wrongly_numbered_file
-    assert_output(nil, /seefeel.starethrough_ep\s+Missing track 02\n/) do
+    assert_output('', /seefeel.starethrough_ep\s+Missing track 02\n/) do
       act(MDIR + 'seefeel.starethrough_ep')
     end
   end
 
   def test_directory_with_missing_artwork
-    assert_output(nil, /#{FDIR + 'fall.eds_babe'}\s+Missing cover art\n/) do
+    assert_output('', /#{FDIR + 'fall.eds_babe'}\s+Missing cover art\n/) do
       act(FDIR + 'fall.eds_babe')
     end
   end
 
   def test_directory_with_artwork_that_should_not_be_there
-    assert_output(nil, /afx.analogue_bubblebath\s+Unwanted cover art\n/) do
+    assert_output('', /afx.analogue_bubblebath\s+Unwanted cover art\n/) do
       act(MDIR + 'afx.analogue_bubblebath')
     end
   end
@@ -67,13 +66,13 @@ class TestLintdirCommand < MiniTest::Test
         #{MDIR}\/pram.meshes/some_more_junk.txt
     EOOUT
 
-    assert_output(nil, Regexp.new(expected, Regexp::MULTILINE)) do
+    assert_output('', Regexp.new(expected, Regexp::MULTILINE)) do
       act(MDIR + 'pram.meshes')
     end
   end
 
   def test_directory_with_mixed_filetypes
-    assert_output(nil, /heavenly.atta_girl\s+Different file types\n/) do
+    assert_output('', /heavenly.atta_girl\s+Different file types\n/) do
       act(MDIR + 'heavenly.atta_girl')
     end
   end
@@ -90,7 +89,7 @@ class TestLintdirCommand < MiniTest::Test
       #{MDIR}\/tegan_and_sara.the_con\\s+Missing file\\(s\\) \\(13\\/14\\)
     EOOUT
 
-    assert_output(nil, Regexp.new(expected, Regexp::MULTILINE)) do
+    assert_output('', Regexp.new(expected, Regexp::MULTILINE)) do
       Aur::Action.new(:lintdir, [], { '<directory>': [MDIR.to_s],
                                       recursive: true }).run!
     end

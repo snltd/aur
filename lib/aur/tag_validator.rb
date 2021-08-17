@@ -6,7 +6,7 @@ module Aur
   #
   class TagValidator
     def artist(artist)
-      !(artist.empty? || artist.match(/[&_]/) || artist != artist.strip)
+      !(artist.empty? || artist.include?('&') || artist != artist.strip)
     end
 
     alias album artist
@@ -21,6 +21,8 @@ module Aur
     end
 
     def genre(genre)
+      return false if genre.nil?
+
       !genre.empty?
     end
   end

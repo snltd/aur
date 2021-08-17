@@ -18,6 +18,8 @@ module Aur
       #
       def setup_tagger; end
 
+      def setup_info; end
+
       def run
         intermediate_file = file.prefixed
 
