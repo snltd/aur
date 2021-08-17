@@ -108,7 +108,7 @@ module Aur
       @errs << e.to_s
     rescue FlacInfoReadError,
            Mp3InfoEOFError,
-           Aur::Exception::FailedOperation => e
+           Aur::Exception::FailedOperation
       warn "ERROR: cannot process '#{file}'."
       @errs.<< file.to_s
     rescue Aur::Exception::InvalidTagValue => e

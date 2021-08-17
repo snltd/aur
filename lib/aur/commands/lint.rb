@@ -44,9 +44,9 @@ module Aur
       def err(file, msg)
         if opts[:summary]
           raise Aur::Exception::Collector, "#{file.dirname}: #{msg}"
-        else
-          warn(format('%-110<file>s    %<msg>s', file: file, msg: msg))
         end
+
+        warn(format('%-110<file>s    %<msg>s', file: file, msg: msg))
       end
 
       # A "proper" file name should be of the form
