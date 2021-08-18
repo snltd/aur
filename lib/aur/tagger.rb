@@ -49,6 +49,7 @@ module Aur
 
       alias validate_artist validate_title
       alias validate_album validate_title
+      alias validate_genre validate_title
 
       def validate_year(year)
         ryear = year.to_i
@@ -62,10 +63,6 @@ module Aur
         return rnum if rnum.positive?
 
         raise(Aur::Exception::InvalidTagValue, num)
-      end
-
-      def validate_genre(genre)
-        genre.capitalize
       end
     end
 
