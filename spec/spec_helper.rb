@@ -4,6 +4,7 @@ require 'pathname'
 require 'minitest/autorun'
 require 'spy/integration'
 require_relative 'common_command_tests'
+require_relative '../lib/aur/fileinfo'
 
 RES_DIR = Pathname.new(__dir__) + 'resources'
 TMP_DIR = Pathname.new('/tmp/aurtest')
