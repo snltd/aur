@@ -6,6 +6,8 @@ module Aur
   #
   class TagValidator
     def artist(artist)
+      return false if artist.nil?
+
       !(artist.empty? || artist.include?('&') || artist != artist.strip)
     end
 
@@ -13,7 +15,8 @@ module Aur
     alias title artist
 
     def year(year)
-      year.to_i.between?(1955, Time.now.year)
+      year.to_s.match?(/^[12]\d\d\d$/) &&
+        year.to_i.between?(1955, Time.now.year)
     end
 
     def t_num(num)

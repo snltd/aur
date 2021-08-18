@@ -55,7 +55,6 @@ class TestTagger < MiniTest::Test
     assert_equal({ t_num: 9 }, t.validate(t_num: '9'))
     assert_equal({ t_num: 1 }, t.validate(t_num: 1))
     assert_equal({ genre: 'Noise' }, t.validate(genre: 'Noise'))
-    assert_equal({ genre: 'Noise' }, t.validate(genre: 'noise'))
 
     e = assert_raises(Aur::Exception::InvalidTagValue) do
       t.validate(year: '2050')
