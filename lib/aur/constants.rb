@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'pathname'
+
 SUPPORTED_TYPES = %w[flac mp3].freeze
 
 BIN = {
