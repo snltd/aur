@@ -3,7 +3,6 @@
 
 require_relative '../../spec_helper'
 require_relative '../../../lib/aur/action'
-require_relative '../../../lib/aur/fileinfo'
 
 # Run 'aur tagsub' commands against things, and verify the results
 #
