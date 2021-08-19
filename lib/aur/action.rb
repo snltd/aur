@@ -56,6 +56,16 @@ module Aur
       load_library('lintdir')
     end
 
+    def handle_ls
+      dirs = opts[:'<directory>'].to_paths
+
+      dirs = [Pathname.pwd] if dirs.empty?
+
+      @flist = opts[:recursive] ? recursive_dir_list(dirs) : dirs
+
+      load_library('ls')
+    end
+
     def handle_help
       require_relative 'commands/help'
       Aur::Command::Help.new(opts[:'<command>'])
