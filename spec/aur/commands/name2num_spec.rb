@@ -8,7 +8,8 @@ require_relative '../../../lib/aur/commands/name2num'
 #
 class TestName2num < MiniTest::Test
   def test_flac
-    t = Aur::Command::Name2num.new(RES_DIR + '01.the_null_set.song_one.flac')
+    t = Aur::Command::Name2num.new(RES_DIR +
+                                   '01.test_artist.untagged_song.flac')
 
     del = Spy.on(t.info.raw, :comment_del)
     add = Spy.on(t.info.raw, :comment_add)
@@ -33,11 +34,11 @@ class TestName2num < MiniTest::Test
   end
 
   def test_mp3
-    t = Aur::Command::Name2num.new(RES_DIR + '01.the_null_set.song_one.mp3')
+    t = Aur::Command::Name2num.new(RES_DIR + '01.test_artist.untagged_song.mp3')
     spy = Spy.on(Mp3Info, :open)
     t.run
     assert_equal(1, spy.calls.count)
-    assert_equal([RES_DIR + '01.the_null_set.song_one.mp3'],
+    assert_equal([RES_DIR + '01.test_artist.untagged_song.mp3'],
                  spy.calls.first.args)
   end
 

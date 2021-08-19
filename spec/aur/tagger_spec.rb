@@ -7,7 +7,7 @@ require_relative '../../lib/aur/fileinfo'
 
 class TestTagger < MiniTest::Test
   def test_flac
-    flacinfo = Aur::FileInfo.new(FLAC_TEST)
+    flacinfo = Aur::FileInfo.new(RES_DIR + 'test_tone-100hz.flac')
     t = Aur::Tagger.new(flacinfo, {})
 
     del = Spy.on(t.info.raw, :comment_del)
@@ -31,7 +31,7 @@ class TestTagger < MiniTest::Test
   # The way the Mp3Info class is written makes it really hard to test. It
   # doesn't matter though. We have full functional tests.
   def test_mp3
-    mp3info = Aur::FileInfo.new(MP3_TEST)
+    mp3info = Aur::FileInfo.new(RES_DIR + 'test_tone-100hz.mp3')
     t = Aur::Tagger.new(mp3info, {})
 
     spy = Spy.on(Mp3Info, :open)
@@ -44,7 +44,7 @@ class TestTagger < MiniTest::Test
   end
 
   def test_validate
-    flacinfo = Aur::FileInfo.new(FLAC_TEST)
+    flacinfo = Aur::FileInfo.new(RES_DIR + 'test_tone-100hz.flac')
     t = Aur::Tagger.new(flacinfo, {})
 
     assert_equal({ artist: 'Prince' }, t.validate(artist: 'Prince'))

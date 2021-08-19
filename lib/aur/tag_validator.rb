@@ -15,11 +15,15 @@ module Aur
     alias title artist
 
     def year(year)
+      return false if year.nil?
+
       year.to_s.match?(/^[12]\d\d\d$/) &&
         year.to_i.between?(1938, Time.now.year)
     end
 
     def t_num(num)
+      return false if num.nil?
+
       num.match(/^[1-9][0-9]?$/)
     end
 

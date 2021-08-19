@@ -41,21 +41,12 @@ class TestReencodeCommand < MiniTest::Test
   def test_transcode_bad_flac
     skip unless BIN[:ffmpeg].exist?
 
-    with_test_file(BAD_FLAC) do |f|
-      assert_output("#{f} -> #{TMP_DIR}/not_really_a.wav\n",
-                    "ERROR: cannot process '#{f}'.\n") do
-        Aur::Action.new(:transcode, [f], '<newtype>': 'wav').run!
-      end
-    end
-  end
-
-  def test_transcode_bad_mp3
-    skip unless BIN[:ffmpeg].exist?
-
-    with_test_file(BAD_MP3) do |f|
-      assert_output("#{f} -> #{TMP_DIR}/not_really_a.wav\n",
-                    "ERROR: cannot process '#{f}'.\n") do
-        Aur::Action.new(:transcode, [f], '<newtype>': 'wav').run!
+    SUPPORTED_TYPES.each do |type|
+      with_test_file(RES_DIR + "not_really_a.#{type}") do |f|
+        assert_output("#{f} -> #{TMP_DIR}/not_really_a.wav\n",
+                      "ERROR: cannot process '#{f}'.\n") do
+          Aur::Action.new(:transcode, [f], '<newtype>': 'wav').run!
+        end
       end
     end
   end

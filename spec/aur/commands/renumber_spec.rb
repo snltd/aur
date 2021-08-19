@@ -8,7 +8,7 @@ require_relative '../../../lib/aur/commands/renumber'
 #
 class TestRenumber < MiniTest::Test
   def test_validate
-    t = Aur::Command::Renumber.new(FLAC_TEST)
+    t = Aur::Command::Renumber.new(RES_DIR + 'test_tone-100hz.flac')
 
     assert_equal(5, t.validate('5'))
 

@@ -9,6 +9,9 @@ require_relative '../../lib/aur/action'
 class CommandTest < MiniTest::Test
   attr_reader :obj
 
+  FLAC_DIR = RES_DIR + 'lintdir' + 'flac'
+  MP3_DIR = RES_DIR + 'lintdir' + 'mp3'
+
   def setup
     @obj = Aur::Action.new(:info, RES_DIR.children)
   end
@@ -28,25 +31,25 @@ class CommandTest < MiniTest::Test
     assert_equal(lintdirs, obj.recursive_dir_list([RES_DIR + 'lintdir']))
 
     assert_equal(lintdirs, obj.recursive_dir_list(
-                             [RES_DIR + 'lintdir', FDIR, MDIR]
+                             [RES_DIR + 'lintdir', FLAC_DIR, MP3_DIR]
                            ))
   end
 
   def lintdirs
     [RES_DIR + 'lintdir',
-     FDIR,
-     FDIR + 'slint.spiderland_remastered',
-     FDIR + 'slint.spiderland_remastered/slint.spiderland_bonus_disc',
-     FDIR + 'fall.eds_babe',
-     MDIR,
-     MDIR + 'heavenly.atta_girl',
-     MDIR + 'broadcast.pendulum',
-     MDIR + 'pet_shop_boys.very',
-     MDIR + 'pet_shop_boys.very/further_listening_1992-1994',
-     MDIR + 'tegan_and_sara.the_con',
-     MDIR + 'seefeel.starethrough_ep',
-     MDIR + 'afx.analogue_bubblebath',
-     MDIR + 'polvo.cor.crane_secret',
-     MDIR + 'pram.meshes'].sort
+     FLAC_DIR,
+     FLAC_DIR + 'slint.spiderland_remastered',
+     FLAC_DIR + 'slint.spiderland_remastered/slint.spiderland_bonus_disc',
+     FLAC_DIR + 'fall.eds_babe',
+     MP3_DIR,
+     MP3_DIR + 'heavenly.atta_girl',
+     MP3_DIR + 'broadcast.pendulum',
+     MP3_DIR + 'pet_shop_boys.very',
+     MP3_DIR + 'pet_shop_boys.very/further_listening_1992-1994',
+     MP3_DIR + 'tegan_and_sara.the_con',
+     MP3_DIR + 'seefeel.starethrough_ep',
+     MP3_DIR + 'afx.analogue_bubblebath',
+     MP3_DIR + 'polvo.cor.crane_secret',
+     MP3_DIR + 'pram.meshes'].sort
   end
 end

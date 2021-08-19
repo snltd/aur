@@ -8,6 +8,9 @@ require_relative '../../../lib/aur/action'
 # results.
 #
 class TestLintdirCommand < MiniTest::Test
+  FDIR = RES_DIR + 'lintdir' + 'flac'
+  MDIR = RES_DIR + 'lintdir' + 'mp3'
+
   def test_directory_which_is_good
     assert_silent { act(MDIR + 'broadcast.pendulum') }
   end

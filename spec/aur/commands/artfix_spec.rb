@@ -15,13 +15,13 @@ class TestArtfix < MiniTest::Test
 
   def test_candidates
     assert_equal(
-      [AFDIR + 'albums/jesus_lizard.liar/cover.jpg',
-       AFDIR + 'albums/windy_and_carl.portal/Front.JPG',
-       AFDIR + 'eps/water_world.dead/front cover.Png'],
-      t.candidates(AFDIR).sort
+      [RES_DIR + 'artfix' + 'albums/jesus_lizard.liar/cover.jpg',
+       RES_DIR + 'artfix' + 'albums/windy_and_carl.portal/Front.JPG',
+       RES_DIR + 'artfix' + 'eps/water_world.dead/front cover.Png'],
+      t.candidates(RES_DIR + 'artfix').sort
     )
 
-    assert_equal([], t.candidates(FDIR))
+    assert_equal([], t.candidates(RES_DIR + 'lintdir' + 'flac'))
   end
 
   def test_new_name

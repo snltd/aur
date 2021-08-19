@@ -9,61 +9,48 @@ require_relative '../../../lib/aur/action'
 class TestTagsubCommand < MiniTest::Test
   include Aur::CommandTests
 
-  def test_flac_tagsub
-    with_test_file('test_tone-100hz.flac') do |f|
-      assert_tag(f, :artist, 'Test Tones')
+  def test_tagsub
+    SUPPORTED_TYPES.each do |type|
+      with_test_file("test_tone-100hz.#{type}") do |f|
+        assert_tag(f, :artist, 'Test Tones')
 
-      assert_output("      artist -> Test File\n", '') do
-        tagsub_command(f, :artist, 'Tones', 'File')
+        assert_output("      artist -> Test File\n", '') do
+          tagsub_command(f, :artist, 'Tones', 'File')
+        end
+
+        assert_tag(f, :artist, 'Test File')
       end
-
-      assert_tag(f, :artist, 'Test File')
     end
   end
 
-  def test_flac_tagsub_backref
-    with_test_file('test_tone-100hz.flac') do |f|
-      assert_tag(f, :artist, 'Test Tones')
+  def test_tagsub_backref
+    SUPPORTED_TYPES.each do |type|
+      with_test_file("test_tone-100hz.#{type}") do |f|
+        assert_tag(f, :artist, 'Test Tones')
 
-      assert_output("       album -> New Tone Test\n", '') do
-        tagsub_command(f, :album, '(\w+) (\w+)s', 'New \2 \1')
+        assert_output("       album -> New Tone Test\n", '') do
+          tagsub_command(f, :album, '(\w+) (\w+)s', 'New \2 \1')
+        end
+
+        assert_tag(f, :album, 'New Tone Test')
       end
-
-      assert_tag(f, :album, 'New Tone Test')
     end
   end
 
-  def test_flac_tagsub_no_change
-    with_test_file('test_tone-100hz.flac') do |f|
-      assert_tag(f, :artist, 'Test Tones')
-      assert_silent { tagsub_command(f, :artist, 'Junk', 'Nonsense') }
-      assert_tag(f, :artist, 'Test Tones')
+  def test_tagsub_no_change
+    SUPPORTED_TYPES.each do |type|
+      with_test_file("test_tone-100hz.#{type}") do |f|
+        assert_tag(f, :artist, 'Test Tones')
+        assert_silent { tagsub_command(f, :artist, 'Junk', 'Nonsense') }
+        assert_tag(f, :artist, 'Test Tones')
+      end
     end
   end
 
   def test_flac_tagsub_bad_tag
     assert_output('', "'badtag' tag not found.\n") do
-      tagsub_command(FLAC_TEST, :badtag, 'find', 'replace')
-    end
-  end
-
-  def test_mp3_tagsub
-    with_test_file('test_tone-100hz.mp3') do |f|
-      assert_tag(f, :artist, 'Test Tones')
-
-      assert_output("      artist -> Test File\n", '') do
-        tagsub_command(f, :artist, 'Tones', 'File')
-      end
-
-      assert_tag(f, :artist, 'Test File')
-    end
-  end
-
-  def test_mp3_tagsub_no_change
-    with_test_file('test_tone-100hz.mp3') do |f|
-      assert_tag(f, :artist, 'Test Tones')
-      assert_silent { tagsub_command(f, :artist, 'Junk', 'Nonsense') }
-      assert_tag(f, :artist, 'Test Tones')
+      tagsub_command(RES_DIR + 'test_tone-100hz.flac', :badtag, 'find',
+                     'replace')
     end
   end
 

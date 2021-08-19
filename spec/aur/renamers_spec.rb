@@ -41,22 +41,22 @@ class TestRenamers < MiniTest::Test
     assert_equal(Pathname.new('/a/04.band.song.mp3'),
                  renumbered_file(4, Pathname.new('/a/13.band.song.mp3')))
     assert_equal(RES_DIR + '19.test_tone-100hz.flac',
-                 renumbered_file(19, FLAC_TEST))
+                 renumbered_file(19, RES_DIR + 'test_tone-100hz.flac'))
   end
 
   def test_rename_file_ok
-    with_test_file('01.the_null_set.song_one.mp3') do |f|
+    with_test_file('01.test_artist.untagged_song.mp3') do |f|
       out, err = capture_io do
         rename_file(f, TMP_DIR + 'target_file.mp3')
       end
 
-      assert_equal("01.the_null_set.song_one.mp3 -> target_file.mp3\n", out)
+      assert_equal("01.test_artist.untagged_song.mp3 -> target_file.mp3\n", out)
       assert_empty(err)
     end
   end
 
   def test_rename_file_exists
-    with_test_file('01.the_null_set.song_one.mp3') do |f|
+    with_test_file('01.test_artist.untagged_song.mp3') do |f|
       FileUtils.cp(RES_DIR + 'bad_name.mp3', TMP_DIR)
 
       assert_raises(Aur::Exception::FileExists) do
@@ -73,7 +73,7 @@ class TestRenamers < MiniTest::Test
 end
 
 def flac_info
-  Aur::FileInfo.new(FLAC_TEST)
+  Aur::FileInfo.new(RES_DIR + 'test_tone-100hz.flac')
   #  Filename : ../resources/test_tone-100hz.flac
   #      Type : flac
   #   Bitrate : 16-bit/44100Hz
@@ -86,8 +86,8 @@ def flac_info
 end
 
 def mp3_info
-  Aur::FileInfo.new(RES_DIR + '01.the_null_set.song_one.mp3')
-  #  Filename : ../resources/01.the_null_set.song_one.mp3
+  Aur::FileInfo.new(RES_DIR + '01.test_artist.untagged_song.mp3')
+  #  Filename : ../resources/01.test_artist.untagged_song.mp3
   #      Type : mp3
   #   Bitrate :
   #    Artist :

@@ -9,13 +9,14 @@ require_relative '../../../lib/aur/stdlib/pathname'
 #
 class TestReencode < MiniTest::Test
   def test_construct_cmd
-    t = Aur::Command::Reencode.new(FLAC_TEST)
+    t = Aur::Command::Reencode.new(RES_DIR + 'test_tone-100hz.flac')
 
     assert_equal(
       '/opt/sysdef/ffmpeg/bin/ffmpeg -hide_banner -loglevel error -i ' \
       "\"#{RES_DIR}/test_tone-100hz.flac\" " \
       "\"#{RES_DIR}/_test_tone-100hz.flac\"",
-      t.construct_cmd(FLAC_TEST, FLAC_TEST.prefixed)
+      t.construct_cmd(RES_DIR + 'test_tone-100hz.flac',
+                      (RES_DIR + 'test_tone-100hz.flac').prefixed)
     )
   end
 end

@@ -7,28 +7,32 @@ module Aur
   #
   module CommandTests
     def test_bad_flac_info
-      out, err = capture_io { Aur::Action.new(action, [BAD_FLAC]).run! }
-      assert_empty(out)
-      assert_equal("ERROR: cannot process '#{BAD_FLAC}'.\n", err)
+      assert_output(
+        '',
+        "ERROR: cannot process '#{RES_DIR + 'not_really_a.flac'}'.\n"
+      ) do
+        Aur::Action.new(action, [RES_DIR + 'not_really_a.flac']).run!
+      end
     end
 
     def test_bad_mp3_info
-      out, err = capture_io { Aur::Action.new(action, [BAD_MP3]).run! }
-      assert_empty(out)
-      assert_equal("ERROR: cannot process '#{BAD_MP3}'.\n", err)
+      assert_output(
+        '',
+        "ERROR: cannot process '#{RES_DIR + 'not_really_a.mp3'}'.\n"
+      ) do
+        Aur::Action.new(action, [RES_DIR + 'not_really_a.mp3']).run!
+      end
     end
 
     def test_both_bad_files
-      out, err = capture_io do
-        Aur::Action.new(action, [BAD_FLAC, BAD_MP3]).run!
+      assert_output(
+        '',
+        "ERROR: cannot process '#{RES_DIR + 'not_really_a.flac'}'.\n" \
+        "ERROR: cannot process '#{RES_DIR + 'not_really_a.mp3'}'.\n"
+      ) do
+        Aur::Action.new(action, [RES_DIR + 'not_really_a.flac',
+                                 RES_DIR + 'not_really_a.mp3']).run!
       end
-
-      assert_empty(out)
-      assert_equal(
-        "ERROR: cannot process '#{BAD_FLAC}'.\n" \
-        "ERROR: cannot process '#{BAD_MP3}'.\n",
-        err
-      )
     end
   end
 end

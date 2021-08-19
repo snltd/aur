@@ -10,74 +10,54 @@ require_relative '../../../lib/aur/fileinfo'
 class TestRenumberCommand < MiniTest::Test
   include Aur::CommandTests
 
-  def test_flac_renumber_up
-    with_test_file('test_tone-100hz.flac') do |f|
-      assert_tag(f, :t_num, '06')
-      outfile = '09.test_tone-100hz.flac'
+  def test_renumber_up
+    SUPPORTED_TYPES.each do |type|
+      with_test_file("test_tone-100hz.#{type}") do |f|
+        assert_tag(f, :t_num, '6')
+        outfile = "09.test_tone-100hz.#{type}"
 
-      assert_output("       t_num -> 9\ntest_tone-100hz.flac -> #{outfile}\n",
-                    '') do
-        renumber_command(f, :up, '3')
+        assert_output(
+          "       t_num -> 9\ntest_tone-100hz.#{type} -> #{outfile}\n",
+          ''
+        ) do
+          renumber_command(f, :up, '3')
+        end
+
+        assert_tag(TMP_DIR + outfile, :t_num, '9')
       end
-
-      assert_tag(TMP_DIR + outfile, :t_num, '9')
     end
   end
 
   def test_flac_renumber_down
-    with_test_file('test_tone-100hz.flac') do |f|
-      assert_tag(f, :t_num, '06')
-      outfile = '02.test_tone-100hz.flac'
+    SUPPORTED_TYPES.each do |type|
+      with_test_file("test_tone-100hz.#{type}") do |f|
+        assert_tag(f, :t_num, '6')
+        outfile = "02.test_tone-100hz.#{type}"
 
-      assert_output("       t_num -> 2\ntest_tone-100hz.flac -> #{outfile}\n",
-                    '') do
-        renumber_command(f, :down, '4')
+        assert_output(
+          "       t_num -> 2\ntest_tone-100hz.#{type} -> #{outfile}\n",
+          ''
+        ) do
+          renumber_command(f, :down, '4')
+        end
+
+        assert_tag(TMP_DIR + outfile, :t_num, '2')
       end
-
-      assert_tag(TMP_DIR + outfile, :t_num, '2')
     end
   end
 
   def test_flac_renumber_down_too_far
-    with_test_file('test_tone-100hz.flac') do |f|
-      assert_tag(f, :t_num, '06')
+    SUPPORTED_TYPES.each do |type|
+      with_test_file("test_tone-100hz.#{type}") do |f|
+        assert_tag(f, :t_num, '6')
 
-      assert_output('', "'-9' is an invalid value.\n") do
-        renumber_command(f, :down, '15')
+        assert_output('', "'-9' is an invalid value.\n") do
+          renumber_command(f, :down, '15')
+        end
+
+        assert_tag(f, :t_num, '6')
+        assert f.exist?
       end
-
-      assert_tag(f, :t_num, '06')
-      assert f.exist?
-    end
-  end
-
-  def test_mp3_renumber_up
-    with_test_file('test_tone-100hz.mp3') do |f|
-      assert_tag(f, :t_num, '6')
-
-      outfile = '09.test_tone-100hz.mp3'
-
-      assert_output("       t_num -> 9\ntest_tone-100hz.mp3 -> #{outfile}\n",
-                    '') do
-        renumber_command(f, :up, '3')
-      end
-
-      assert_tag(TMP_DIR + outfile, :t_num, '9')
-    end
-  end
-
-  def test_mp3_renumber_down
-    with_test_file('test_tone-100hz.mp3') do |f|
-      assert_tag(f, :t_num, '6')
-
-      outfile = '02.test_tone-100hz.mp3'
-
-      assert_output("       t_num -> 2\ntest_tone-100hz.mp3 -> #{outfile}\n",
-                    '') do
-        renumber_command(f, :down, '4')
-      end
-
-      assert_tag(TMP_DIR + outfile, :t_num, '2')
     end
   end
 
