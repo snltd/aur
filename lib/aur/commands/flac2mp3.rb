@@ -14,7 +14,7 @@ module Aur
 
       def run_flac
         check_dependencies
-        info = Aur::FileInfo::Flac.new(file)
+        info = Aur::FileInfo.new(file)
         cmd = construct_command(file, info.our_tags)
         puts "#{file} -> #{dest_file}"
         system(cmd)

@@ -17,6 +17,8 @@ MP3_TEST = RES_DIR + 'test_tone-100hz.mp3'
 BAD_FLAC = RES_DIR + 'not_really_a.flac'
 BAD_MP3 = RES_DIR + 'not_really_a.mp3'
 
+FILETYPES = %w[flac mp3].freeze
+
 def setup_test_dir
   FileUtils.rm_r(TMP_DIR) if TMP_DIR.exist?
   FileUtils.mkdir_p(TMP_DIR)
@@ -53,11 +55,6 @@ end
 # Assert that the given file has the given tag.
 #
 def assert_tag(file, key, value)
-  info = if file.extname == '.flac'
-           Aur::FileInfo::Flac.new(file)
-         else
-           Aur::FileInfo::Mp3.new(file)
-         end
-
+  info = Aur::FileInfo.new(file)
   assert_equal(value, info.our_tags[key])
 end

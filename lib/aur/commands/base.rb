@@ -34,20 +34,11 @@ module Aur
       # fileinfo, and would otherwise require classes for arbitrary filetypes.
       #
       def setup_info
-        Object.const_get(class_for(:FileInfo)).new(file)
+        Aur::FileInfo.new(file)
       end
 
       def setup_tagger
-        Object.const_get(class_for(:Tagger)).new(info, opts)
-      end
-
-      # @return [String] name of relevant info class
-      # @raise [NameError] if the info class does not exist
-      #
-      def class_for(action)
-        format('Aur::%<action>s::%<name>s',
-               action: action,
-               name: file.extclass)
+        Aur::Tagger.new(info)
       end
     end
   end
