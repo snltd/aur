@@ -38,7 +38,7 @@ module Aur
       end
 
       def setup_tagger
-        Aur::Tagger.new(file)
+        Aur::Tagger.new(info)
       end
     end
   end
