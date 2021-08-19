@@ -14,10 +14,11 @@ module Aur
     # Examines files and compares them with our standards.
     #
     class Lint
-      attr_reader :file, :opts, :validator
+      attr_reader :file, :info, :opts, :validator
 
       def initialize(file = nil, opts = {})
         @file = file
+        @info = Aur::FileInfo.new(file)
         @opts = opts
         @validator = Aur::TagValidator.new
       end
@@ -31,8 +32,8 @@ module Aur
 
       def lint(file)
         correctly_named?(file)
-        correct_tags?(file)
-        correct_tag_values?(file)
+        correct_tags?
+        correct_tag_values?
       rescue Aur::Exception::LintBadName
         err(file, 'Invalid file name')
       rescue Aur::Exception::LintBadTags => e
@@ -68,10 +69,8 @@ module Aur
       # Do we have the tags we expect to have? For now, at least, we're not
       # going to worry about additional tags.
       #
-      def correct_tags?(file)
-        info, type = fileinfo(file)
-
-        missing_tags = REQ_TAGS[type] - info.tags.keys
+      def correct_tags?
+        missing_tags = REQ_TAGS[info.filetype.to_sym] - info.tags.keys
 
         return true if missing_tags.empty?
 
@@ -79,11 +78,8 @@ module Aur
       end
 
       # Are tags (reasonably) correctly populated?
-      # TODO re-use the info object
       #
-      def correct_tag_values?(file)
-        info, _type = fileinfo(file)
-
+      def correct_tag_values?
         info.our_tags.each do |tag, value|
           unless validator.send(tag, value)
             msg = opts[:summary] ? tag : "#{tag}: #{value}"
@@ -101,16 +97,6 @@ module Aur
             - all and only required tags are present
             - said tags are populated with sane values
         EOHELP
-      end
-
-      private
-
-      def fileinfo(file)
-        if file.extname == '.flac'
-          [Aur::FileInfo::Flac.new(file), :flac]
-        else
-          [Aur::FileInfo::Mp3.new(file), :mp3]
-        end
       end
     end
   end

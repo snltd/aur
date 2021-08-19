@@ -13,14 +13,14 @@ class TestReencodeCommand < MiniTest::Test
       skip unless BIN[:ffmpeg].exist?
 
       original_mtime = f.mtime
-      original_tags = Aur::FileInfo::Flac.new(f).our_tags
+      original_tags = Aur::FileInfo.new(f).our_tags
 
       assert_output("#{f} -> #{f} [re-encoded]\n", '') do
         Aur::Action.new(:reencode, [f]).run!
       end
 
       new_mtime = f.mtime
-      new_tags = Aur::FileInfo::Flac.new(f).our_tags
+      new_tags = Aur::FileInfo.new(f).our_tags
 
       refute_equal(original_mtime, new_mtime)
       assert_equal(original_tags, new_tags)
@@ -32,7 +32,7 @@ class TestReencodeCommand < MiniTest::Test
       skip unless BIN[:ffmpeg].exist?
 
       original_mtime = f.mtime
-      original_tags = Aur::FileInfo::Mp3.new(f).our_tags
+      original_tags = Aur::FileInfo.new(f).our_tags
 
       assert_output("#{f} -> #{f} [re-encoded]\n", '') do
         Aur::Action.new(:reencode, [f]).run!
@@ -41,7 +41,7 @@ class TestReencodeCommand < MiniTest::Test
       assert(f.exist?)
 
       new_mtime = f.mtime
-      new_tags = Aur::FileInfo::Mp3.new(f).our_tags
+      new_tags = Aur::FileInfo.new(f).our_tags
 
       refute_equal(original_mtime, new_mtime)
 

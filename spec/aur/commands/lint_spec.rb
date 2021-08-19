@@ -11,7 +11,7 @@ class TestLint < MiniTest::Test
   attr_reader :t
 
   def setup
-    @t = Aur::Command::Lint.new
+    @t = Aur::Command::Lint.new(RES_DIR + 'bad_name.flac')
   end
 
   def test_correctly_named?
@@ -47,15 +47,14 @@ class TestLint < MiniTest::Test
   end
 
   def test_correct_tags?
-    assert t.correct_tags?(RES_DIR + 'bad_name.flac')
-    assert t.correct_tags?(RES_DIR + 'bad_name.mp3')
+    assert t.correct_tags?
 
     assert_raises(Aur::Exception::LintBadTags) do
-      t.correct_tags?(RES_DIR + 'unstripped.mp3')
+      Aur::Command::Lint.new(RES_DIR + 'unstripped.mp3').correct_tags?
     end
   end
 
   def test_correct_tag_values?
-    t.correct_tag_values?(RES_DIR + 'bad_name.flac')
+    assert t.correct_tag_values?
   end
 end

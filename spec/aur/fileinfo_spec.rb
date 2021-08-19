@@ -10,8 +10,8 @@ class TestFileInfo < MiniTest::Test
   attr_reader :flac, :mp3
 
   def setup
-    @flac = Aur::FileInfo::Flac.new(FLAC_TEST)
-    @mp3 = Aur::FileInfo::Mp3.new(MP3_TEST)
+    @flac = Aur::FileInfo.new(FLAC_TEST)
+    @mp3 = Aur::FileInfo.new(MP3_TEST)
   end
 
   def test_flac_bitrate
@@ -48,7 +48,6 @@ class TestFileInfo < MiniTest::Test
 
   def test_mp3_bitrate
     assert_equal('64kbps', mp3.bitrate)
-    # assert_equal('51kbps (variable)', mp3.bitrate)
   end
 
   def test_mp3_artist
@@ -80,15 +79,28 @@ class TestFileInfo < MiniTest::Test
   end
 
   def test_prt_name
-    assert_equal('test_tone-100hz.flac',
-                 Aur::FileInfo::Flac.new(FLAC_TEST).prt_name)
-    assert_equal('test_tone...',
-                 Aur::FileInfo::Flac.new(FLAC_TEST).prt_name(12))
+    assert_equal('test_tone-100hz.flac', Aur::FileInfo.new(FLAC_TEST).prt_name)
+    assert_equal('test_tone...', Aur::FileInfo.new(FLAC_TEST).prt_name(12))
   end
 
   def test_picture?
     refute(flac.picture?)
-    with_pic = Aur::FileInfo::Flac.new(RES_DIR + 'unstripped.flac')
+    with_pic = Aur::FileInfo.new(RES_DIR + 'unstripped.flac')
     assert(with_pic.picture?)
+  end
+
+  def test_unsupported
+    assert_raises(Aur::Exception::UnsupportedFiletype) do
+      Aur::FileInfo.new(RES_DIR + 'front.png')
+    end
+
+    assert_raises(Aur::Exception::UnsupportedFiletype) do
+      Aur::FileInfo.new(RES_DIR)
+    end
+  end
+
+  def test_filetype
+    assert_equal('flac', flac.filetype)
+    assert_equal('mp3', mp3.filetype)
   end
 end

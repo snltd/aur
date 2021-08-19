@@ -73,7 +73,7 @@ class TestRenamers < MiniTest::Test
 end
 
 def flac_info
-  Aur::FileInfo::Flac.new(FLAC_TEST)
+  Aur::FileInfo.new(FLAC_TEST)
   #  Filename : ../resources/test_tone-100hz.flac
   #      Type : flac
   #   Bitrate : 16-bit/44100Hz
@@ -86,7 +86,7 @@ def flac_info
 end
 
 def mp3_info
-  Aur::FileInfo::Mp3.new(RES_DIR + '01.the_null_set.song_one.mp3')
+  Aur::FileInfo.new(RES_DIR + '01.the_null_set.song_one.mp3')
   #  Filename : ../resources/01.the_null_set.song_one.mp3
   #      Type : mp3
   #   Bitrate :
