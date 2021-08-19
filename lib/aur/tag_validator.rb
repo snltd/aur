@@ -16,7 +16,7 @@ module Aur
 
     def year(year)
       year.to_s.match?(/^[12]\d\d\d$/) &&
-        year.to_i.between?(1955, Time.now.year)
+        year.to_i.between?(1938, Time.now.year)
     end
 
     def t_num(num)

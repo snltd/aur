@@ -22,7 +22,7 @@ class TestTagValidator < MiniTest::Test
   def test_year
     assert t.year('1994')
     refute t.year(Time.now.year + 1)
-    refute t.year('1940')
+    refute t.year('1930')
     refute t.year('')
     refute t.year('1996/2020')
     refute t.year('1989 02 03')
