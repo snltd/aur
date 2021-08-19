@@ -8,15 +8,15 @@ require_relative '../../../lib/aur/commands/base'
 #
 class TestBase < MiniTest::Test
   def test_initialize_flac
-    obj = Aur::Command::Base.new(FLAC_TEST)
-    assert_equal(FLAC_TEST, obj.file)
-    assert_instance_of(Aur::FileInfo::Flac, obj.info)
+    obj = Aur::Command::Base.new(RES_DIR + 'test_tone-100hz.flac')
+    assert_equal(RES_DIR + 'test_tone-100hz.flac', obj.file)
+    assert_instance_of(Aur::FileInfo, obj.info)
   end
 
   def test_initialize_mp3
-    obj = Aur::Command::Base.new(MP3_TEST)
-    assert_equal(MP3_TEST, obj.file)
-    assert_instance_of(Aur::FileInfo::Mp3, obj.info)
+    obj = Aur::Command::Base.new(RES_DIR + 'test_tone-100hz.mp3')
+    assert_equal(RES_DIR + 'test_tone-100hz.mp3', obj.file)
+    assert_instance_of(Aur::FileInfo, obj.info)
   end
 
   def test_initialize_png

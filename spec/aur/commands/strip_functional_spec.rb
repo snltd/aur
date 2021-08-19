@@ -14,7 +14,7 @@ class TestStripCommand < MiniTest::Test
     skip unless BIN[:metaflac].exist?
 
     with_test_file('unstripped.flac') do |f|
-      original = Aur::FileInfo::Flac.new(f)
+      original = Aur::FileInfo.new(f)
 
       assert original.picture?
       assert_equal(12, original.tags.size)
@@ -25,7 +25,7 @@ class TestStripCommand < MiniTest::Test
         Aur::Action.new(:strip, [f]).run!
       end
 
-      new = Aur::FileInfo::Flac.new(f)
+      new = Aur::FileInfo.new(f)
       refute new.picture?
       assert_equal(REQ_TAGS[:flac].sort, new.tags.keys.sort)
       assert_nil(new.tags[:encoder])
@@ -34,7 +34,7 @@ class TestStripCommand < MiniTest::Test
 
   def test_flac_nothing_to_strip
     with_test_file('bad_name.flac') do |f|
-      original = Aur::FileInfo::Flac.new(f)
+      original = Aur::FileInfo.new(f)
       original_mtime = f.mtime
 
       refute original.picture?
@@ -53,7 +53,7 @@ class TestStripCommand < MiniTest::Test
                       tyer: '2021' }
 
     with_test_file('unstripped.mp3') do |f|
-      original = Aur::FileInfo::Mp3.new(f)
+      original = Aur::FileInfo.new(f)
 
       assert_equal(11, original.tags.size)
       refute_equal(required_tags, original.tags)
@@ -65,7 +65,7 @@ class TestStripCommand < MiniTest::Test
         Aur::Action.new(:strip, [f]).run!
       end
 
-      new = Aur::FileInfo::Mp3.new(f)
+      new = Aur::FileInfo.new(f)
 
       refute new.picture?
       assert_equal(required_tags, new.tags)
@@ -75,7 +75,7 @@ class TestStripCommand < MiniTest::Test
 
   def test_mp3_nothing_to_strip
     with_test_file('bad_name.mp3') do |f|
-      original = Aur::FileInfo::Mp3.new(f)
+      original = Aur::FileInfo.new(f)
       original_mtime = f.mtime
 
       refute original.picture?

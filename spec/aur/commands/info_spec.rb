@@ -10,7 +10,7 @@ class TestInfo < MiniTest::Test
   attr_reader :flac
 
   def setup
-    @flac = Aur::Command::Info.new(FLAC_TEST)
+    @flac = Aur::Command::Info.new(RES_DIR + 'test_tone-100hz.flac')
   end
 
   def test_fmt_line
@@ -31,7 +31,7 @@ class TestInfo < MiniTest::Test
   end
 
   def test_track_number
-    assert_equal('06', flac.fields[:'Track no'])
+    assert_equal('6', flac.fields[:'Track no'])
   end
 
   def test_track_artist

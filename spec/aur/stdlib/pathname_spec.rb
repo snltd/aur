@@ -4,7 +4,7 @@
 require_relative '../../spec_helper'
 require_relative '../../../lib/aur/stdlib/pathname'
 
-# Tests
+# Tests for Pathname extentions
 #
 class TestPathname < MiniTest::Test
   def test_extclass
@@ -14,7 +14,9 @@ class TestPathname < MiniTest::Test
   end
 
   def test_prefixed
-    assert_equal(RES_DIR + '_test_tone-100hz.flac', FLAC_TEST.prefixed)
-    assert_equal(RES_DIR + 'xxtest_tone-100hz.flac', FLAC_TEST.prefixed('xx'))
+    assert_equal(RES_DIR + '_test_tone-100hz.flac',
+                 (RES_DIR + 'test_tone-100hz.flac').prefixed)
+    assert_equal(RES_DIR + 'xxtest_tone-100hz.flac',
+                 (RES_DIR + 'test_tone-100hz.flac').prefixed('xx'))
   end
 end

@@ -8,14 +8,6 @@ require_relative '../lib/aur/fileinfo'
 
 RES_DIR = Pathname.new(__dir__) + 'resources'
 TMP_DIR = Pathname.new('/tmp/aurtest')
-FDIR = RES_DIR + 'lintdir' + 'flac'
-MDIR = RES_DIR + 'lintdir' + 'mp3'
-AFDIR = RES_DIR + 'artfix'
-
-FLAC_TEST = RES_DIR + 'test_tone-100hz.flac'
-MP3_TEST = RES_DIR + 'test_tone-100hz.mp3'
-BAD_FLAC = RES_DIR + 'not_really_a.flac'
-BAD_MP3 = RES_DIR + 'not_really_a.mp3'
 
 def setup_test_dir
   FileUtils.rm_r(TMP_DIR) if TMP_DIR.exist?
@@ -30,6 +22,7 @@ end
 # file must be in RES_DIR.
 # @param [String] name of file you wish to test
 # @return [Pathname] reference to the file in TMP_DIR
+#
 def with_test_file(file)
   setup_test_dir
   FileUtils.cp_r(RES_DIR + file, TMP_DIR)
@@ -53,11 +46,6 @@ end
 # Assert that the given file has the given tag.
 #
 def assert_tag(file, key, value)
-  info = if file.extname == '.flac'
-           Aur::FileInfo::Flac.new(file)
-         else
-           Aur::FileInfo::Mp3.new(file)
-         end
-
-  assert_equal(value, info.our_tags[key])
+  info = Aur::FileInfo.new(file)
+  assert_equal(value.to_s, info.our_tags[key].to_s)
 end
