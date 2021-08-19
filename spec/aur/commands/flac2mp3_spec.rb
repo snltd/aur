@@ -10,16 +10,17 @@ class TestFlac2Mp3 < MiniTest::Test
   attr_reader :t
 
   def setup
-    @t = Aur::Command::Flac2mp3.new(FLAC_TEST)
+    @t = Aur::Command::Flac2mp3.new(RES_DIR + 'test_tone-100hz.flac')
   end
 
   def test_construct_command
     assert_equal(
-      "/opt/local/bin/flac -dsc \"#{FLAC_TEST}\" | /opt/local/bin/lame " \
+      "/opt/local/bin/flac -dsc \"#{RES_DIR + 'test_tone-100hz.flac'}\" " \
+      '| /opt/local/bin/lame ' \
       '-h --vbr-new --preset 128 --id3v2-only --add-id3v2 --silent ' \
       '--tt "Song Title" --ta "Band" --tl "Album Title" --ty "1993" ' \
-      "--tn \"4\" --tg \"Noise\" - \"#{MP3_TEST}\"",
-      t.construct_command(FLAC_TEST, test_tags)
+      "--tn \"4\" --tg \"Noise\" - \"#{RES_DIR + 'test_tone-100hz.mp3'}\"",
+      t.construct_command(RES_DIR + 'test_tone-100hz.flac', test_tags)
     )
   end
 

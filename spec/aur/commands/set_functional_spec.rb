@@ -10,8 +10,8 @@ class TestSetCommand < MiniTest::Test
   include Aur::CommandTests
 
   def test_flac_set
-    FILETYPES.each do |type|
-      with_test_file("01.the_null_set.song_one.#{type}") do |f|
+    SUPPORTED_TYPES.each do |type|
+      with_test_file("01.test_artist.untagged_song.#{type}") do |f|
         assert_output("      artist -> My Rubbish Band\n", '') do
           set_command(f, 'artist', 'My Rubbish Band')
         end
@@ -58,8 +58,8 @@ class TestSetCommand < MiniTest::Test
   end
 
   def test_set_bad_tag
-    FILETYPES.each do |type|
-      with_test_file("01.the_null_set.song_one.#{type}") do |f|
+    SUPPORTED_TYPES.each do |type|
+      with_test_file("01.test_artist.untagged_song.#{type}") do |f|
         assert_output('', "'singer' is not a valid tag name.\n") do
           set_command(f, 'singer', 'Mouse Melon')
         end
@@ -68,8 +68,8 @@ class TestSetCommand < MiniTest::Test
   end
 
   def test_set_invalid_tag
-    FILETYPES.each do |type|
-      with_test_file("01.the_null_set.song_one.#{type}") do |f|
+    SUPPORTED_TYPES.each do |type|
+      with_test_file("01.test_artist.untagged_song.#{type}") do |f|
         assert_output('', "'Five' is an invalid value.\n") do
           set_command(f, 't_num', 'Five')
         end
