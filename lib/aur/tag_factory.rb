@@ -15,17 +15,23 @@ module Aur
     #
     def title(string)
       @in_brackets = false
-      raw = string.split('_')
-      words = raw.map.with_index { |w, i| handle_word(w, i, raw.count) }
+      strings = string.split('_')
+
+      words = strings.map.with_index do |s, index|
+        handle_string(s, index, strings.count)
+      end
+
       join_up(words)
     end
+
+    alias album title
 
     # Artists are handled like titles, but with one completely arbitrary
     # decision: in 'Someone and The Somethings', 'The' is capitalized. So
     # there.
     #
     def artist(string)
-      title(string).gsub('and the', 'and The')
+      title(string).gsub('and the ', 'and The ')
     end
 
     def genre(string)
@@ -41,39 +47,36 @@ module Aur
     # downcase all but the first character, which messes up our brackets
     # handling, hence the logic at the end.
     #
-    def smart_capitalize(word, index, len)
-      return word if /^(\w\.)+$/.match?(word) # initialisms
-
-      if NO_CAPS.include?(word.downcase) && index.between?(1, len - 2)
-        return word.downcase
+    def smart_capitalize(word, index, count)
+      if /^(\w\.)+$/.match?(word) # initialisms
+        word
+      elsif NO_CAPS.include?(word.downcase) && index.between?(1, count - 2)
+        word.downcase
+      else
+        word.capitalize
       end
-
-      return word.capitalize unless /\s/.match?(word)
-
-      word.split(/\s/).map do |w|
-        w.start_with?('(') ? w : smart_capitalize(w, 1, len)
-      end.join(' ')
     end
 
-    # When creating a title, every word (though a "word" can be multiple
-    # actual words separated by one or two dashes) passes through this
+    # When creating a title, every string (usually a word, but sometimes
+    # multiple words separated by one or two dashes) passes through this. It's
+    # the inner loop from #title.
     #
-    def handle_word(word, index, count)
-      if word.match?(/^(\w-)+\w?/)
-        word.initials
-      elsif word.include?('--')
-        handle_long_dash(word, index, count)
-      elsif word.include?('-')
-        handle_short_dash(word)
+    def handle_string(string, index, count)
+      if string.match?(/^(\w-)+\w?/)
+        string.initials
+      elsif string.include?('--')
+        handle_long_dash(string, index, count)
+      elsif string.include?('-')
+        handle_short_dash(string)
       else
-        smart_capitalize(word.expand, index, count)
+        smart_capitalize(string.expand, index, count)
       end
     end
 
     # A single dash denotes brackets opening or closing.
     #
-    def handle_short_dash(word)
-      words = word.split('-')
+    def handle_short_dash(string)
+      words = string.split('-')
       @in_brackets ? close_brackets(words) : open_brackets(words)
     end
 
@@ -102,9 +105,9 @@ module Aur
 
     # A long dash is a hyphen
     #
-    def handle_long_dash(word, index, count)
-      ws = word.split('--')
-      ws.map { |e| smart_capitalize(e.expand, index, count) }.join('-')
+    def handle_long_dash(string, index, count)
+      words = string.split('--')
+      words.map { |w| smart_capitalize(w.expand, index, count) }.join('-')
     end
 
     # Join everything together, and close the brackets if need-be.

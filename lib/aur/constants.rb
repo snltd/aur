@@ -22,7 +22,7 @@ NO_CAPS = %w[a aboard about above absent across after against along
              alongside amid amidst among amongst an and around as as
              aslant astride at athwart atop barring before behind
              below beneath beside besides between beyond but by de
-             despite down during except failing following for for
+             despite down during except failing featuring following for for
              from in is inside into la le like mid minus near next nor
              notwithstanding of off on onto opposite or out outside
              over past per plus regarding round save since so than
@@ -47,6 +47,7 @@ EXPAND = {
   doesnt: "doesn't",
   dont: "don't",
   etc: 'etc.',
+  ft: 'featuring',
   hes: "he's",
   havent: "haven't",
   ii: 'II',
