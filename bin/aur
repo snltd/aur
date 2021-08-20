@@ -12,6 +12,7 @@ CMDS = %i[artfix
           inumber
           lint
           lintdir
+          ls
           name2num
           name2tag
           num2name
@@ -40,6 +41,7 @@ docopt = <<~EOCMDS
     aur renumber (up|down) <number> <file>...
     aur split <file>...
     aur info <file>...
+    aur ls [-r] [-d string] [<directory>]...
     aur sort <file>...
     aur verify <file>...
     aur flac2mp3 <file>...
@@ -56,6 +58,7 @@ docopt = <<~EOCMDS
     -q, --quiet       don't print non-warning/error messages
     -r, --recursive   lint directories recursively
     -s, --summary     summarise results
+    -d, --delimiter   produce machine-parseable output with the given delimeter
 EOCMDS
 
 def sanitize_keys(options)
@@ -70,6 +73,15 @@ def errors(errs)
   warn "Completed with #{errs.size} errors."
   errs.each { |err| warn "  #{err}" }
   exit 1
+end
+
+begin
+  tw = IO.console.winsize.last
+  raise StandardError if tw < 60
+rescue StandardError
+  tw = 80
+ensure
+  TW = tw
 end
 
 begin

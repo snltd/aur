@@ -10,6 +10,8 @@ require_relative '../lib/aur/fileinfo'
 RES_DIR = Pathname.new(__dir__) + 'resources'
 TMP_DIR = Pathname.new('/tmp/aurtest')
 
+TW = 70
+
 String.disable_colorization true
 
 def setup_test_dir
