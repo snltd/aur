@@ -8,16 +8,16 @@ module Aur
   # Methods to construct tags from filenames. The naming, capitalising,
   # bracketing and all of that is just my personal preference.
   #
-  module MakeTag
-    # Turn a filename type name, like 'pet_shop_boys' into a tag type name,
-    # like 'Pet Shop Boys'
+  class TagFactory
+    # Turn a filename-safe string, like 'Blue Bell Knoll' into a tag like
+    # 'Blue Bell Knoll'.
     #
     # rubocop:disable Metrics/MethodLength
     # rubocop:disable Metrics/AbcSize
     # rubocop:disable Metrics/CyclomaticComplexity
     # rubocop:disable Metrics/PerceivedComplexity
     #
-    def mk_title(string)
+    def title(string)
       words = string.split('_')
       in_brackets = false
 
@@ -42,6 +42,8 @@ module Aur
     # rubocop:enable Metrics/CyclomaticComplexity
     # rubocop:enable Metrics/AbcSize
     # rubocop:enable Metrics/MethodLength
+
+    private
 
     # I do brackets by treating every segment as a full title. So, I always
     # capitalize the words before and after the brackets, and the first and
