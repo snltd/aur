@@ -53,7 +53,9 @@ class TestStripCommand < MiniTest::Test
                       tyer: '2021' }
 
     with_test_file('unstripped.mp3') do |f|
-      original = Aur::FileInfo.new(f)
+      # Suppress library warning
+      original = nil
+      capture_io { original = Aur::FileInfo.new(f) }
 
       assert_equal(11, original.tags.size)
       refute_equal(required_tags, original.tags)

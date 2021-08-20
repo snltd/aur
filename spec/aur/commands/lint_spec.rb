@@ -49,8 +49,10 @@ class TestLint < MiniTest::Test
   def test_correct_tags?
     assert t.correct_tags?
 
-    assert_raises(Aur::Exception::LintBadTags) do
-      Aur::Command::Lint.new(RES_DIR + 'unstripped.mp3').correct_tags?
+    capture_io do # because the MP3 library stderrs a warning
+      assert_raises(Aur::Exception::LintBadTags) do
+        Aur::Command::Lint.new(RES_DIR + 'unstripped.mp3').correct_tags?
+      end
     end
   end
 
