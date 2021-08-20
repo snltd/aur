@@ -66,4 +66,11 @@ class TestName2Tag < MiniTest::Test
     assert_equal('The N.W.R.A.', t.title('the_n-w-r-a'))
     assert_equal('W.M.C. Blob 59', t.title('w-m-c_blob_59'))
   end
+
+  def test_genre
+    assert_equal('Noise', t.genre('noise'))
+    assert_equal('Noise', t.genre('Noise '))
+    assert_equal('Hip-Hop', t.genre('Hip-Hop'))
+    assert_equal('Rock and Roll', t.genre('rock AND roll'))
+  end
 end

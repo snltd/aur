@@ -32,7 +32,7 @@ module Aur
           bw, in_brackets = in_brackets ? close_brackets(ws) : open_brackets(ws)
           bw
         else
-          smart_capitalize(w.expand, i, words.size)
+          smart_capitalize(w.expand, i, words.count)
         end
       end
 
@@ -42,6 +42,16 @@ module Aur
     # rubocop:enable Metrics/CyclomaticComplexity
     # rubocop:enable Metrics/AbcSize
     # rubocop:enable Metrics/MethodLength
+
+    def genre(string)
+      words = string.split
+
+      words.map!.with_index do |word, i|
+        smart_capitalize(word, i, words.count)
+      end
+
+      words.join(' ').gsub(/-[a-z]/, &:upcase)
+    end
 
     private
 
@@ -73,7 +83,9 @@ module Aur
     def smart_capitalize(word, index, len)
       return word if /^(\w\.)+$/.match?(word) # initialisms
 
-      return word if NO_CAPS.include?(word) && index.between?(1, len - 2)
+      if NO_CAPS.include?(word.downcase) && index.between?(1, len - 2)
+        return word.downcase
+      end
 
       return word.capitalize unless /\s/.match?(word)
 

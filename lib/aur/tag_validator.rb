@@ -1,10 +1,16 @@
 # frozen_string_literal: true
 
+require_relative 'tag_factory'
+
 module Aur
   #
   # Collection of methods to compare tag values to our standards
   #
   class TagValidator
+    def initialize
+      @tag_factory = Aur::TagFactory.new
+    end
+
     def artist(artist)
       return false if artist.nil?
 
@@ -29,7 +35,7 @@ module Aur
     def genre(genre)
       return false if genre.nil? || genre.empty?
 
-      genre.split(/[\s-]/).all? { |g| g.match?(/^[A-Z][a-z\-]+$/) }
+      genre == @tag_factory.genre(genre)
     end
   end
 end
