@@ -2,7 +2,7 @@
 
 require_relative 'base'
 require_relative '../constants'
-require_relative '../make_tag'
+require_relative '../tag_factory'
 require_relative '../stdlib/string'
 
 module Aur
@@ -11,9 +11,8 @@ module Aur
     # Retag a file from its name
     #
     class Name2tag < Base
-      include Aur::MakeTag
-
       TAGS = %i[artist title album t_num].freeze
+      TAG_FACTORY = Aur::TagFactory.new
 
       def run
         puts file
@@ -24,7 +23,7 @@ module Aur
       #
       def tags_from_filename
         TAGS.each_with_object({}) do |tag, aggr|
-          aggr[tag] = mk_title(info.send("f_#{tag}".to_sym))
+          aggr[tag] = TAG_FACTORY.title(info.send("f_#{tag}".to_sym))
         end
       end
 
