@@ -58,7 +58,7 @@ docopt = <<~EOCMDS
     -q, --quiet       don't print non-warning/error messages
     -r, --recursive   lint directories recursively
     -s, --summary     summarise results
-    -d, --delimiter   produce machine-parseable output with the give separator
+    -d, --delimiter   produce machine-parseable output with the given delimeter
 EOCMDS
 
 def sanitize_keys(options)
