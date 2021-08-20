@@ -2,8 +2,6 @@
 
 require_relative 'base'
 require_relative '../constants'
-require_relative '../make_tag'
-require_relative '../stdlib/string'
 
 module Aur
   module Command
@@ -11,8 +9,6 @@ module Aur
     # Put "The" before the artist name
     #
     class Thes < Base
-      include Aur::MakeTag
-
       def run
         new = new_name(info.artist)
 
