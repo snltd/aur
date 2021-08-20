@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'flacinfo'
+require 'colorize'
 require 'mp3info'
 require_relative 'exception'
 require_relative 'constants'
@@ -94,6 +95,7 @@ module Aur
     # @param file [Pathname] file which needs action applied
     #
     # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Metrics/AbcSize
     def run_command(file)
       klass = action_class(file)
 
@@ -106,16 +108,19 @@ module Aur
       end
     rescue Aur::Exception::Collector => e
       @errs << e.to_s
+    rescue FlacInfoWriteError
+      abort "#{file} must be re-encoded".red.bold
     rescue FlacInfoReadError,
            Mp3InfoEOFError,
            Aur::Exception::FailedOperation
-      warn "ERROR: cannot process '#{file}'."
+      warn "ERROR: cannot process '#{file}'.".bold
       @errs.<< file.to_s
     rescue Aur::Exception::InvalidTagValue => e
       warn "'#{e}' is an invalid value."
     rescue Aur::Exception::InvalidTagName => e
       warn "'#{e}' is not a valid tag name."
     end
+    # rubocop:enable Metrics/AbcSize
     # rubocop:enable Metrics/MethodLength
 
     def special_method(file)

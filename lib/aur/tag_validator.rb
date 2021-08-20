@@ -17,8 +17,7 @@ module Aur
     def year(year)
       return false if year.nil?
 
-      year.to_s.match?(/^[12]\d\d\d$/) &&
-        year.to_i.between?(1938, Time.now.year)
+      year.to_s.match?(/^[12]\d{3}$/) && year.to_i.between?(1938, Time.now.year)
     end
 
     def t_num(num)
@@ -28,9 +27,9 @@ module Aur
     end
 
     def genre(genre)
-      return false if genre.nil?
+      return false if genre.nil? || genre.empty?
 
-      !genre.empty?
+      genre.split(/[\s-]/).all? { |g| g.match?(/^[A-Z][a-z\-]+$/) }
     end
   end
 end

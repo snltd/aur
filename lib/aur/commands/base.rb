@@ -34,11 +34,11 @@ module Aur
       # fileinfo, and would otherwise require classes for arbitrary filetypes.
       #
       def setup_info
-        Aur::FileInfo.new(file)
+        Aur::FileInfo.new(file, opts)
       end
 
       def setup_tagger
-        Aur::Tagger.new(info)
+        Aur::Tagger.new(info, opts)
       end
     end
   end

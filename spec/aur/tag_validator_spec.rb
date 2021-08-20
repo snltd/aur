@@ -17,6 +17,7 @@ class TestTagValidator < MiniTest::Test
     assert t.artist('Simon and Garfunkel')
     refute t.artist('Simon & Garfunkel')
     refute t.artist('')
+    refute t.artist(nil)
   end
 
   def test_year
@@ -26,6 +27,7 @@ class TestTagValidator < MiniTest::Test
     refute t.year('')
     refute t.year('1996/2020')
     refute t.year('1989 02 03')
+    refute t.year(nil)
   end
 
   def test_tracknum
@@ -38,11 +40,20 @@ class TestTagValidator < MiniTest::Test
     refute t.t_num('1/14')
     refute t.t_num('01/14')
     refute t.t_num('1 (disc 1)')
+    refute t.t_num(nil)
   end
 
   def test_genre
     assert t.genre('Alternative')
     assert t.genre('Noise')
+    assert t.genre('Hip-Hop')
+    assert t.genre('Folk Rock')
+    assert t.genre('Rock and Roll')
+    refute t.genre('Folk rock')
+    refute t.genre('Hip-hop')
+    refute t.genre('Folk/Rock')
+    refute t.genre('noise')
     refute t.genre('')
+    refute t.genre(nil)
   end
 end

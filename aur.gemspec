@@ -23,6 +23,7 @@ Gem::Specification.new do |gem|
                   'Rakefile']
   gem.executables = 'aur'
 
+  gem.add_runtime_dependency 'colorize', '~> 0.8'
   gem.add_runtime_dependency 'docopt', '~> 0.6.0'
   gem.add_runtime_dependency 'flacinfo-rb', '~> 1.0.0'
   gem.add_runtime_dependency 'i18n', '~> 1.8.0'
