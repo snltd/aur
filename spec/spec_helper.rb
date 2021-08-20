@@ -9,6 +9,8 @@ require_relative '../lib/aur/fileinfo'
 RES_DIR = Pathname.new(__dir__) + 'resources'
 TMP_DIR = Pathname.new('/tmp/aurtest')
 
+TW = 70
+
 def setup_test_dir
   FileUtils.rm_r(TMP_DIR) if TMP_DIR.exist?
   FileUtils.mkdir_p(TMP_DIR)
