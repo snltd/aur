@@ -10,6 +10,12 @@ module Aur
   #
   class TagFactory
     #
+    # @param file [Pathname]
+    def all(info)
+      pp info
+    end
+
+    #
     # Turn a filename-safe string, like 'Blue Bell Knoll' into a tag like
     # 'Blue Bell Knoll'.
     #
@@ -31,7 +37,14 @@ module Aur
     # there.
     #
     def artist(string)
-      title(string).gsub('and the ', 'and The ')
+      PRESETS[:artist].fetch(string.to_sym,
+                             title(string).gsub('and the ', 'and The '))
+    end
+
+    # Strip leading zeroes
+    #
+    def t_num(num)
+      num.to_i.to_s
     end
 
     def genre(string)
@@ -43,9 +56,7 @@ module Aur
     private
 
     # Don't capitalize a word if it's in the NO_CAPS list, but *do* capitalize
-    # it if it's the first or last word in a title. String#capitalize will
-    # downcase all but the first character, which messes up our brackets
-    # handling, hence the logic at the end.
+    # it if it's the first or last word in a title.
     #
     def smart_capitalize(word, index, count)
       if /^(\w\.)+$/.match?(word) # initialisms
@@ -117,3 +128,8 @@ module Aur
     end
   end
 end
+
+PRESETS = {
+  artist: { abba: 'ABBA',
+            add_n_to_x: 'Add N to (X)' }
+}.freeze

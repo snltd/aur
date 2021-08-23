@@ -17,3 +17,5 @@ Style/StringConcatenation:
   Enabled: false
 Style/OptionalBooleanParameter:
   Enabled: false
+Style/LineEndConcatenation:
+  Enabled: false

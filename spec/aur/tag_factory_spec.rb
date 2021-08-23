@@ -76,6 +76,8 @@ class TestName2Tag < MiniTest::Test
                  t.artist('someone_ft_someone_else'))
     assert_equal('R.E.M.', t.artist('r-e-m'))
     assert_equal('M.J. Hibbett', t.artist('m-j_hibbett'))
+    assert_equal('ABBA', t.artist('abba'))
+    assert_equal('Add N to (X)', t.artist('add_n_to_x'))
   end
 
   def test_album
@@ -90,5 +92,10 @@ class TestName2Tag < MiniTest::Test
     assert_equal('Noise', t.genre('Noise '))
     assert_equal('Hip-Hop', t.genre('Hip-Hop'))
     assert_equal('Rock and Roll', t.genre('rock AND roll'))
+  end
+
+  def test_t_num
+    assert_equal('1', t.t_num('01'))
+    assert_equal('39', t.t_num('39'))
   end
 end

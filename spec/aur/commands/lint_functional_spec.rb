@@ -19,7 +19,7 @@ class TestLintCommand < MiniTest::Test
     end
   end
 
-  def test_missing_tags
+  def test_missing_tags_and_wrong_album
     file = RES_DIR + 'lint' + '03.test_artist.missing_tags.flac'
 
     out, err = capture_io { act(file) }
