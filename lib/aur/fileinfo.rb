@@ -12,12 +12,15 @@ module Aur
   # abstracting each supported filetype to a common interface.
   #
   class FileInfo
-    attr_reader :file, :info, :raw
+    attr_reader :file, :info, :raw, :opts
 
-    def initialize(file)
+    # We don't currently use opts. Here for consistency.
+    #
+    def initialize(file, opts = {})
       load_specifics(file)
       @file = file
       @info = @raw = read
+      @opts = opts
       post_initialize if respond_to?(:post_initialize)
     end
 

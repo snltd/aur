@@ -9,77 +9,127 @@ module Aur
   # bracketing and all of that is just my personal preference.
   #
   class TagFactory
+    #
+    # @param file [Pathname]
+    def all(info)
+      pp info
+    end
+
+    #
     # Turn a filename-safe string, like 'Blue Bell Knoll' into a tag like
     # 'Blue Bell Knoll'.
     #
-    # rubocop:disable Metrics/MethodLength
-    # rubocop:disable Metrics/AbcSize
-    # rubocop:disable Metrics/CyclomaticComplexity
-    # rubocop:disable Metrics/PerceivedComplexity
-    #
     def title(string)
-      words = string.split('_')
-      in_brackets = false
+      @in_brackets = false
+      strings = string.split('_')
 
-      new_words = words.map.with_index do |w, i|
-        w = w.initials if w.match?(/^(\w-)+\w?/)
-
-        if w.include?('--')
-          ws = w.split('--')
-          ws.map { |e| smart_capitalize(e.expand, i, words.size) }.join('-')
-        elsif w.include?('-')
-          ws = w.split('-')
-          bw, in_brackets = in_brackets ? close_brackets(ws) : open_brackets(ws)
-          bw
-        else
-          smart_capitalize(w.expand, i, words.size)
-        end
+      words = strings.map.with_index do |s, index|
+        handle_string(s, index, strings.count)
       end
 
-      new_words.flatten.join(' ').tap { |str| str.<< ')' if in_brackets }
+      join_up(words)
     end
-    # rubocop:enable Metrics/PerceivedComplexity
-    # rubocop:enable Metrics/CyclomaticComplexity
-    # rubocop:enable Metrics/AbcSize
-    # rubocop:enable Metrics/MethodLength
+
+    alias album title
+
+    # Artists are handled like titles, but with one completely arbitrary
+    # decision: in 'Someone and The Somethings', 'The' is capitalized. So
+    # there.
+    #
+    def artist(string)
+      PRESETS[:artist].fetch(string.to_sym,
+                             title(string).gsub('and the ', 'and The '))
+    end
+
+    # Strip leading zeroes
+    #
+    def t_num(num)
+      num.to_i.to_s
+    end
+
+    def genre(string)
+      raw = string.split
+      words = raw.map.with_index { |w, i| smart_capitalize(w, i, raw.count) }
+      words.join(' ').gsub(/-[a-z]/, &:upcase)
+    end
 
     private
+
+    # Don't capitalize a word if it's in the NO_CAPS list, but *do* capitalize
+    # it if it's the first or last word in a title.
+    #
+    def smart_capitalize(word, index, count)
+      if /^(\w\.)+$/.match?(word) # initialisms
+        word
+      elsif NO_CAPS.include?(word.downcase) && index.between?(1, count - 2)
+        word.downcase
+      else
+        word.capitalize
+      end
+    end
+
+    # When creating a title, every string (usually a word, but sometimes
+    # multiple words separated by one or two dashes) passes through this. It's
+    # the inner loop from #title.
+    #
+    def handle_string(string, index, count)
+      if string.match?(/^(\w-)+\w?/)
+        string.initials
+      elsif string.include?('--')
+        handle_long_dash(string, index, count)
+      elsif string.include?('-')
+        handle_short_dash(string)
+      else
+        smart_capitalize(string.expand, index, count)
+      end
+    end
+
+    # A single dash denotes brackets opening or closing.
+    #
+    def handle_short_dash(string)
+      words = string.split('-')
+      @in_brackets ? close_brackets(words) : open_brackets(words)
+    end
 
     # I do brackets by treating every segment as a full title. So, I always
     # capitalize the words before and after the brackets, and the first and
     # last words inside them.
     #
     def open_brackets(words)
+      @in_brackets = true
       first = words.first.expand(:caps)
       inner = words[1].expand(:caps)
 
-      return ["#{first} (#{inner}", true] if words.size < 3
+      return "#{first} (#{inner}" if words.size < 3
 
       final = words.last.expand(:caps)
       inner = words[1..-2].join('-').initials if words.size > 3
 
-      ["#{first} (#{inner}) #{final}", false]
+      @in_brackets = false
+      "#{first} (#{inner}) #{final}"
     end
 
     def close_brackets(words)
-      ["#{words[0].expand(:caps)}) #{words[1].expand(:caps)}", false]
+      @in_brackets = false
+      "#{words[0].expand(:caps)}) #{words[1].expand(:caps)}"
     end
 
-    # Don't capitalize a word if it's in the NO_CAPS list, but *do* capitalize
-    # it if it's the first or last word in a title. String#capitalize will
-    # downcase all but the first character, which messes up our brackets
-    # handling, hence the logic at the end.
+    # A long dash is a hyphen
     #
-    def smart_capitalize(word, index, len)
-      return word if /^(\w\.)+$/.match?(word) # initialisms
+    def handle_long_dash(string, index, count)
+      words = string.split('--')
+      words.map { |w| smart_capitalize(w.expand, index, count) }.join('-')
+    end
 
-      return word if NO_CAPS.include?(word) && index.between?(1, len - 2)
-
-      return word.capitalize unless /\s/.match?(word)
-
-      word.split(/\s/).map do |w|
-        w.start_with?('(') ? w : smart_capitalize(w, 1, len)
-      end.join(' ')
+    # Join everything together, and close the brackets if need-be.
+    #
+    def join_up(words)
+      words.flatten.join(' ').tap { |str| str.<< ')' if @in_brackets }
     end
   end
 end
+
+PRESETS = {
+  artist: { abba: 'ABBA',
+            add_n_to_x: 'Add N to (X)' }
+}.freeze

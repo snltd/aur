@@ -20,7 +20,7 @@ module Aur
         @file = file
         @info = Aur::FileInfo.new(file)
         @opts = opts
-        @validator = Aur::TagValidator.new
+        @validator = Aur::TagValidator.new(info, opts)
       end
 
       def run

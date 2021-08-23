@@ -66,4 +66,36 @@ class TestName2Tag < MiniTest::Test
     assert_equal('The N.W.R.A.', t.title('the_n-w-r-a'))
     assert_equal('W.M.C. Blob 59', t.title('w-m-c_blob_59'))
   end
+
+  def test_artist
+    assert_equal('Stereolab', t.artist('stereolab'))
+    assert_equal('Royal Trux', t.artist('royal_trux'))
+    assert_equal('Jeffrey Lewis and The Bolts',
+                 t.artist('jeffrey_lewis_and_the_bolts'))
+    assert_equal('Someone featuring Someone Else',
+                 t.artist('someone_ft_someone_else'))
+    assert_equal('R.E.M.', t.artist('r-e-m'))
+    assert_equal('M.J. Hibbett', t.artist('m-j_hibbett'))
+    assert_equal('ABBA', t.artist('abba'))
+    assert_equal('Add N to (X)', t.artist('add_n_to_x'))
+  end
+
+  def test_album
+    assert_equal('Spiderland', t.album('spiderland'))
+    assert_equal('Mars Audiac Quintet', t.album('mars_audiac_quintet'))
+    assert_equal('The Decline and Fall of Heavenly',
+                 t.album('the_decline_and_fall_of_heavenly'))
+  end
+
+  def test_genre
+    assert_equal('Noise', t.genre('noise'))
+    assert_equal('Noise', t.genre('Noise '))
+    assert_equal('Hip-Hop', t.genre('Hip-Hop'))
+    assert_equal('Rock and Roll', t.genre('rock AND roll'))
+  end
+
+  def test_t_num
+    assert_equal('1', t.t_num('01'))
+    assert_equal('39', t.t_num('39'))
+  end
 end

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'colorize'
 require 'pathname'
 require 'minitest/autorun'
 require 'spy/integration'
@@ -10,6 +11,8 @@ RES_DIR = Pathname.new(__dir__) + 'resources'
 TMP_DIR = Pathname.new('/tmp/aurtest')
 
 TW = 70
+
+String.disable_colorization true
 
 def setup_test_dir
   FileUtils.rm_r(TMP_DIR) if TMP_DIR.exist?
