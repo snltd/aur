@@ -98,7 +98,7 @@ CMDS.each do |cmd|
 
   cmd = Aur::Action.new(cmd, opts[:'<file>'], opts)
   cmd.run!
-  errors(cmd.errs) unless cmd.no_error_report
+  errors(cmd.errs) unless cmd && cmd.no_error_report
   exit
 end
 
