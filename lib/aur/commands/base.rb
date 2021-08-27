@@ -40,6 +40,12 @@ module Aur
       def setup_tagger
         Aur::Tagger.new(info, opts)
       end
+
+      # Override this if you don't want an error summary
+      #
+      def no_error_report
+        false
+      end
     end
   end
 end
