@@ -19,7 +19,7 @@ module Aur
   # deal with different target filetypes.
   #
   class Action
-    attr_reader :flist, :action, :errs, :opts
+    attr_reader :flist, :action, :errs, :opts, :klass
 
     # @param action [Symbol] the action to take.
     # @param flist [Array[Pathname]] list of files to which the
@@ -95,6 +95,10 @@ module Aur
       flist.each { |f| run_command(f) }
     end
 
+    def no_error_report
+      klass.no_error_report
+    end
+
     private
 
     # Some operations present the same interface regardless of file
@@ -107,7 +111,7 @@ module Aur
     # rubocop:disable Metrics/MethodLength
     # rubocop:disable Metrics/AbcSize
     def run_command(file)
-      klass = action_class(file)
+      @klass = action_class(file)
 
       if klass.respond_to?(special_method(file))
         klass.send(special_method(file))
