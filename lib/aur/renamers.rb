@@ -39,10 +39,12 @@ module Aur
     end
 
     def rename_file(file, dest)
-      raise Aur::Exception::FileExists if dest.exist?
-
-      rename_message(file, dest)
-      FileUtils.mv(file, dest)
+      if dest.exist? && dest.size.positive?
+        warn "#{dest} already exists"
+      else
+        rename_message(file, dest)
+        FileUtils.mv(file, dest)
+      end
     end
 
     def rename_message(file, dest)
