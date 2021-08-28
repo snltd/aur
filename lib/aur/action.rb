@@ -19,7 +19,7 @@ module Aur
   # deal with different target filetypes.
   #
   class Action
-    attr_reader :flist, :action, :errs, :opts
+    attr_reader :flist, :action, :errs, :opts, :klass
 
     # @param action [Symbol] the action to take.
     # @param flist [Array[Pathname]] list of files to which the
@@ -95,6 +95,12 @@ module Aur
       flist.each { |f| run_command(f) }
     end
 
+    def no_error_report
+      klass.no_error_report
+    rescue NoMethodError
+      false
+    end
+
     private
 
     # Some operations present the same interface regardless of file
@@ -107,7 +113,7 @@ module Aur
     # rubocop:disable Metrics/MethodLength
     # rubocop:disable Metrics/AbcSize
     def run_command(file)
-      klass = action_class(file)
+      @klass = action_class(file)
 
       if klass.respond_to?(special_method(file))
         klass.send(special_method(file))
@@ -122,9 +128,14 @@ module Aur
       abort "#{file} must be re-encoded".red.bold
     rescue FlacInfoReadError,
            Mp3InfoEOFError,
-           Aur::Exception::FailedOperation
-      warn "ERROR: cannot process '#{file}'.".bold
-      @errs.<< file.to_s
+           Aur::Exception::FailedOperation => e
+
+      if klass.respond_to?(:handle_err)
+        klass.handle_err(file, e)
+      else
+        warn "ERROR: cannot process '#{file}'.".bold
+        @errs.<< file.to_s
+      end
     rescue Aur::Exception::InvalidTagValue => e
       warn "'#{e}' is an invalid value."
     rescue Aur::Exception::InvalidTagName => e
@@ -143,8 +154,7 @@ module Aur
     #
     def load_library(libfile)
       require_relative(File.join('commands', libfile))
-    rescue LoadError => e
-      puts e
+    rescue LoadError
       abort "ERROR: '#{libfile}' command is not implemented."
     end
 

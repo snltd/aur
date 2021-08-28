@@ -27,6 +27,7 @@ CMDS = %i[artfix
           tagsub
           thes
           transcode
+          check
           verify].freeze
 
 docopt = <<~EOCMDS
@@ -45,6 +46,7 @@ docopt = <<~EOCMDS
     aur info <file>...
     aur ls [-r] [-d string] [<directory>]...
     aur sort <file>...
+    aur check <file>...
     aur verify <file>...
     aur flac2mp3 <file>...
     aur transcode <newtype> <file>...
@@ -98,7 +100,7 @@ CMDS.each do |cmd|
 
   cmd = Aur::Action.new(cmd, opts[:'<file>'], opts)
   cmd.run!
-  errors(cmd.errs)
+  errors(cmd.errs) unless cmd&.no_error_report
   exit
 end
 
