@@ -28,8 +28,9 @@ module Aur
       end
 
       def retitle(title)
-        title.split(/\W/).each_with_object(String.new(title)) do |w, ret|
+        title.split(/[\s,]/).each_with_object(String.new(title)) do |w, ret|
           next unless NO_CAPS.include?(w.downcase)
+          next if w.match(/^[A-Z]\.[A-Z]\./)
 
           ret.gsub!(%r{(#{SPACERS})#{w}(#{SPACERS})}, "\\1#{w.downcase}\\2")
         end
