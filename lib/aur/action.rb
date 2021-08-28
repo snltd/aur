@@ -154,7 +154,7 @@ module Aur
     #
     def load_library(libfile)
       require_relative(File.join('commands', libfile))
-    rescue LoadError => e
+    rescue LoadError
       abort "ERROR: '#{libfile}' command is not implemented."
     end
 
