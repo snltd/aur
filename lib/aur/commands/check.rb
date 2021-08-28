@@ -6,13 +6,18 @@ require_relative '../constants'
 module Aur
   module Command
     #
-    # See if we can parse the file.
+    # See if we can parse the file. This command dumps filenames to stdout so
+    # they can be reencoded, skipping the usual summary
     #
     class Check < Base
       def run; end
 
       def no_error_report
         true
+      end
+
+      def handle_err(file, _err)
+        puts file
       end
 
       def self.help

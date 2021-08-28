@@ -97,6 +97,8 @@ module Aur
 
     def no_error_report
       klass.no_error_report
+    rescue NoMethodError
+      false
     end
 
     private
@@ -126,9 +128,14 @@ module Aur
       abort "#{file} must be re-encoded".red.bold
     rescue FlacInfoReadError,
            Mp3InfoEOFError,
-           Aur::Exception::FailedOperation
-      warn "ERROR: cannot process '#{file}'.".bold
-      @errs.<< file.to_s
+           Aur::Exception::FailedOperation => e
+
+      if klass.respond_to?(:handle_err)
+        klass.handle_err(file, e)
+      else
+        warn "ERROR: cannot process '#{file}'.".bold
+        @errs.<< file.to_s
+      end
     rescue Aur::Exception::InvalidTagValue => e
       warn "'#{e}' is an invalid value."
     rescue Aur::Exception::InvalidTagName => e
@@ -147,8 +154,7 @@ module Aur
     #
     def load_library(libfile)
       require_relative(File.join('commands', libfile))
-    rescue LoadError => e
-      puts e
+    rescue LoadError
       abort "ERROR: '#{libfile}' command is not implemented."
     end
 
