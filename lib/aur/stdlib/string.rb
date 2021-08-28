@@ -17,7 +17,7 @@ class String
   #   - turn a hyphenated word into word--word
   #
   def to_safe
-    I18n.transliterate(self)
+    I18n.transliterate(self.force_encoding('utf-8'))
         .downcase
         .gsub(/(\S)-(\S)/, '\1--\2')
         .gsub(/\s+\(/, '-')
