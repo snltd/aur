@@ -6,6 +6,4 @@ require_relative '../../../lib/aur/action'
 
 # Run 'aur retitle...' commands against things, and verify the results
 #
-class TestRetitleCommand < MiniTest::Test
-  include Aur::CommandTests
-end
+class TestRetitleCommand < MiniTest::Test; end
