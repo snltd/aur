@@ -10,12 +10,6 @@ module Aur
   #
   class TagFactory
     #
-    # @param file [Pathname]
-    def all(info)
-      pp info
-    end
-
-    #
     # Turn a filename-safe string, like 'Blue Bell Knoll' into a tag like
     # 'Blue Bell Knoll'.
     #
