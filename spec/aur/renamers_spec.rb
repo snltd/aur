@@ -59,7 +59,7 @@ class TestRenamers < MiniTest::Test
     with_test_file('01.test_artist.untagged_song.mp3') do |f|
       FileUtils.cp(RES_DIR + 'bad_name.mp3', TMP_DIR)
 
-      assert_raises(Aur::Exception::FileExists) do
+      assert_output('', "#{TMP_DIR}/bad_name.mp3 already exists\n") do
         rename_file(f, TMP_DIR + 'bad_name.mp3')
       end
     end
