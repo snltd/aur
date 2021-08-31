@@ -5,14 +5,24 @@ require_relative 'base'
 module Aur
   module Command
     #
-    # Verify FLACs.
+    # Check the integrity of a file. Doesn't look at tags or anything: that's
+    # what we call 'linting'.
     #
     class Verify < Base
-      def run
-        raise "unsupported filetype: #{info.filetype}"
-      end
+      def self.help
+        <<~EOUSAGE
+          usage: aur verify <file>...
 
-      def run_flac
+          Verifies FLACs by calling out to the flac binary. Does not support
+          any other file types.
+        EOUSAGE
+      end
+    end
+
+    # Verify FLACs.
+    #
+    module VerifyFlac
+      def run
         abort 'No flac binary.' unless BIN[:flac].exist?
 
         res = system("#{BIN[:flac]} --test --totally-silent #{file}")
@@ -21,18 +31,13 @@ module Aur
                     name: info.prt_name,
                     status: res ? 'OK' : 'INVALID')
       end
+    end
 
-      def run_mp3
+    # We can't verify MP3s, but we can at least say so.
+    #
+    module VerifyMp3
+      def run
         warn 'MP3 files cannot be verified.'
-      end
-
-      def self.help
-        <<~EOUSAGE
-          usage: aur verify <file>...
-
-          Verifies FLACs by calling out to the flac binary. Does not support
-          any other file types.
-        EOUSAGE
       end
     end
   end
