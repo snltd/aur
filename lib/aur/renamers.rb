@@ -13,7 +13,7 @@ module Aur
     include Aur::Logger
 
     def track_fnum(info)
-      format('%02d', info.t_num || 0)
+      format('%02d', info.t_num.to_i || 0)
     end
 
     # @return [String] the artist name, taken from the tag and turned into a
