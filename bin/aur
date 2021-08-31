@@ -87,7 +87,7 @@ end
 begin
   tw = IO.console.winsize.last
   raise StandardError if tw < 60
-rescue StandardError => e
+rescue StandardError
   tw = 80
 ensure
   TW = tw
