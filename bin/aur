@@ -3,6 +3,7 @@
 
 require 'docopt'
 require 'pathname'
+require 'io/console'
 require_relative '../lib/aur/action'
 
 CMDS = %i[artfix

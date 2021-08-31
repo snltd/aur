@@ -11,7 +11,7 @@ module Aur
     class Artfix
       attr_reader :dir, :opts
 
-      SUFFIXES = %w[.jpg .png].freeze
+      SUFFIXES = %w[.jpg .jpeg .png].freeze
       OK_NAMES = %w[front.jpg front.png].freeze
 
       def initialize(dir = nil, opts = {})
