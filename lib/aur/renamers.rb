@@ -13,7 +13,7 @@ module Aur
     include Aur::Logger
 
     def track_fnum(info)
-      format('%02d', info.t_num || 0)
+      format('%02d', info.t_num.to_i || 0)
     end
 
     # @return [String] the artist name, taken from the tag and turned into a
@@ -39,10 +39,12 @@ module Aur
     end
 
     def rename_file(file, dest)
-      raise Aur::Exception::FileExists if dest.exist?
-
-      rename_message(file, dest)
-      FileUtils.mv(file, dest)
+      if dest.exist? && dest.size.positive?
+        warn "#{dest} already exists"
+      else
+        rename_message(file, dest)
+        FileUtils.mv(file, dest)
+      end
     end
 
     def rename_message(file, dest)

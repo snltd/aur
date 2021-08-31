@@ -114,14 +114,9 @@ module Aur
     # rubocop:disable Metrics/AbcSize
     def run_command(file)
       @klass = action_class(file)
+      return klass.run if klass.respond_to?(:run)
 
-      if klass.respond_to?(special_method(file))
-        klass.send(special_method(file))
-      elsif klass.respond_to?(:run)
-        klass.run
-      else
-        raise Aur::Exception::UnsupportedFiletype
-      end
+      raise Aur::Exception::UnsupportedFiletype
     rescue Aur::Exception::Collector => e
       @errs << e.to_s
     rescue FlacInfoWriteError
@@ -129,13 +124,10 @@ module Aur
     rescue FlacInfoReadError,
            Mp3InfoEOFError,
            Aur::Exception::FailedOperation => e
+      return klass.handle_err(file, e) if klass.respond_to?(:handle_err)
 
-      if klass.respond_to?(:handle_err)
-        klass.handle_err(file, e)
-      else
-        warn "ERROR: cannot process '#{file}'.".bold
-        @errs.<< file.to_s
-      end
+      warn "ERROR: cannot process '#{file}'.".bold
+      @errs.<< file.to_s
     rescue Aur::Exception::InvalidTagValue => e
       warn "'#{e}' is an invalid value."
     rescue Aur::Exception::InvalidTagName => e
@@ -143,12 +135,6 @@ module Aur
     end
     # rubocop:enable Metrics/AbcSize
     # rubocop:enable Metrics/MethodLength
-
-    def special_method(file)
-      "run_#{file.extclass.downcase}".to_sym
-    rescue NoMethodError
-      :nomethod
-    end
 
     # @param libfile [String]
     #

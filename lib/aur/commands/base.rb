@@ -28,6 +28,7 @@ module Aur
         @info = setup_info
         @tagger = setup_tagger
         @errs = 0
+        load_subclass if info.respond_to?(:filetype)
       end
 
       # Separated out for the benefit of transcode, which does not need
@@ -39,6 +40,22 @@ module Aur
 
       def setup_tagger
         Aur::Tagger.new(info, opts)
+      end
+
+      # Commands can inherit from a module which contains methods specific to
+      # a given filetype.
+      #
+      def load_subclass
+        return unless Aur::Command.const_defined?(filetype_module)
+
+        extend Object.const_get("Aur::Command::#{filetype_module}")
+      end
+
+      # Looks up the module which a command class can use to handle a specific
+      # filetype. Sometimes info isn't actualy a FileInfo object.
+      #
+      def filetype_module
+        self.class.name.split('::').last + info.filetype.capitalize
       end
 
       # Override this if you don't want an error summary
