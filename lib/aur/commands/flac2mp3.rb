@@ -12,14 +12,6 @@ module Aur
     class Flac2mp3 < Base
       include Aur::Renamers
 
-      def run_flac
-        check_dependencies
-        info = Aur::FileInfo.new(file)
-        cmd = construct_command(file, info.our_tags)
-        puts "#{file} -> #{dest_file}"
-        system(cmd)
-      end
-
       def construct_command(file, tags)
         "#{BIN[:flac]} -dsc #{escaped(file)} | " \
           "#{BIN[:lame]} #{LAME_FLAGS} #{lame_tag_opts(tags)} " \
@@ -70,6 +62,18 @@ module Aur
 
           Tags are copied from the FLAC.
         EOHELP
+      end
+    end
+
+    # Transcode a single FLAC
+    #
+    module Flac2mp3Flac
+      def run
+        check_dependencies
+        info = Aur::FileInfo.new(file)
+        cmd = construct_command(file, info.our_tags)
+        puts "#{file} -> #{dest_file}"
+        system(cmd)
       end
     end
   end
