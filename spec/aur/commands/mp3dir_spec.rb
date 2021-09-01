@@ -10,6 +10,9 @@ class TestMp3dir < MiniTest::Test
   attr_reader :t
 
   def setup
+    skip unless BIN[:flac].exist?
+    skip unless BIN[:lame].exist?
+
     @t = Aur::Command::Mp3dir.new(RES_DIR)
   end
 
