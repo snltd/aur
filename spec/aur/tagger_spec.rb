@@ -48,16 +48,6 @@ class TestTagger < MiniTest::Test
     assert spy.has_been_called?
   end
 
-  # def test_genre_id
-  # assert_equal('(20)', t_mp3.genre_id('Alternative'))
-  #
-  # err = assert_raises(Aur::Exception::InvalidTagValue) do
-  # t_mp3.genre_id('No Such Thing')
-  # end
-  #
-  # assert_equal("'No Such Thing' is not a valid genre.", err.message)
-  # end
-
   def test_validate
     flacinfo = Aur::FileInfo.new(RES_DIR + 'test_tone-100hz.flac')
     t = Aur::Tagger.new(flacinfo, {})
