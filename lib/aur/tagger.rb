@@ -14,6 +14,7 @@ module Aur
 
     # @param info [Aur::Fileinfo::*]
     # @param opts [Hash]
+    #
     def initialize(info, opts = {})
       @info = fileinfo(info)
       load_specifics
@@ -80,6 +81,7 @@ module Aur
       when 'flac'
         extend Aur::TaggerFlac
       when 'mp3'
+        require_relative 'genre_list'
         extend Aur::TaggerMp3
       else
         raise Aur::Exception::UnsupportedFiletype
@@ -131,6 +133,7 @@ module Aur
       Mp3Info.open(info.file) do |mp3|
         validate(tags).each_pair do |name, value|
           tag_msg(name, value)
+          # value = genre_id(value) if name == :genre
           mp3.tag2[info.tag_name(name)] = value
         end
       end

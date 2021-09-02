@@ -75,6 +75,6 @@ class TestTaggerFunctional < MiniTest::Test
              title: nil,
              t_num: nil,
              year: nil,
-             genre: '(0)' } }
+             genre: 'Noise' } }
   end
 end

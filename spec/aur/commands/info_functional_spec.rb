@@ -52,7 +52,7 @@ def bad_name_mp3_info
    Artist : The Null Set
     Album : Some Stuff By
     Title : Sammy Davis Jr. (Dancing)
-    Genre : Blues
+    Genre : Electronic
  Track no : 2
      Year : 2021
 

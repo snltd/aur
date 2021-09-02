@@ -6,6 +6,13 @@ require_relative '../../lib/aur/tagger'
 require_relative '../../lib/aur/fileinfo'
 
 class TestTagger < MiniTest::Test
+  attr_reader :t_mp3
+
+  def setup
+    mp3info = Aur::FileInfo.new(RES_DIR + 'test_tone-100hz.mp3')
+    @t_mp3 = Aur::Tagger.new(mp3info, {})
+  end
+
   def test_flac
     flacinfo = Aur::FileInfo.new(RES_DIR + 'test_tone-100hz.flac')
     t = Aur::Tagger.new(flacinfo, {})
@@ -30,18 +37,26 @@ class TestTagger < MiniTest::Test
 
   # The way the Mp3Info class is written makes it really hard to test. It
   # doesn't matter though. We have full functional tests.
+  #
   def test_mp3
-    mp3info = Aur::FileInfo.new(RES_DIR + 'test_tone-100hz.mp3')
-    t = Aur::Tagger.new(mp3info, {})
-
     spy = Spy.on(Mp3Info, :open)
     # Because we Spy on the #open method and Mp3Info works on a block passed
     # to #open, nothing inside the loop (e.g. the calling of the #msg method)
     # happens, so there's really nothing to test. Just ensure it was called.
 
-    t.tag!(test_tags)
+    t_mp3.tag!(test_tags)
     assert spy.has_been_called?
   end
+
+  # def test_genre_id
+  # assert_equal('(20)', t_mp3.genre_id('Alternative'))
+  #
+  # err = assert_raises(Aur::Exception::InvalidTagValue) do
+  # t_mp3.genre_id('No Such Thing')
+  # end
+  #
+  # assert_equal("'No Such Thing' is not a valid genre.", err.message)
+  # end
 
   def test_validate
     flacinfo = Aur::FileInfo.new(RES_DIR + 'test_tone-100hz.flac')
