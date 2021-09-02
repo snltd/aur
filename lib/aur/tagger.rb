@@ -14,6 +14,7 @@ module Aur
 
     # @param info [Aur::Fileinfo::*]
     # @param opts [Hash]
+    #
     def initialize(info, opts = {})
       @info = fileinfo(info)
       load_specifics

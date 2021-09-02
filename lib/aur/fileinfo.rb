@@ -176,10 +176,6 @@ module Aur
   # Methods specific to MP3s. We are all about id3v2. v1 is nowhere.
   #
   module FileInfoMp3
-    def post_initialize
-      require_relative 'genre_list'
-    end
-
     def read
       Mp3Info.open(file)
     end
@@ -210,12 +206,6 @@ module Aur
         t_num: 'TRCK',
         year: 'TYER',
         genre: 'TCON' }
-    end
-
-    # The genre is a number in brackets. Look up its text value in a table
-    #
-    def genre
-      GENRE_LIST[tags[:tcon].delete('()').to_i]
     end
 
     def picture?
