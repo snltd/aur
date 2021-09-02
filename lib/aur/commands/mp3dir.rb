@@ -62,7 +62,7 @@ module Aur
       # source).
       #
       def remove_leftovers(source, dest)
-        dest.children.each do |mp3|
+        dest.children.select(&:file?).each do |mp3|
           flac = source + mp3.basename.sub_ext('.flac')
 
           next if flac.exist?
