@@ -2,11 +2,11 @@ inherit_from:
   - ../.rubocop.yml
 
 Metrics/AbcSize:
-  Max: 64
+  Max: 100
 Metrics/ClassLength:
   Max: 400
 Metrics/MethodLength:
-  Max: 39
+  Max: 50
 Naming/VariableNumber:
   Enabled: false
 Metrics/BlockLength:

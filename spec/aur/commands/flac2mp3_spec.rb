@@ -20,7 +20,11 @@ class TestFlac2Mp3 < MiniTest::Test
       '-h --vbr-new --preset 128 --id3v2-only --add-id3v2 --silent ' \
       '--tt "Song Title" --ta "Band" --tl "Album Title" --ty "1993" ' \
       "--tn \"4\" --tg \"Noise\" - \"#{RES_DIR + 'test_tone-100hz.mp3'}\"",
-      t.construct_command(RES_DIR + 'test_tone-100hz.flac', test_tags)
+      t.construct_command(
+        RES_DIR + 'test_tone-100hz.flac',
+        RES_DIR + 'test_tone-100hz.mp3',
+        test_tags
+      )
     )
   end
 

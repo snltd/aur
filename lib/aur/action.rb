@@ -78,6 +78,11 @@ module Aur
       load_library('artfix')
     end
 
+    def handle_mp3dir
+      @flist = opts[:'<directory>'].to_paths
+      load_library('mp3dir')
+    end
+
     # Blows up an array of directories to an array of those directories and
     # all the directories under them, uniquely sorted.
     # @param roots [Array[Pathname]]

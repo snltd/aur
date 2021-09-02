@@ -3,6 +3,7 @@
 require_relative 'base'
 require_relative '../constants'
 require_relative '../renamers'
+require_relative 'mixins/flac2mp3'
 
 module Aur
   module Command
@@ -11,43 +12,7 @@ module Aur
     #
     class Flac2mp3 < Base
       include Aur::Renamers
-
-      def construct_command(file, tags)
-        "#{BIN[:flac]} -dsc #{escaped(file)} | " \
-          "#{BIN[:lame]} #{LAME_FLAGS} #{lame_tag_opts(tags)} " \
-          "- #{escaped(dest_file)}"
-      end
-
-      def dest_file
-        file.sub_ext('.mp3')
-      end
-
-      def check_dependencies
-        unless BIN[:flac].exist?
-          raise(Aur::Exception::MissingBinary, BIN[:flac])
-        end
-
-        return if BIN[:lame].exist?
-
-        raise(Aur::Exception::MissingBinary, BIN[:lame])
-      end
-
-      def lame_tag_opts(tags)
-        lame_flag_map.each_pair.with_object([]) do |(flag, tag), aggr|
-          aggr.<< "#{flag} #{escaped(tags[tag])}" if tags.fetch(tag, false)
-        end.join(' ')
-      end
-
-      # Maps LAME's command-line tag options to what we call tags
-      #
-      def lame_flag_map
-        { '--tt': :title,
-          '--ta': :artist,
-          '--tl': :album,
-          '--ty': :year,
-          '--tn': :t_num,
-          '--tg': :genre }
-      end
+      include Aur::Mixin::Flac2mp3
 
       def self.help
         <<~EOHELP
@@ -71,8 +36,9 @@ module Aur
       def run
         check_dependencies
         info = Aur::FileInfo.new(file)
-        cmd = construct_command(file, info.our_tags)
-        puts "#{file} -> #{dest_file}"
+        dest = file.sub_ext('.mp3')
+        cmd = construct_command(file, dest, info.our_tags)
+        puts "#{file} -> #{dest}"
         system(cmd)
       end
     end
