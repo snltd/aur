@@ -66,6 +66,8 @@ module Aur
       return false if string.nil?
 
       !string.empty? && !string.include?('&') && string.strip == string
+    rescue NoMethodError
+      raise Aur::Exception::InvalidTagValue, "Unparseable tag: #{string}"
     end
 
     alias title artist

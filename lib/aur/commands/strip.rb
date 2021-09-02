@@ -8,8 +8,6 @@ module Aur
     # Removes embedded images and unwanted tags from the given file.
     #
     class Strip < Base
-      # include Aur::Renamers
-
       def run
         remove_extra_tags if info.incorrect_tags?
         tagger.remove_picture if info.picture?

@@ -27,6 +27,7 @@ CMDS = %i[artfix
           strip
           tag2name
           tagsub
+          tagconv
           thes
           transcode
           check
@@ -54,6 +55,7 @@ docopt = <<~EOCMDS
     aur mp3dir [-rf] <directory>...
     aur transcode <newtype> <file>...
     aur reencode <file>...
+    aur tagconv <file>...
     aur lint [-st] <file>...
     aur lintdir [-r] <directory>...
     aur artfix [-n] <directory>...
@@ -67,7 +69,7 @@ docopt = <<~EOCMDS
     -s, --summary     summarise results
     -d, --delimiter   produce machine-parseable output with the given delimeter
     -t, --strict      compare actual to expected tags
-    -F, --force       overwrite any existing files
+    -f, --force       overwrite any existing files
 EOCMDS
 
 def sanitize_keys(options)
