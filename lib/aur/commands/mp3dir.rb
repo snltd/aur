@@ -27,10 +27,10 @@ module Aur
       end
 
       def safety_check
-        unless source_dir.dirname.to_s.match?(/\/flac\//)
-          raise Aur::Exception::InvalidInput,
-            "#{source_dir} is not in /flac/ heirarchy"
-        end
+        return true if source_dir.dirname.to_s.include?('/flac/')
+
+        raise Aur::Exception::InvalidInput,
+              "#{source_dir} is not in /flac/ heirarchy"
       end
 
       def run

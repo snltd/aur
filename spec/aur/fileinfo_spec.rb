@@ -55,15 +55,24 @@ class TestFileInfo < MiniTest::Test
   end
 
   def test_partner
+    fdir = TMP_DIR + 'flac' + 'singer.lp'
+    mdir = TMP_DIR + 'mp3' + 'singer.lp'
+
+    FileUtils.mkdir_p(fdir)
+    FileUtils.touch(fdir + '01.singer.song.flac')
+    FileUtils.mkdir_p(mdir)
+    FileUtils.touch(mdir + '01.singer.song.mp3')
+
     assert_equal(
-      Pathname.new('/storage/flac/singer.lp/01/.singer.song.flac'),
-      mp3.partner(Pathname.new('/storage/mp3/singer.lp/01/.singer.song.mp3'))
+      fdir + '01.singer.song.flac', mp3.partner(mdir + '01.singer.song.mp3')
     )
 
     assert_equal(
-      Pathname.new('/storage/mp3/singer.lp/01/.singer.song.mp3'),
-      flac.partner(Pathname.new('/storage/flac/singer.lp/01/.singer.song.flac'))
+      mdir + '01.singer.song.mp3', flac.partner(fdir + '01.singer.song.flac')
     )
+
+    FileUtils.rm_r(TMP_DIR + 'flac')
+    FileUtils.rm_r(TMP_DIR + 'mp3')
   end
 
   def test_prt_name
