@@ -27,7 +27,7 @@ module Aur
       end
 
       def safety_check
-        return true if source_dir.dirname.to_s.include?('/flac/')
+        return true if source_dir.to_s.split('/').include?('flac')
 
         raise Aur::Exception::InvalidInput,
               "#{source_dir} is not in /flac/ heirarchy"
