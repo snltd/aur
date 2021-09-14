@@ -137,6 +137,13 @@ module Aur
       warn "'#{e}' is an invalid value."
     rescue Aur::Exception::InvalidTagName => e
       warn "'#{e}' is not a valid tag name."
+    rescue Aur::Exception::InvalidInput => e
+      warn "Bad input: #{e}"
+    rescue Errno::ENOENT => e
+      warn "File not found: #{e}".bold.red
+    rescue StandardError => e
+      warn "Unhandled error on #{file}".red.bold
+      pp e
     end
     # rubocop:enable Metrics/AbcSize
     # rubocop:enable Metrics/MethodLength
