@@ -42,5 +42,13 @@ module Aur
         system(cmd)
       end
     end
+
+    # We don't turn mp3s into mp3s
+    #
+    module Flac2mp3Mp3
+      def run
+        raise Aur::Exception::UnsupportedFiletype
+      end
+    end
   end
 end

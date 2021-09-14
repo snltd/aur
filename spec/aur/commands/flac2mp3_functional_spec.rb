@@ -32,7 +32,10 @@ class TestFlac2Mp3Command < MiniTest::Test
 
   def test_flac2mp3_mp3
     with_test_file('test_tone-100hz.mp3') do |f|
-      assert_raises(Aur::Exception::UnsupportedFiletype) do
+      assert_output(
+        nil,
+        "Unhandled error on #{TMP_DIR + 'test_tone-100hz.mp3'}\n"
+      ) do
         Aur::Action.new(:flac2mp3, [f]).run!
       end
     end

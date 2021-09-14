@@ -27,7 +27,7 @@ module Aur
       end
 
       def copy_tags
-        puts "copying tags from flac"
+        puts 'copying tags from flac'
         tagger.tag!(Aur::FileInfo.new(@partner).our_tags)
       end
 
