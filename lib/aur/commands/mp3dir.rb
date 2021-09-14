@@ -23,6 +23,14 @@ module Aur
         @opts = opts
         @source_dir = dir.realpath
         @target_dir = mp3_target_dir(source_dir)
+        safety_check
+      end
+
+      def safety_check
+        return true if source_dir.to_s.split('/').include?('flac')
+
+        raise Aur::Exception::InvalidInput,
+              "#{source_dir} is not in /flac/ heirarchy"
       end
 
       def run

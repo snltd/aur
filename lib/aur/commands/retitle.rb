@@ -25,6 +25,8 @@ module Aur
         else
           tagger.tag!(title: new_title)
         end
+      rescue NoMethodError
+        raise Aur::Exception::InvalidTagValue, "#{file} has broken tags"
       end
 
       def retitle(title)

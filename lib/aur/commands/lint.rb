@@ -85,6 +85,8 @@ module Aur
             msg = opts[:summary] ? tag : "#{tag}: #{value}"
             err(file, "Bad tag value: #{msg}")
           end
+        rescue NoMethodError
+          raise Aur::Exception::InvalidTagValue, "Unparseable tag: #{value}"
         end
       end
 

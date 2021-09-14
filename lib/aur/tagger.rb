@@ -30,6 +30,8 @@ module Aur
     # care about. Validation can change a tag's type and/or value.
     #
     def validate(tags)
+      return tags if opts[:novalidate]
+
       tags.tap do |t|
         t.each_pair do |name, value|
           validate_method = "validate_#{name}".to_sym
@@ -133,6 +135,8 @@ module Aur
         validate(tags).each_pair do |name, value|
           tag_msg(name, value)
           mp3.tag2[info.tag_name(name)] = value
+        rescue Encoding::CompatibilityError
+          raise Aur::Exception::InvalidTagValue, "#{value} badly encoded"
         end
       end
     end

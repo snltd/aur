@@ -7,24 +7,15 @@ require_relative '../../../lib/aur/commands/mp3dir'
 # Tests for mp3dir class
 #
 class TestMp3dir < MiniTest::Test
-  attr_reader :t
-
-  def setup
+  def test_mp3_target_dir
     skip unless BIN[:flac].exist?
     skip unless BIN[:lame].exist?
 
-    @t = Aur::Command::Mp3dir.new(RES_DIR)
-  end
+    t = Aur::Command::Mp3dir.new(Pathname.new('/storage/flac/eps'))
 
-  def test_mp3_target_dir
     assert_equal(
       Pathname.new('/storage/mp3/eps/pram.meshes'),
       t.mp3_target_dir(Pathname.new('/storage/flac/eps/pram.meshes'))
-    )
-
-    assert_equal(
-      Pathname.new('/storage/mp3/eps/flace.meshes'),
-      t.mp3_target_dir(Pathname.new('/storage/flac/eps/flace.meshes'))
     )
 
     assert_equal(

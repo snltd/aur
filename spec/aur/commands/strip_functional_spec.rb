@@ -21,7 +21,7 @@ class TestStripCommand < MiniTest::Test
       refute_equal(REQ_TAGS[:flac], original.tags.keys)
       assert_equal('aur', original.tags[:encoder])
 
-      assert_output("Surplus tags: composer, encoder, tempo\n", '') do
+      assert_output("Surplus tags in #{f}: composer, encoder, tempo\n", '') do
         Aur::Action.new(:strip, [f]).run!
       end
 
@@ -63,7 +63,9 @@ class TestStripCommand < MiniTest::Test
       assert original.picture?
 
       # the lib throws a warning on our test file so we ignore stderr
-      assert_output("Surplus tags: apic, tcom, tenc, tlen, tsse, txxx\n") do
+      assert_output(
+        "Surplus tags in #{f}: apic, tcom, tenc, tlen, tsse, txxx\n"
+      ) do
         Aur::Action.new(:strip, [f]).run!
       end
 

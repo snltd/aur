@@ -10,7 +10,9 @@ module Aur
     # they can be reencoded, skipping the usual summary
     #
     class Check < Base
-      def run; end
+      def run
+        puts file if info.title.nil? || info.title.empty?
+      end
 
       def no_error_report
         true
