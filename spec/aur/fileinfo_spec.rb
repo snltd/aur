@@ -54,6 +54,27 @@ class TestFileInfo < MiniTest::Test
     assert_raises(NoMethodError) { mp3.merp }
   end
 
+  def test_partner
+    fdir = TMP_DIR + 'flac' + 'singer.lp'
+    mdir = TMP_DIR + 'mp3' + 'singer.lp'
+
+    FileUtils.mkdir_p(fdir)
+    FileUtils.touch(fdir + '01.singer.song.flac')
+    FileUtils.mkdir_p(mdir)
+    FileUtils.touch(mdir + '01.singer.song.mp3')
+
+    assert_equal(
+      fdir + '01.singer.song.flac', mp3.partner(mdir + '01.singer.song.mp3')
+    )
+
+    assert_equal(
+      mdir + '01.singer.song.mp3', flac.partner(fdir + '01.singer.song.flac')
+    )
+
+    FileUtils.rm_r(TMP_DIR + 'flac')
+    FileUtils.rm_r(TMP_DIR + 'mp3')
+  end
+
   def test_prt_name
     assert_equal(
       'test_tone-100hz.flac',
