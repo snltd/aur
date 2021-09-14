@@ -54,6 +54,18 @@ class TestFileInfo < MiniTest::Test
     assert_raises(NoMethodError) { mp3.merp }
   end
 
+  def test_partner
+    assert_equal(
+      Pathname.new('/storage/flac/singer.lp/01/.singer.song.flac'),
+      mp3.partner(Pathname.new('/storage/mp3/singer.lp/01/.singer.song.mp3'))
+    )
+
+    assert_equal(
+      Pathname.new('/storage/mp3/singer.lp/01/.singer.song.mp3'),
+      flac.partner(Pathname.new('/storage/flac/singer.lp/01/.singer.song.flac'))
+    )
+  end
+
   def test_prt_name
     assert_equal(
       'test_tone-100hz.flac',

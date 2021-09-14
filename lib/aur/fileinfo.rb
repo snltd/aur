@@ -171,6 +171,10 @@ module Aur
     def picture?
       info.picture['n'].positive?
     end
+
+    def partner(this_file = file)
+      this_file.realpath.sub(%r{/flac/}, '/mp3/').sub_ext('.mp3')
+    end
   end
 
   # Methods specific to MP3s. We are all about id3v2. v1 is nowhere.
@@ -210,6 +214,10 @@ module Aur
 
     def picture?
       !info.tag2.pictures.empty?
+    end
+
+    def partner(this_file = file)
+      this_file.realpath.sub(%r{/mp3/}, '/flac/').sub_ext('.flac')
     end
   end
 end

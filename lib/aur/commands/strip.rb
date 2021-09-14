@@ -16,7 +16,9 @@ module Aur
       def remove_extra_tags
         surplus_tags = info.tags.keys.sort - info.required_tags
 
-        puts "Surplus tags: #{surplus_tags.join(', ')}"
+        return if surplus_tags.empty?
+
+        puts "Surplus tags in #{file}: #{surplus_tags.join(', ')}"
         tagger.untag!(surplus_tags)
       end
 
