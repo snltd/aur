@@ -19,7 +19,7 @@ module Aur
       end
 
       def run
-        to_be_synced(flacs, mp3s).each { |dir| sync(dir) }
+        difference(flacs, mp3s).each { |dir| action(dir) }
       end
 
       def flacs
@@ -30,14 +30,14 @@ module Aur
         content_under(mdir, '.mp3')
       end
 
-      def sync(dir)
+      def action(dir)
         Aur::Command::Mp3dir.new(dir).run
       end
 
       # @return [Array[Pathname]] fully qualified paths of FLAC directories
       #   which need mp3ing.
       #
-      def to_be_synced(flacdirs, mp3dirs)
+      def difference(flacdirs, mp3dirs)
         (flacdirs - mp3dirs).map { |d| fdir + d.first }
       end
 
