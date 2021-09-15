@@ -15,7 +15,7 @@ class TestHelp < MiniTest::Test
 
       assert_instance_of(String, help)
 
-      assert_match(/^usage: aur #{class_name(cmd).downcase} /, help)
+      assert_match(/^usage: aur #{class_name(cmd).downcase}/, help)
     end
   end
 

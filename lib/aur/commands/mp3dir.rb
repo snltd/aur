@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'colorize'
 require 'fileutils'
 require_relative 'base'
 require_relative '../constants'
@@ -34,16 +35,24 @@ module Aur
       end
 
       def run
-        FileUtils.mkdir_p(target_dir)
+        setup
 
         flacs_in(dir).each do |source|
           dest = target_file(source)
-
-          next if dest.exist? && !opts[:force]
+          next if opts[:force].nil? && dest.exist?
 
           transcode(source, dest)
         end
 
+        cleanup
+      end
+
+      def setup
+        FileUtils.mkdir_p(target_dir)
+        puts source_dir.to_s.bold
+      end
+
+      def cleanup
         remove_leftovers(source_dir, target_dir)
       end
 
@@ -62,20 +71,22 @@ module Aur
       def transcode(source, dest)
         info = Aur::FileInfo.new(source)
         cmd = construct_command(source, dest, info.our_tags)
-        puts "#{source} -> #{dest}"
+        puts "  -> #{dest.basename}"
         system(cmd)
       end
 
       # Removes any MP3s (in dest) that don't have FLAC equivalents (in
-      # source).
+      # source). Doesn't remove anything in tracks/ directories.
       #
       def remove_leftovers(source, dest)
+        return if dest.basename.to_s == 'tracks'
+
         dest.children.select(&:file?).each do |mp3|
           flac = source + mp3.basename.sub_ext('.flac')
 
           next if flac.exist?
 
-          puts "Removing #{mp3}"
+          puts "  removing #{mp3}"
           mp3.unlink
         end
       end
