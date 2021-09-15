@@ -39,7 +39,7 @@ class CommandTest < MiniTest::Test
     [RES_DIR + 'lintdir',
      FLAC_DIR,
      FLAC_DIR + 'slint.spiderland_remastered',
-     FLAC_DIR + 'slint.spiderland_remastered/slint.spiderland_bonus_disc',
+     FLAC_DIR + 'slint.spiderland_remastered/bonus_disc',
      FLAC_DIR + 'fall.eds_babe',
      MP3_DIR,
      MP3_DIR + 'heavenly.atta_girl',

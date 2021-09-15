@@ -83,6 +83,11 @@ module Aur
       load_library('mp3dir')
     end
 
+    def handle_syncflac
+      @flist = [Pathname.new('/storage')]
+      load_library('syncflac')
+    end
+
     # Blows up an array of directories to an array of those directories and
     # all the directories under them, uniquely sorted.
     # @param roots [Array[Pathname]]
