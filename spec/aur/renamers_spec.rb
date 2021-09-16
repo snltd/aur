@@ -88,7 +88,7 @@ class TestRenamers < MiniTest::Test
     input = OpenStruct.new(
       artist: 'The Someone & The Somethings',
       title: "Hey! What's This? (This & That)",
-      album: '12 Songs & Some Noise',
+      album: '12 Songs & Some Noise'
     )
 
     assert_equal('someone_and_the_somethings', artist_fname(input))
