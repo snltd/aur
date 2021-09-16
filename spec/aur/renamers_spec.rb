@@ -83,6 +83,18 @@ class TestRenamers < MiniTest::Test
     assert_equal('the_song', track_fname(input))
     assert_equal('the_lp', album_fname(input))
   end
+
+  def test_chars
+    input = OpenStruct.new(
+      artist: 'The Someone & The Somethings',
+      title: "Hey! What's This? (This & That)",
+      album: '12 Songs & Some Noise',
+    )
+
+    assert_equal('someone_and_the_somethings', artist_fname(input))
+    assert_equal('hey_whats_this-this_and_that', track_fname(input))
+    assert_equal('12_songs_and_some_noise', album_fname(input))
+  end
 end
 
 def flac_info
