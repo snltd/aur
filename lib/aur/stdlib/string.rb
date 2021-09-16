@@ -19,6 +19,7 @@ class String
   def to_safe
     I18n.transliterate(String.new(self).force_encoding('utf-8'))
         .downcase
+        .gsub('&', 'and')
         .gsub(/(\S)-(\S)/, '\1--\2')
         .gsub(/\s+\(/, '-')
         .gsub(/\)\s+/, '-')
