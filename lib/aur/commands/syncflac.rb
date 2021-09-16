@@ -37,8 +37,10 @@ module Aur
       # @return [Array[Pathname]] fully qualified paths of FLAC directories
       #   which need mp3ing.
       #
-      def to_be_synced(flacdirs, mp3dirs)
-        (flacdirs - mp3dirs).map { |d| fdir + d.first }
+      def difference(flacdirs, mp3dirs)
+        (flacdirs - mp3dirs).map { |d| fdir + d.first }.reject do |d|
+          d.to_s.end_with?('/new') || d.to_s.include?('/new/')
+        end
       end
 
       def self.help
