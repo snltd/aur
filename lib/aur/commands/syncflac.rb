@@ -19,7 +19,7 @@ module Aur
       end
 
       def run
-        to_be_synced(flacs, mp3s).each { |dir| sync(dir) }
+        difference(flacs, mp3s).each { |dir| action(dir) }
       end
 
       def flacs
@@ -30,7 +30,7 @@ module Aur
         content_under(mdir, '.mp3')
       end
 
-      def sync(dir)
+      def action(dir)
         Aur::Command::Mp3dir.new(dir).run
       end
 
