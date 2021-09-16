@@ -11,7 +11,7 @@ class TestTag2NameCommand < MiniTest::Test
 
   def test_flac_tag2name
     SUPPORTED_TYPES.each do |type|
-      expected = "02.the_null_set.sammy_davis_jr-dancing.#{type}"
+      expected = "02.null_set.sammy_davis_jr-dancing.#{type}"
 
       with_test_file("bad_name.#{type}") do |f|
         assert_output("bad_name.#{type} -> #{expected}\n", '') do

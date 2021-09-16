@@ -19,7 +19,7 @@ module Aur
     # @return [String] the artist name, taken from the tag and turned into a
     #   safe filename segment.
     def artist_fname(info)
-      (info.artist || 'unknown_artist').to_safe
+      (info.artist || 'unknown_artist').to_safe.sub(/^the_/, '')
     end
 
     # @return [String] the album name, taken from the tag and turned into a

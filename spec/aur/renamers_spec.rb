@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+require 'ostruct'
 require_relative '../spec_helper'
 require_relative '../../lib/aur/renamers'
 require_relative '../../lib/aur/fileinfo'
@@ -69,6 +70,18 @@ class TestRenamers < MiniTest::Test
     assert_equal('"Spiderland"', escaped('Spiderland'))
     assert_equal('"Theme from \"Shaft\""', escaped('Theme from "Shaft"'))
     assert_equal('"\"Loads\" of \"Quotes\""', escaped('"Loads" of "Quotes"'))
+  end
+
+  def test_leading_the
+    input = OpenStruct.new(
+      artist: 'The Someone and The Somethings',
+      title: 'The Song',
+      album: 'The LP'
+    )
+
+    assert_equal('someone_and_the_somethings', artist_fname(input))
+    assert_equal('the_song', track_fname(input))
+    assert_equal('the_lp', album_fname(input))
   end
 end
 
