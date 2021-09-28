@@ -51,8 +51,8 @@ class TestRenumberCommand < MiniTest::Test
       with_test_file("test_tone-100hz.#{type}") do |f|
         assert_tag(f, :t_num, '6')
 
-        assert_output('', "'-9' is an invalid value.\n") do
-          renumber_command(f, :down, '15')
+        assert_output('', "ERROR: '-9' is an invalid value.\n") do
+          assert_raises(SystemExit) { renumber_command(f, :down, '15') }
         end
 
         assert_tag(f, :t_num, '6')

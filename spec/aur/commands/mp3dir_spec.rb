@@ -23,4 +23,10 @@ class TestMp3dir < MiniTest::Test
       t.mp3_target_dir(Pathname.new('/flacs_and_mp3s/flac/eps/abc.def'))
     )
   end
+
+  def test_run_against_mp3_dirs
+    assert_raises(Aur::Exception::InvalidInput) do
+      Aur::Command::Mp3dir.new(RES_DIR)
+    end
+  end
 end

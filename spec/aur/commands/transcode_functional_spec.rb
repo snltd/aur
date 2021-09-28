@@ -45,7 +45,9 @@ class TestReencodeCommand < MiniTest::Test
       with_test_file(RES_DIR + "not_really_a.#{type}") do |f|
         assert_output("#{f} -> #{TMP_DIR}/not_really_a.wav\n",
                       "ERROR: cannot process '#{f}'.\n") do
-          Aur::Action.new(:transcode, [f], '<newtype>': 'wav').run!
+          assert_raises(SystemExit) do
+            Aur::Action.new(:transcode, [f], '<newtype>': 'wav').run!
+          end
         end
       end
     end

@@ -112,6 +112,27 @@ class TestMp3dir < MiniTest::Test
     end
   end
 
+  def test_running_in_the_wrong_place
+    with_test_file('lintdir') do |dir|
+      d = dir + 'mp3' + 'pram.meshes'
+
+      assert_output('',
+                    "ERROR: Bad input: #{d} is not in /flac/ hierarchy\n") do
+        assert_raises(SystemExit) { act(d) }
+      end
+    end
+  end
+
+  def test_running_against_a_file
+    with_test_file('lintdir') do |dir|
+      f = dir + 'flac' + 'fall.eds_babe' + '04.fall.free_ranger.flac'
+
+      assert_output(f.to_s + "\n", "ERROR: Argument must be a directory.\n") do
+        assert_raises(SystemExit) { act(f) }
+      end
+    end
+  end
+
   def action
     :mp3dir
   end
