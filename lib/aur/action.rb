@@ -134,14 +134,16 @@ module Aur
       raise Aur::Exception::UnsupportedFiletype
     rescue Aur::Exception::Collector => e
       @errs << e.to_s
-    rescue FlacInfoWriteError
-      abort "#{file} must be re-encoded".red.bold
+    rescue FlacInfoWriteError => e
+      exit if e.message == 'No changes to write'
+
+      abort "#{file} error: #{e}. Maybe re-encode?".red.bold
     rescue FlacInfoReadError,
            Mp3InfoEOFError,
            Aur::Exception::FailedOperation => e
       return klass.handle_err(file, e) if klass.respond_to?(:handle_err)
 
-      die "cannot process '#{file}'.".bold
+      warn "ERROR: cannot process '#{file}'.".bold
       @errs.<< file.to_s
     rescue Aur::Exception::InvalidTagValue => e
       die "'#{e}' is an invalid value."
