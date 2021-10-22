@@ -67,7 +67,7 @@ module Aur
     # the inner loop from #title.
     #
     def handle_string(string, index, count)
-      if string.match?(/^(\w-)+\w?/)
+      if string.match?(/^([a-z]-)+\w?/)
         string.initials
       elsif string.include?('--')
         handle_long_dash(string, index, count)
