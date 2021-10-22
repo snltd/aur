@@ -14,12 +14,30 @@ module Aur
       end
 
       def remove_extra_tags
-        surplus_tags = info.tags.keys.sort - info.required_tags
+        surplus_tags = extra_tags
 
         return if surplus_tags.empty?
 
         puts "Surplus tags in #{file}: #{surplus_tags.join(', ')}"
         tagger.untag!(surplus_tags)
+      end
+
+      def extra_tags
+        real_tags(info.raw.comment, info.tags.keys.sort - info.required_tags)
+      end
+
+      # Tag case can be all over the place, and the lib needs it to be
+      # correct. You can even have two tags with the same (differently cased)
+      # name. This method finds the exact tag names from the given lower-cased
+      # ones
+      #
+      # @param real [Array[String]] the tags (key=val) in the file, mixed case
+      # @param ideal [Array[String]] the tag keys we want, lower case
+      # @return [Array[String]] subset of @real
+      #
+      def real_tags(real, ideal)
+        real_keys = real.map { |t| t.split('=').first }
+        real_keys.select { |k| ideal.include?(k.downcase.to_sym) }
       end
 
       def self.help
