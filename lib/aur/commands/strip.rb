@@ -22,6 +22,19 @@ module Aur
         tagger.untag!(surplus_tags)
       end
 
+      def self.help
+        <<~EOHELP
+          usage: aur strip <file>...
+
+          Removes embedded images and unwanted tags from the given file(s).
+          Stripping an MP3 also removes ID3v1 tags.
+        EOHELP
+      end
+    end
+
+    # FLACs need extra work on tag names
+    #
+    module StripFlac
       def extra_tags
         real_tags(info.raw.comment, info.tags.keys.sort - info.required_tags)
       end
@@ -39,14 +52,13 @@ module Aur
         real_keys = real.map { |t| t.split('=').first }
         real_keys.select { |k| ideal.include?(k.downcase.to_sym) }
       end
+    end
 
-      def self.help
-        <<~EOHELP
-          usage: aur strip <file>...
-
-          Removes embedded images and unwanted tags from the given file(s).
-          Stripping an MP3 also removes ID3v1 tags.
-        EOHELP
+    # Fallback for MP3s
+    #
+    module StripMp3
+      def extra_tags
+        info.tags.keys.sort - info.required_tags
       end
     end
   end
