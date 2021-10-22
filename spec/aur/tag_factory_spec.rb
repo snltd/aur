@@ -33,6 +33,7 @@ class TestName2Tag < MiniTest::Test
   def test_title_brackets_at_end
     assert_equal('Suburbia (The Full Horror)',
                  t.title('suburbia-the_full_horror'))
+    assert_equal('Drumming (Part III)', t.title('drumming-part_iii'))
   end
 
   def test_title_inches

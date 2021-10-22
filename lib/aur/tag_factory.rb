@@ -53,10 +53,12 @@ module Aur
     # it if it's the first or last word in a title.
     #
     def smart_capitalize(word, index, count)
-      if /^(\w\.)+$/.match?(word) # initialisms
+      if word.match?(/^(\w\.)+$/) # initialisms
         word
       elsif NO_CAPS.include?(word.downcase) && index.between?(1, count - 2)
         word.downcase
+      elsif word.match?(/^[A-Z0-9]+$/)
+        word
       else
         word.capitalize
       end
