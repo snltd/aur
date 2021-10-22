@@ -52,8 +52,10 @@ module Aur
     # Don't capitalize a word if it's in the NO_CAPS list, but *do* capitalize
     # it if it's the first or last word in a title.
     #
+    # rubocop:disable Lint/DuplicateBranch
     def smart_capitalize(word, index, count)
-      if word.match?(/^(\w\.)+$/) # initialisms
+      if word.match?(/^(\w\.)+$/)
+        # initialisms
         word
       elsif NO_CAPS.include?(word.downcase) && index.between?(1, count - 2)
         word.downcase
@@ -63,6 +65,7 @@ module Aur
         word.capitalize
       end
     end
+    # rubocop:enable Lint/DuplicateBranch
 
     # When creating a title, every string (usually a word, but sometimes
     # multiple words separated by one or two dashes) passes through this. It's
