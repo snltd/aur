@@ -14,8 +14,8 @@ module Aur
     class Ls
       def initialize(dir = nil, opts = {})
         @dir = dir
-        @format = if opts[:delimiter]
-                    delimited_format_string(opts[:delimiter])
+        @format = if opts[:delim]
+                    delimited_format_string(opts[:delim])
                   else
                     format_string(TW)
                   end
