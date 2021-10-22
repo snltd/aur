@@ -34,7 +34,7 @@ class TestLsCommand < MiniTest::Test
       Aur::Action.new(
         :ls,
         [],
-        '<directory>': [RES_DIR + 'null_set.some_stuff_by'], delimiter: '|'
+        '<directory>': [RES_DIR + 'null_set.some_stuff_by'], delim: '|'
       ).run!
     end
   end
