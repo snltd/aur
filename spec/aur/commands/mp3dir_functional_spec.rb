@@ -14,7 +14,6 @@ class TestMp3dir < MiniTest::Test
   #
   def test_mp3dir
     skip unless BIN[:flac].exist?
-    skip unless BIN[:lame].exist?
 
     with_test_file('mp3dir') do |dir|
       source_dir = dir + 'flac' + 'artist.first_album'
@@ -81,7 +80,6 @@ class TestMp3dir < MiniTest::Test
 
   def test_mp3dir_tidy_up
     skip unless BIN[:flac].exist?
-    skip unless BIN[:lame].exist?
 
     with_test_file('mp3dir') do |dir|
       source_dir = dir + 'flac' + 'artist.first_album'
@@ -113,6 +111,8 @@ class TestMp3dir < MiniTest::Test
   end
 
   def test_running_in_the_wrong_place
+    skip unless BIN[:flac].exist?
+
     with_test_file('lintdir') do |dir|
       d = dir + 'mp3' + 'pram.meshes'
 
@@ -124,6 +124,8 @@ class TestMp3dir < MiniTest::Test
   end
 
   def test_running_against_a_file
+    skip unless BIN[:flac].exist?
+
     with_test_file('lintdir') do |dir|
       f = dir + 'flac' + 'fall.eds_babe' + '04.fall.free_ranger.flac'
 
