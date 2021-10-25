@@ -21,7 +21,7 @@ class TestStripCommand < MiniTest::Test
       refute_equal(REQ_TAGS[:flac], original.tags.keys)
       assert_equal('aur', original.tags[:encoder])
 
-      assert_output("Surplus tags in #{f}: composer, encoder, tempo\n", '') do
+      assert_output("Surplus tags in #{f}: COMPOSER, ENCODER, TEMPO\n", '') do
         Aur::Action.new(:strip, [f]).run!
       end
 

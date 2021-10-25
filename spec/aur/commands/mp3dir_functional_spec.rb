@@ -14,7 +14,6 @@ class TestMp3dir < MiniTest::Test
   #
   def test_mp3dir
     skip unless BIN[:flac].exist?
-    skip unless BIN[:lame].exist?
 
     with_test_file('mp3dir') do |dir|
       source_dir = dir + 'flac' + 'artist.first_album'
@@ -81,7 +80,6 @@ class TestMp3dir < MiniTest::Test
 
   def test_mp3dir_tidy_up
     skip unless BIN[:flac].exist?
-    skip unless BIN[:lame].exist?
 
     with_test_file('mp3dir') do |dir|
       source_dir = dir + 'flac' + 'artist.first_album'
@@ -109,6 +107,31 @@ class TestMp3dir < MiniTest::Test
       assert (expected_dir + '01.artist.song_1.mp3').exist?
       assert (expected_dir + '02.artist.song_2.mp3').exist?
       refute bonus.exist?
+    end
+  end
+
+  def test_running_in_the_wrong_place
+    skip unless BIN[:flac].exist?
+
+    with_test_file('lintdir') do |dir|
+      d = dir + 'mp3' + 'pram.meshes'
+
+      assert_output('',
+                    "ERROR: Bad input: #{d} is not in /flac/ hierarchy\n") do
+        assert_raises(SystemExit) { act(d) }
+      end
+    end
+  end
+
+  def test_running_against_a_file
+    skip unless BIN[:flac].exist?
+
+    with_test_file('lintdir') do |dir|
+      f = dir + 'flac' + 'fall.eds_babe' + '04.fall.free_ranger.flac'
+
+      assert_output(f.to_s + "\n", "ERROR: Argument must be a directory.\n") do
+        assert_raises(SystemExit) { act(f) }
+      end
     end
   end
 

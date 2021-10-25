@@ -31,7 +31,7 @@ module Aur
         return true if source_dir.to_s.split('/').include?('flac')
 
         raise Aur::Exception::InvalidInput,
-              "#{source_dir} is not in /flac/ heirarchy"
+              "#{source_dir} is not in /flac/ hierarchy"
       end
 
       def run
@@ -39,7 +39,7 @@ module Aur
 
         flacs_in(dir).each do |source|
           dest = target_file(source)
-          next if opts[:force].nil? && dest.exist?
+          next if dest.exist? && !opts[:force]
 
           transcode(source, dest)
         end

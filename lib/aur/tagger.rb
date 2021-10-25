@@ -112,6 +112,7 @@ module Aur
         info.raw.comment_del(name.to_s.upcase)
         info.raw.comment_del(name.to_s)
       end
+
       info.raw.update!
     end
 
@@ -137,6 +138,7 @@ module Aur
       Mp3Info.open(info.file) do |mp3|
         validate(tags).each_pair do |name, value|
           tag_msg(name, value)
+          value = value.dup.force_encoding('UTF-8') if value.is_a?(String)
           mp3.tag2[info.tag_name(name)] = value
         rescue Encoding::CompatibilityError
           raise Aur::Exception::InvalidTagValue, "#{value} badly encoded"

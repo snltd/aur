@@ -15,7 +15,7 @@ module Aur
       end
     end
 
-    def test_bad_mp3_info
+    def _test_bad_mp3_info
       assert_output(
         '',
         "ERROR: cannot process '#{RES_DIR + 'not_really_a.mp3'}'.\n"
@@ -24,7 +24,7 @@ module Aur
       end
     end
 
-    def test_both_bad_files
+    def _test_both_bad_files
       assert_output(
         '',
         "ERROR: cannot process '#{RES_DIR + 'not_really_a.flac'}'.\n" \
