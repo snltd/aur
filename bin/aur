@@ -56,7 +56,7 @@ docopt = <<~EOCMDS
     aur verify <file>...
     aur flac2mp3 <file>...
     aur mp3dir [-rf] <directory>...
-    aur syncflac
+    aur syncflac [-D]
     aur wantflac
     aur transcode <newtype> <file>...
     aur reencode <file>...
@@ -78,6 +78,7 @@ docopt = <<~EOCMDS
     -f, --force         overwrite any existing files
     -m, --forcemod      modify MP3 tags if corresponding FLAC has a newer mtime
     -N, --novalidate    don't validate tags
+    -D, --deep          synchronize contents of all FLAC directories
 EOCMDS
 
 def sanitize_keys(options)

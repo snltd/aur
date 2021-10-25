@@ -151,14 +151,14 @@ module Aur
       die "'#{e}' is not a valid tag name."
     rescue Aur::Exception::InvalidInput => e
       die "Bad input: #{e}"
-    rescue Errno::ENOENT => e
-      die "File not found: #{e}".bold.red
+    #rescue Errno::ENOENT => e
+      #die "File not found: #{e}".bold.red
     rescue Errno::ENOTDIR
       die 'Argument must be a directory.'
-    rescue StandardError => e
-      warn "ERROR: Unhandled error on #{file}".red.bold
-      pp e
-      exit 2
+    #rescue StandardError => e
+      #warn "ERROR: Unhandled error on #{file}".red.bold
+      #pp e
+      #exit 2
     end
     # rubocop:enable Metrics/AbcSize
     # rubocop:enable Metrics/MethodLength
