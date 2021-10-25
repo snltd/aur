@@ -60,8 +60,8 @@ class TestSetCommand < MiniTest::Test
   def test_set_bad_tag
     SUPPORTED_TYPES.each do |type|
       with_test_file("01.test_artist.untagged_song.#{type}") do |f|
-        assert_output('', "'singer' is not a valid tag name.\n") do
-          set_command(f, 'singer', 'Mouse Melon')
+        assert_output('', "ERROR: 'singer' is not a valid tag name.\n") do
+          assert_raises(SystemExit) { set_command(f, 'singer', 'Mouse Melon') }
         end
       end
     end
@@ -70,12 +70,17 @@ class TestSetCommand < MiniTest::Test
   def test_set_invalid_tag
     SUPPORTED_TYPES.each do |type|
       with_test_file("01.test_artist.untagged_song.#{type}") do |f|
-        assert_output('', "'Five' is an invalid value.\n") do
-          set_command(f, 't_num', 'Five')
+        assert_output('', "ERROR: 'Five' is an invalid value.\n") do
+          assert_raises(SystemExit) { set_command(f, 't_num', 'Five') }
         end
 
-        assert_output('', "'#{Time.now.year + 1}' is an invalid value.\n") do
-          set_command(f, 'year', Time.now.year + 1)
+        assert_output(
+          '',
+          "ERROR: '#{Time.now.year + 1}' is an invalid value.\n"
+        ) do
+          assert_raises(SystemExit) do
+            set_command(f, 'year', Time.now.year + 1)
+          end
         end
       end
     end

@@ -35,6 +35,7 @@ class TestName2Tag < MiniTest::Test
                  t.title('suburbia-the_full_horror'))
     assert_equal('Om Mani Padme Hum 3 (Piano Version)',
                  t.title('om_mani_padme_hum_3-piano_version.flac'))
+    assert_equal('Drumming (Part III)', t.title('drumming-part_iii'))
   end
 
   def test_title_inches
@@ -61,6 +62,8 @@ class TestName2Tag < MiniTest::Test
                  t.title('the-i-n-i-t-i-a-l-s-in_brackets'))
     assert_equal('Two (Lots) Of Brackets (Is Tricky)',
                  t.title('two-lots-of_brackets-is_tricky'))
+    assert_equal('Variations 3 (Canon on the Unison)',
+                 t.title('variations_3-canon_on_the_unison'))
   end
 
   def test_title_initials

@@ -9,17 +9,22 @@ module Aur
     # Makes sure we have MP3s of all our FLACs
     #
     class Syncflac
-      attr_reader :fdir, :mdir
+      attr_reader :fdir, :mdir, :opts
 
       include Aur::Mixin::FileTree
 
-      def initialize(root, _opts = {})
+      def initialize(root, opts = {})
+        @opts = opts
         @fdir = root + 'flac'
         @mdir = root + 'mp3'
       end
 
       def run
-        difference(flacs, mp3s).each { |dir| action(dir) }
+        if opts[:deep]
+          deep_difference(flacs)
+        else
+          difference(flacs, mp3s).each { |dir| action(dir) }
+        end
       end
 
       def flacs
@@ -41,6 +46,10 @@ module Aur
         (flacdirs - mp3dirs).map { |d| fdir + d.first }.reject do |d|
           d.to_s.end_with?('/new') || d.to_s.include?('/new/')
         end
+      end
+
+      def deep_difference(flacdirs)
+        flacdirs.each { |d, _count| action(fdir + d) }
       end
 
       def self.help

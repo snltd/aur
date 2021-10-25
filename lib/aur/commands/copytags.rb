@@ -15,14 +15,16 @@ module Aur
 
       def run
         @partner = info.partner
-        if partner.exist? && (needs_retagging?(info.our_tags) || opts[:force])
-          copy_tags
-        end
+        copy_tags if partner.exist? && needs_retagging?(info.our_tags)
       rescue Encoding::CompatibilityError
         puts "Bad encoding on #{file}"
       end
 
       def needs_retagging?(tags)
+        return true if opts[:force]
+
+        return true if opts[:forcemod] && partner.mtime > file.mtime
+
         tags.values.any?(&:nil?)
       end
 

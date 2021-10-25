@@ -15,6 +15,29 @@ module Aur
       SPACERS = '[ ,.!?]+'
 
       def run
+        if opts[:album]
+          retitle_album
+        else
+          retitle_title
+        end
+      end
+
+      def retitle_album
+        original_title = info.album
+        new_title = retitle(original_title)
+
+        return if new_title == original_title
+
+        if opts[:noop]
+          puts "#{original_title} -> #{new_title}"
+        else
+          tagger.tag!(album: new_title)
+        end
+      rescue NoMethodError
+        raise Aur::Exception::InvalidTagValue, "#{file} has broken tags"
+      end
+
+      def retitle_title
         original_title = info.title
         new_title = retitle(original_title)
 
@@ -29,14 +52,25 @@ module Aur
         raise Aur::Exception::InvalidTagValue, "#{file} has broken tags"
       end
 
+      # rubocop:disable Metrics/MethodLength
       def retitle(title)
+        follow_punct = false
+
         title.split(/[\s,]/).each_with_object(String.new(title)) do |w, ret|
+          if follow_punct
+            follow_punct = w.match?(/:$/)
+            next
+          end
+
+          follow_punct = w.match?(/:$/)
+
           next unless NO_CAPS.include?(w.downcase)
           next if /^[A-Z]\.[A-Z]\./.match?(w)
 
           ret.gsub!(/(#{SPACERS})#{w}(#{SPACERS})/, "\\1#{w.downcase}\\2")
         end
       end
+      # rubocop:enable Metrics/MethodLength
 
       def self.help
         require_relative '../fileinfo'
