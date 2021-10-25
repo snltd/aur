@@ -135,9 +135,7 @@ module Aur
     rescue Aur::Exception::Collector => e
       @errs << e.to_s
     rescue FlacInfoWriteError => e
-      exit if e.message == 'No changes to write'
-
-      abort "#{file} error: #{e}. Maybe re-encode?".red.bold
+      abort "#{file} write error: '#{e}'. Re-encode?".red.bold
     rescue FlacInfoReadError,
            Mp3InfoEOFError,
            Aur::Exception::FailedOperation => e
