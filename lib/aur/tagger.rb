@@ -108,7 +108,8 @@ module Aur
     # @param tags [Array] of tags to remove
     #
     def untag!(tags)
-      tags.each { |name| info.raw.comment_del(name.to_s.upcase) }
+      tags.each { |name| info.raw.comment_del(name.to_s) }
+
       info.raw.update!
     end
 
@@ -134,6 +135,7 @@ module Aur
       Mp3Info.open(info.file) do |mp3|
         validate(tags).each_pair do |name, value|
           tag_msg(name, value)
+          value = value.dup.force_encoding('UTF-8') if value.is_a?(String)
           mp3.tag2[info.tag_name(name)] = value
         rescue Encoding::CompatibilityError
           raise Aur::Exception::InvalidTagValue, "#{value} badly encoded"

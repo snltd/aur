@@ -22,10 +22,9 @@ class TestMp3dir < MiniTest::Test
       assert(source_dir.exist?)
       refute(expected_dir.exist?)
 
-      assert_output("#{source_dir + '01.artist.song_1.flac'} -> " \
-                    "#{expected_dir + '01.artist.song_1.mp3'}\n" \
-                    "#{source_dir + '02.artist.song_2.flac'} -> " \
-                    "#{expected_dir + '02.artist.song_2.mp3'}\n",
+      assert_output("#{source_dir}\n" \
+                    "  -> 01.artist.song_1.mp3\n" \
+                    "  -> 02.artist.song_2.mp3\n",
                     '') do
         act(source_dir)
       end
@@ -44,7 +43,7 @@ class TestMp3dir < MiniTest::Test
 
       # Running again should do nothing, because the MP3s already exist
       #
-      assert_silent { act(source_dir) }
+      assert_output("#{source_dir}\n", '') { act(source_dir) }
       assert_equal(original_mtimes, expected_dir.children.map(&:mtime))
 
       # Now remove one file and run again. It should be replaced, and the
@@ -52,9 +51,7 @@ class TestMp3dir < MiniTest::Test
       #
       (expected_dir + '02.artist.song_2.mp3').unlink
 
-      assert_output("#{source_dir + '02.artist.song_2.flac'} -> " \
-                    "#{expected_dir + '02.artist.song_2.mp3'}\n",
-                    '') do
+      assert_output("#{source_dir}\n  -> 02.artist.song_2.mp3\n", '') do
         act(source_dir)
       end
 
@@ -69,10 +66,9 @@ class TestMp3dir < MiniTest::Test
 
       # Running with -f should overwrite both files
       #
-      assert_output("#{source_dir + '01.artist.song_1.flac'} -> " \
-                    "#{expected_dir + '01.artist.song_1.mp3'}\n" \
-                    "#{source_dir + '02.artist.song_2.flac'} -> " \
-                    "#{expected_dir + '02.artist.song_2.mp3'}\n",
+      assert_output("#{source_dir}\n" \
+                    "  -> 01.artist.song_1.mp3\n" \
+                    "  -> 02.artist.song_2.mp3\n",
                     '') do
         act(source_dir, force: true)
       end
@@ -98,11 +94,10 @@ class TestMp3dir < MiniTest::Test
       assert(expected_dir.exist?)
       assert(bonus.exist?)
 
-      assert_output("#{source_dir + '01.artist.song_1.flac'} -> " \
-                    "#{expected_dir + '01.artist.song_1.mp3'}\n" \
-                    "#{source_dir + '02.artist.song_2.flac'} -> " \
-                    "#{expected_dir + '02.artist.song_2.mp3'}\n" \
-                    "Removing #{bonus}\n",
+      assert_output("#{source_dir}\n" \
+                    "  -> 01.artist.song_1.mp3\n" \
+                    "  -> 02.artist.song_2.mp3\n" \
+                    "  removing #{bonus}\n",
                     '') do
         act(source_dir)
       end

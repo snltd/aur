@@ -134,8 +134,10 @@ module Aur
       raise Aur::Exception::UnsupportedFiletype
     rescue Aur::Exception::Collector => e
       @errs << e.to_s
-    rescue FlacInfoWriteError
-      abort "#{file} must be re-encoded".red.bold
+    rescue FlacInfoWriteError => e
+      exit if e.message == 'No changes to write'
+
+      abort "#{file} error: #{e}. Maybe re-encode?".red.bold
     rescue FlacInfoReadError,
            Mp3InfoEOFError,
            Aur::Exception::FailedOperation => e
@@ -144,26 +146,34 @@ module Aur
       warn "ERROR: cannot process '#{file}'.".bold
       @errs.<< file.to_s
     rescue Aur::Exception::InvalidTagValue => e
-      warn "'#{e}' is an invalid value."
+      die "'#{e}' is an invalid value."
     rescue Aur::Exception::InvalidTagName => e
-      warn "'#{e}' is not a valid tag name."
+      die "'#{e}' is not a valid tag name."
     rescue Aur::Exception::InvalidInput => e
-      warn "Bad input: #{e}"
+      die "Bad input: #{e}"
     rescue Errno::ENOENT => e
-      warn "File not found: #{e}".bold.red
+      die "File not found: #{e}".bold.red
+    rescue Errno::ENOTDIR
+      die 'Argument must be a directory.'
     rescue StandardError => e
-      warn "Unhandled error on #{file}".red.bold
+      warn "ERROR: Unhandled error on #{file}".red.bold
       pp e
+      exit 2
     end
     # rubocop:enable Metrics/AbcSize
     # rubocop:enable Metrics/MethodLength
+
+    def die(message)
+      warn "ERROR: #{message}"
+      exit 1
+    end
 
     # @param libfile [String]
     #
     def load_library(libfile)
       require_relative(File.join('commands', libfile))
     rescue LoadError
-      abort "ERROR: '#{libfile}' command is not implemented."
+      die "'#{libfile}' command is not implemented."
     end
 
     # Given a list of files, returns a list of files which aur knows how to

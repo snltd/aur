@@ -61,7 +61,7 @@ docopt = <<~EOCMDS
     aur transcode <newtype> <file>...
     aur reencode <file>...
     aur tagconv [-N] <file>...
-    aur copytags [-fN] <file>...
+    aur copytags [-fmN] <file>...
     aur lint [-st] <file>...
     aur lintdir [-r] <directory>...
     aur artfix [-n] <directory>...
@@ -69,14 +69,15 @@ docopt = <<~EOCMDS
     aur help <command>
 
   Options:
-    -n, --noop        don't perform the requested operation
-    -q, --quiet       don't print non-warning/error messages
-    -r, --recursive   operate recursively
-    -s, --summary     summarise results
-    -d, --delimiter   produce machine-parseable output with the given delimeter
-    -t, --strict      compare actual to expected tags
-    -f, --force       overwrite any existing files
-    -N, --novalidate  don't validate tags
+    -n, --noop          don't perform the requested operation
+    -q, --quiet         don't print non-warning/error messages
+    -r, --recursive     operate recursively
+    -s, --summary       summarise results
+    -d, --delim STRING  machine-parseable output with given delimeter
+    -t, --strict        compare actual to expected tags
+    -f, --force         overwrite any existing files
+    -m, --forcemod      modify MP3 tags if corresponding FLAC has a newer mtime
+    -N, --novalidate    don't validate tags
 EOCMDS
 
 def sanitize_keys(options)
