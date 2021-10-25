@@ -108,7 +108,10 @@ module Aur
     # @param tags [Array] of tags to remove
     #
     def untag!(tags)
-      tags.each { |name| info.raw.comment_del(name.to_s.upcase) }
+      tags.each do |name|
+        info.raw.comment_del(name.to_s.upcase)
+        info.raw.comment_del(name.to_s)
+      end
       info.raw.update!
     end
 

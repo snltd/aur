@@ -21,5 +21,7 @@ class TestRetitle < MiniTest::Test
     assert_equal('This, that, and, Yes, the Other',
                  t.retitle('This, That, And, Yes, The Other'))
     assert_equal('It is is It', t.retitle('It Is Is It'))
+    assert_equal('A: The Thing of Things',
+                 t.retitle('A: The Thing Of Things'))
   end
 end

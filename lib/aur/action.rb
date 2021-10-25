@@ -134,8 +134,8 @@ module Aur
       raise Aur::Exception::UnsupportedFiletype
     rescue Aur::Exception::Collector => e
       @errs << e.to_s
-    rescue FlacInfoWriteError
-      abort "#{file} must be re-encoded".red.bold
+    rescue FlacInfoWriteError => e
+      abort "#{file} write error: '#{e}'. Re-encode?".red.bold
     rescue FlacInfoReadError,
            Mp3InfoEOFError,
            Aur::Exception::FailedOperation => e
