@@ -34,7 +34,7 @@ class TestName2Tag < MiniTest::Test
     assert_equal('Suburbia (The Full Horror)',
                  t.title('suburbia-the_full_horror'))
     assert_equal('Om Mani Padme Hum 3 (Piano Version)',
-                 t.title('om_mani_padme_hum_3-piano_version.flac'))
+                 t.title('om_mani_padme_hum_3-piano_version'))
     assert_equal('Drumming (Part III)', t.title('drumming-part_iii'))
   end
 
