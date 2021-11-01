@@ -66,12 +66,6 @@ class TestRenamers < MiniTest::Test
     end
   end
 
-  def test_escaped
-    assert_equal('"Spiderland"', escaped('Spiderland'))
-    assert_equal('"Theme from \"Shaft\""', escaped('Theme from "Shaft"'))
-    assert_equal('"\"Loads\" of \"Quotes\""', escaped('"Loads" of "Quotes"'))
-  end
-
   def test_leading_the
     input = OpenStruct.new(
       artist: 'The Someone and The Somethings',

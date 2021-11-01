@@ -144,9 +144,9 @@ module Aur
       warn "ERROR: cannot process '#{file}'.".bold
       @errs.<< file.to_s
     rescue Aur::Exception::InvalidTagValue => e
-      die "'#{e}' is an invalid value."
+      die "#{file}: #{e}"
     rescue Aur::Exception::InvalidTagName => e
-      die "'#{e}' is not a valid tag name."
+      die "#{file}: #{e} (invalid tag)"
     rescue Aur::Exception::InvalidInput => e
       die "Bad input: #{e}"
     rescue Errno::ENOENT => e

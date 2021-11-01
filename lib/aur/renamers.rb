@@ -4,6 +4,7 @@ require_relative 'stdlib/numeric'
 require_relative 'stdlib/string'
 require_relative 'logger'
 require_relative 'exception'
+require_relative 'helpers'
 
 module Aur
   #
@@ -11,6 +12,7 @@ module Aur
   #
   module Renamers
     include Aur::Logger
+    include Aur::Helpers
 
     def track_fnum(info)
       format('%02d', info.t_num.to_i || 0)
@@ -63,10 +65,6 @@ module Aur
                  end
 
       tfile.dirname + basename
-    end
-
-    def escaped(word)
-      '"' + word.to_s.gsub(/"/, '\"') + '"'
     end
   end
 end

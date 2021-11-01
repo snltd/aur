@@ -23,7 +23,7 @@ class TestTaggerFunctional < MiniTest::Test
           file.tag!(tracknumber: 4)
         end
 
-        assert_equal('tracknumber', e.message)
+        assert_equal("cannot validate 'tracknumber'", e.message)
 
         assert_equal(6, info.our_tags[:t_num].to_i)
         assert_output(/t_num -> 3/) { file.tag!(t_num: 3) }

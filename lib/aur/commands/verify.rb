@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'base'
+require_relative '../renamers'
 
 module Aur
   module Command
@@ -22,10 +23,12 @@ module Aur
     # Verify FLACs.
     #
     module VerifyFlac
+      include Aur::Renamers
+
       def run
         abort 'No flac binary.' unless BIN[:flac].exist?
 
-        res = system("#{BIN[:flac]} --test --totally-silent #{file}")
+        res = system("#{BIN[:flac]} --test --totally-silent #{escaped(file)}")
 
         puts format('%<name>-60s  %<status>s',
                     name: info.prt_name,

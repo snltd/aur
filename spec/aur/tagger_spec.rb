@@ -64,15 +64,17 @@ class TestTagger < MiniTest::Test
     e = assert_raises(Aur::Exception::InvalidTagValue) do
       t.validate(year: '2050')
     end
-    assert_equal('2050', e.message)
+
+    assert_equal("'2050' is an invalid year", e.message)
 
     e = assert_raises(Aur::Exception::InvalidTagValue) do
       t.validate(t_num: '0')
     end
-    assert_equal('0', e.message)
+
+    assert_equal("'0' is an invalid t_num", e.message)
 
     e = assert_raises(Aur::Exception::InvalidTagValue) { t.validate(t_num: -1) }
-    assert_equal('-1', e.message)
+    assert_equal("'-1' is an invalid t_num", e.message)
   end
 
   def test_tags
