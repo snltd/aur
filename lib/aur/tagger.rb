@@ -37,7 +37,7 @@ module Aur
           validate_method = "validate_#{name}".to_sym
 
           unless respond_to?(validate_method)
-            raise(Aur::Exception::InvalidTagName, name)
+            raise Aur::Exception::InvalidTagValue, "cannot validate '#{name}'"
           end
 
           t[name] = send(validate_method, value)
@@ -57,14 +57,18 @@ module Aur
       ryear = year.to_i
       return ryear if ryear.between?(1940, Time.now.year)
 
-      raise(Aur::Exception::InvalidTagValue, year)
+      raise Aur::Exception::InvalidTagValue, "'#{num}' in an invalid year"
     end
 
     def validate_t_num(num)
       rnum = num.to_i
-      return rnum if rnum.positive?
 
-      raise(Aur::Exception::InvalidTagValue, num)
+      if rnum.positive? ||
+         rnum.zero? && info.file.realpath.dirname.basename.to_s == 'tracks'
+        return rnum
+      end
+
+      raise Aur::Exception::InvalidTagValue, "'#{num}' in an invalid t_num"
     end
 
     private
@@ -85,7 +89,7 @@ module Aur
       when 'mp3'
         extend Aur::TaggerMp3
       else
-        raise Aur::Exception::UnsupportedFiletype
+        raise Aur::Exception::UnsupportedFiletype, info.filetype
       end
     end
   end
