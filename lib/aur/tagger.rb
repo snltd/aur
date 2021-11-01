@@ -64,7 +64,7 @@ module Aur
       rnum = num.to_i
 
       if rnum.positive? ||
-         rnum.zero? && info.file.realpath.dirname.basename.to_s == 'tracks'
+         (rnum.zero? && info.file.realpath.dirname.basename.to_s == 'tracks')
         return rnum
       end
 
