@@ -146,7 +146,7 @@ module Aur
     rescue Aur::Exception::InvalidTagValue => e
       die "#{file}: #{e}"
     rescue Aur::Exception::InvalidTagName => e
-      die "#{file}: '#{e}' is not a valid tag name."
+      die "#{file}: #{e} (invalid tag)"
     rescue Aur::Exception::InvalidInput => e
       die "Bad input: #{e}"
     rescue Errno::ENOENT => e

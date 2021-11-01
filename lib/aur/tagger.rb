@@ -37,7 +37,7 @@ module Aur
           validate_method = "validate_#{name}".to_sym
 
           unless respond_to?(validate_method)
-            raise Aur::Exception::InvalidTagValue, "cannot validate '#{name}'"
+            raise Aur::Exception::InvalidTagName, "cannot validate '#{name}'"
           end
 
           t[name] = send(validate_method, value)
@@ -57,7 +57,7 @@ module Aur
       ryear = year.to_i
       return ryear if ryear.between?(1940, Time.now.year)
 
-      raise Aur::Exception::InvalidTagValue, "'#{num}' in an invalid year"
+      raise Aur::Exception::InvalidTagValue, "'#{year}' is an invalid year"
     end
 
     def validate_t_num(num)
@@ -68,7 +68,7 @@ module Aur
         return rnum
       end
 
-      raise Aur::Exception::InvalidTagValue, "'#{num}' in an invalid t_num"
+      raise Aur::Exception::InvalidTagValue, "'#{num}' is an invalid t_num"
     end
 
     private
