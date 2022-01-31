@@ -37,13 +37,13 @@ class TestNum2name < MiniTest::Test
 
   def test_new_filename_flac_missing_data
     assert_equal('00.test_tone-100hz.flac',
-                 flac.new_filename(Tags.new({ title: 'Another Song' })))
+                 flac.new_filename(TestTags.new({ title: 'Another Song' })))
   end
 
   def test_new_filename_mp3_all_data
     assert_equal('10.test_tone-100hz.mp3',
                  mp3.new_filename(
-                   Tags.new({ artist: 'Band', title: 'Song', t_num: '10' })
+                   TestTags.new({ artist: 'Band', title: 'Song', t_num: '10' })
                  ))
   end
 end

@@ -22,13 +22,17 @@ class TestLs < MiniTest::Test
   private
 
   def short_tags
-    Tags.new({ artist: 'Slint', album: 'Tweez', title: 'Ron', t_num: 1 })
+    TestTags.new({ artist: 'Slint', album: 'Tweez', title: 'Ron', t_num: 1 })
   end
 
   def long_tags
-    Tags.new(artist: 'of Montreal',
-             title: 'I Felt Like Smashing My Face Through a Clear Glass Window',
-             album: "The Bird who Continues to Eat the Rabbit's Flower",
-             t_num: 8)
+    TestTags.new(
+      {
+        artist: 'of Montreal',
+        title: 'I Felt Like Smashing My Face Through a Clear Glass Window',
+        album: "The Bird who Continues to Eat the Rabbit's Flower",
+        t_num: 8
+      }
+    )
   end
 end
