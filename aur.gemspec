@@ -19,9 +19,10 @@ Gem::Specification.new do |gem|
   gem.license       = 'BSD-2-Clause'
 
   gem.bindir        = 'bin'
-  gem.files = Dir['bin/*', 'aur.gemspec', 'Gemfile*', 'lib/**/*',
-                  'Rakefile']
+  gem.files = Dir['bin/*', 'aur.gemspec', 'Gemfile*', 'lib/**/*', 'Rakefile']
   gem.executables = 'aur'
+
+  gem.metadata['rubygems_mfa_required'] = 'true'
 
   gem.add_runtime_dependency 'colorize', '~> 0.8'
   gem.add_runtime_dependency 'docopt', '~> 0.6.0'
