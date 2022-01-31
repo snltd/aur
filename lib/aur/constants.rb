@@ -19,7 +19,7 @@ LAME_FLAGS = '-h --vbr-new --preset 128 --id3v2-only --add-id3v2 --silent'
 # These words are not (normally) capitalised when generating tags. 'featuring'
 # is there for artist names.
 #
-NO_CAPS = %w[a an and are as as at By de featuring for from in is it into la
+NO_CAPS = %w[a am an and are as as at By de featuring for from in is it into la
              le nor of off on onto or out per so than that the till to
              too via vs when with].freeze
 
