@@ -14,6 +14,8 @@ TW = 70
 
 String.disable_colorization true
 
+Tags = Struct.new(:artist, :title, :album, :t_num, keyword_init: true)
+
 def setup_test_dir
   FileUtils.rm_r(TMP_DIR) if TMP_DIR.exist?
   FileUtils.mkdir_p(TMP_DIR)

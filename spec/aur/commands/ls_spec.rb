@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require 'ostruct'
-
 require_relative '../../spec_helper'
 require_relative '../../../lib/aur/commands/ls'
 
@@ -24,20 +22,13 @@ class TestLs < MiniTest::Test
   private
 
   def short_tags
-    OpenStruct.new(
-      t_num: 1,
-      artist: 'Slint',
-      album: 'Tweez',
-      title: 'Ron'
-    )
+    Tags.new({ artist: 'Slint', album: 'Tweez', title: 'Ron', t_num: 1 })
   end
 
   def long_tags
-    OpenStruct.new(
-      t_num: 8,
-      artist: 'of Montreal',
-      title: 'I Felt Like Smashing My Face Through a Clear Glass Window',
-      album: "The Bird who Continues to Eat the Rabbit's Flower"
-    )
+    Tags.new(artist: 'of Montreal',
+             title: 'I Felt Like Smashing My Face Through a Clear Glass Window',
+             album: "The Bird who Continues to Eat the Rabbit's Flower",
+             t_num: 8)
   end
 end

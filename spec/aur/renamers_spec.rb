@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require 'ostruct'
 require_relative '../spec_helper'
 require_relative '../../lib/aur/renamers'
 require_relative '../../lib/aur/fileinfo'
@@ -67,11 +66,10 @@ class TestRenamers < MiniTest::Test
   end
 
   def test_leading_the
-    input = OpenStruct.new(
-      artist: 'The Someone and The Somethings',
-      title: 'The Song',
-      album: 'The LP'
-    )
+    input = Tags.new('The Someone and The Somethings',
+                     'The Song',
+                     'The LP',
+                     2)
 
     assert_equal('someone_and_the_somethings', artist_fname(input))
     assert_equal('the_song', track_fname(input))
@@ -79,11 +77,10 @@ class TestRenamers < MiniTest::Test
   end
 
   def test_chars
-    input = OpenStruct.new(
-      artist: 'The Someone & The Somethings',
-      title: "Hey! What's This? (This & That)",
-      album: '12 Songs & Some Noise'
-    )
+    input = Tags.new('The Someone & The Somethings',
+                     "Hey! What's This? (This & That)",
+                     '12 Songs & Some Noise',
+                     5)
 
     assert_equal('someone_and_the_somethings', artist_fname(input))
     assert_equal('hey_whats_this-this_and_that', track_fname(input))

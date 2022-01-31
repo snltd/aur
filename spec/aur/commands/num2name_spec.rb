@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require 'ostruct'
 require_relative '../../spec_helper'
 require_relative '../../../lib/aur/commands/num2name'
 
@@ -38,13 +37,13 @@ class TestNum2name < MiniTest::Test
 
   def test_new_filename_flac_missing_data
     assert_equal('00.test_tone-100hz.flac',
-                 flac.new_filename(OpenStruct.new(title: 'Another Song')))
+                 flac.new_filename(Tags.new({ title: 'Another Song' })))
   end
 
   def test_new_filename_mp3_all_data
     assert_equal('10.test_tone-100hz.mp3',
                  mp3.new_filename(
-                   OpenStruct.new(t_num: 10, artist: 'Band', title: 'Song')
+                   Tags.new({ artist: 'Band', title: 'Song', t_num: '10' })
                  ))
   end
 end
