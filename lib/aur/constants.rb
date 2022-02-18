@@ -23,6 +23,15 @@ NO_CAPS = %w[a am an and are as as at By de featuring for from in is it into la
              le nor of off on onto or out per so than that the till to
              too via vs when with].freeze
 
+# These words should always be fully upper-cased.
+#
+ALL_CAPS = %w[ok dj lp ep l.a. bmr bbc scsi ii iii iv vi vii ix xi cd fm
+              mtv od afx2 brkn01 brkn02 brkn03].freeze
+
+# These words should be ignored when examining case
+#
+IGNORE_CASE = %w[v/vm mccartney].freeze
+
 # The keys of this hash are expanded to the corresponding value when
 # generating tags. Some of these contractions are, of course, real words, but
 # you're more likely to see can't than cant and won't than wont. Lets and its
@@ -37,6 +46,7 @@ EXPAND = {
   cant: "can't",
   couldnt: "couldn't",
   didnt: "didn't",
+  dj: 'DJ',
   doesnt: "doesn't",
   dont: "don't",
   etc: 'etc.',

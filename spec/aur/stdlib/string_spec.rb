@@ -72,4 +72,29 @@ class StringTest < MiniTest::Test
     assert '99'.safenum?
     refute '00'.safenum?
   end
+
+  def test_titlecase
+    assert_equal('Word', 'word'.titlecase)
+    assert_equal('Word', 'Word'.titlecase)
+    assert_equal('the', 'The'.titlecase)
+    assert_equal('of', 'of'.titlecase)
+    assert_equal('The', 'the'.titlecase('A:'))
+    assert_equal('The', 'the'.titlecase('/'))
+    assert_equal('and,', 'And,'.titlecase)
+    assert_equal('(Disc,', '(disc,'.titlecase)
+    assert_equal('I', 'i'.titlecase)
+    assert_equal('a', 'a'.titlecase)
+    assert_equal('L.A.', 'l.a.'.titlecase)
+    assert_equal('P.R.O.D.U.C.T.', 'p.r.o.d.u.c.t.'.titlecase)
+    assert_equal('(B.M.R.', '(B.M.R.'.titlecase)
+    assert_equal('(A', '(A'.titlecase)
+    assert_equal('(LP', '(LP'.titlecase)
+    assert_equal('(Live)', '(live)'.titlecase)
+    assert_equal('(II)', '(Ii)'.titlecase)
+    assert_equal('OK', 'ok'.titlecase)
+    assert_equal('Aikea-Guinea', 'Aikea-Guinea'.titlecase)
+    assert_equal('Itchy+Scratchy', 'Itchy+scratchy'.titlecase)
+    assert_equal('A-O', 'A-O'.titlecase)
+
+  end
 end

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require 'i18n'
+require_relative '../constants'
+
 I18n.available_locales = %i[en]
 
 # Extensions to stdlib String
@@ -57,5 +59,31 @@ class String
   #
   def safenum?
     match?(/^[0-9][0-9]$/) && to_i.positive?
+  end
+
+  # A somewhat-exclusive version of capitalize.
+  #
+  def titlecase(previous_word = 'none', force_caps = false)
+    if self.match(/^\W/)
+      return self.sub(/^(\W+)(.*)/) { |m| "#{$1}#{$2.titlecase('/')}" }
+    end
+
+    word = self.gsub(/\W/, '').downcase
+
+    %w[- + /].each do |sep|
+      if self.include?(sep)
+        return self.split(sep).map { |w| w.titlecase('/') }.join(sep)
+      end
+    end
+
+    if IGNORE_CASE.include?(word)
+      self
+    elsif ALL_CAPS.include?(word) || self.match(/^\w\.\w\./)
+      upcase
+    elsif NO_CAPS.include?(word) && !previous_word.match(/[:\/]$/)
+      downcase
+    else
+      capitalize
+    end
   end
 end

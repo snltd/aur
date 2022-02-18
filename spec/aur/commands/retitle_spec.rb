@@ -23,5 +23,14 @@ class TestRetitle < MiniTest::Test
     assert_equal('It is is It', t.retitle('It Is Is It'))
     assert_equal('A: The Thing of Things',
                  t.retitle('A: The Thing Of Things'))
+    assert_equal('One Thing / And the Other',
+                 t.retitle('One Thing / And The Other'))
+    assert_equal('It is Narrow Here', t.retitle('It Is Narrow here'))
+    assert_equal(
+      'The Song of the Nightingale / The Firebird Suite / The Rite of Spring',
+      t.retitle(
+        'The Song Of The Nightingale / The Firebird Suite / The Rite of Spring'
+      )
+    )
   end
 end
