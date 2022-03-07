@@ -19,18 +19,27 @@ LAME_FLAGS = '-h --vbr-new --preset 128 --id3v2-only --add-id3v2 --silent'
 # These words are not (normally) capitalised when generating tags. 'featuring'
 # is there for artist names.
 #
-NO_CAPS = %w[a am an and are as as at By de featuring for from in is it into la
-             le nor of off on onto or out per so than that the till to
-             too via vs when with].freeze
+NO_CAPS = %w[a am an and are as as at by de featuring for from in is it into la
+             le nor of off on onto or out per so than that the till to o'clock
+             au ne pas es se ce its oclock
+             est dans isnt des te du un une et too via vs when with].freeze
 
 # These words should always be fully upper-cased.
 #
-ALL_CAPS = %w[ok dj lp ep l.a. bmr bbc scsi ii iii iv vi vii ix xi cd fm
-              mtv od afx2 brkn01 brkn02 brkn03].freeze
+ALL_CAPS = %w[ok dj lp ep l.a. bmr bbc scsi ii iii iv vi vii ix xi cd fm tko
+              xii viii xiii xiv diy pbm psb pm kvrx ckid ulc bt ufo 4ad jdp
+              sm omd nyc mf cv tr sh jt gsg bbc2 qed isbn gsoh qed fb amc
+              xv dlp xxv xviii xvi xxi hiv usa ost wiaiwya vv lsxx rm zz cvb
+              kb gr gb uk mdma tvr17 tvc wmc emi tda vsx lcd kg uv jlh bs ts
+              ww3 wr fbi vvv tx qwerty nw abc gq olv sm57 wkrp hp hc ox4 jc qrj
+              dvd tnt acd csi xr3 acac 4ad3dcd vip kfc uvtv nme gf bf abba bmx
+              fc 3cp a&r r&b ihop lsd lcd lp2 mbv pcp
+              tv gtg bnoc nypd mtv od afx2 brkn01 brkn02 brkn03].freeze
 
 # These words should be ignored when examining case
 #
-IGNORE_CASE = %w[v/vm mccartney].freeze
+IGNORE_CASE = %w[d'isan o'keefe mcgee mcintyre ça b's mccay mccoy lps eps mxbx
+                 a: iiia iiib 5-6-7-8's v/vm mccartney mms mcdonalds].freeze
 
 # The keys of this hash are expanded to the corresponding value when
 # generating tags. Some of these contractions are, of course, real words, but

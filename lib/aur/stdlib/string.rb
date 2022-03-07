@@ -63,27 +63,60 @@ class String
 
   # A somewhat-exclusive version of capitalize.
   #
-  def titlecase(previous_word = 'none', force_caps = false)
-    if self.match(/^\W/)
-      return self.sub(/^(\W+)(.*)/) { |m| "#{$1}#{$2.titlecase('/')}" }
+  # rubocop:disable Metrics/CyclomaticComplexity
+  def titlecase(previous_word = 'none', run_together = false)
+    return titlecase_start_with_nonword(self) if /^\W/.match?(self)
+
+    return titlecase_follow_punct(self) if /[:=)]$/.match?(self)
+
+    %w[= - + / :].each do |sep|
+      return titlecase_contains_sep(self, sep) if include?(sep)
     end
 
-    word = self.gsub(/\W/, '').downcase
+    return self if titlecase_ignorecase?(self)
 
-    %w[- + /].each do |sep|
-      if self.include?(sep)
-        return self.split(sep).map { |w| w.titlecase('/') }.join(sep)
-      end
-    end
+    word = gsub(/\W/, '').downcase
+    return upcase if titlecase_upcase?(self, word)
 
-    if IGNORE_CASE.include?(word)
-      self
-    elsif ALL_CAPS.include?(word) || self.match(/^\w\.\w\./)
-      upcase
-    elsif NO_CAPS.include?(word) && !previous_word.match(/[:\/]$/)
-      downcase
-    else
-      capitalize
+    return downcase if titlecase_downcase?(word, run_together, previous_word)
+
+    capitalize
+  end
+  # rubocop:enable Metrics/CyclomaticComplexity
+
+  private
+
+  def titlecase_ignorecase?(selfword)
+    IGNORE_CASE.include?(selfword.downcase)
+  end
+
+  def titlecase_downcase?(word, run_together, previous_word)
+    NO_CAPS.include?(word) && (run_together ||
+                               !previous_word.match(%r{[:\-/)?!]$}))
+  end
+
+  def titlecase_upcase?(selfword, word)
+    ALL_CAPS.include?(word) || selfword.match(/^\w\.\w\./) ||
+      selfword.match(/^\w,$/)
+  end
+
+  def titlecase_start_with_nonword(word)
+    word.sub(/^(\W+)(.*)/) do
+      "#{Regexp.last_match(1)}#{Regexp.last_match(2).titlecase('/')}"
     end
+  end
+
+  def titlecase_follow_punct(word)
+    word.sub(/^(\w+)(\W)/) do
+      "#{Regexp.last_match(1).titlecase('/')}#{Regexp.last_match(2)}"
+    end
+  end
+
+  def titlecase_contains_sep(word, sep)
+    return unless word.include?(sep)
+
+    word.split(sep).map.with_index do |w, i|
+      w.titlecase('/', i.positive?)
+    end.join(sep)
   end
 end

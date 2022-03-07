@@ -95,6 +95,12 @@ class StringTest < MiniTest::Test
     assert_equal('Aikea-Guinea', 'Aikea-Guinea'.titlecase)
     assert_equal('Itchy+Scratchy', 'Itchy+scratchy'.titlecase)
     assert_equal('A-O', 'A-O'.titlecase)
-
+    assert_equal('The', 'the'.titlecase('as)'))
+    assert_equal('As)', 'as)'.titlecase)
+    assert_equal('A:', 'A:'.titlecase('men?'))
+    assert_equal('A,', 'A,')
+    assert_equal('Fixed::Content', 'fixed::content'.titlecase)
+    assert_equal('Kill-a-Man', 'kill-a-man'.titlecase)
+    assert_equal('Master=Dik', 'Master=dik'.titlecase)
   end
 end

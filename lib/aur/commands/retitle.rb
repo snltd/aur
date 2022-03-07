@@ -37,8 +37,7 @@ module Aur
         else
           tagger.tag!(album: new_title)
         end
-      rescue NoMethodError => e
-        pp e
+      rescue NoMethodError
         raise Aur::Exception::InvalidTagValue, "#{file} has broken tags"
       end
 
@@ -53,8 +52,7 @@ module Aur
         else
           tagger.tag!(title: new_title)
         end
-      rescue NoMethodError => e
-        pp e
+      rescue NoMethodError
         raise Aur::Exception::InvalidTagValue, "#{file} has broken tags"
       end
 
@@ -65,7 +63,11 @@ module Aur
 
         # Using / as the previous word forces capitalisation
         words.each_cons(3).map do |before, word, after|
-          before.nil? || after.nil? ? word.titlecase('/') : word.titlecase(before)
+          if before.nil? || after.nil?
+            word.titlecase('/')
+          else
+            word.titlecase(before)
+          end
         end.join(' ')
       end
 
