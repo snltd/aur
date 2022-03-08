@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
-require_relative '../constants'
 require_relative 'base'
+require_relative '../constants'
+require_relative '../stdlib/string'
 
 module Aur
   module Command
@@ -15,7 +16,10 @@ module Aur
       SPACERS = '[ ,.!?]+'
 
       def run
-        if opts[:album]
+        if opts[:all]
+          retitle_album
+          retitle_title
+        elsif opts[:album]
           retitle_album
         else
           retitle_title
@@ -52,25 +56,20 @@ module Aur
         raise Aur::Exception::InvalidTagValue, "#{file} has broken tags"
       end
 
-      # rubocop:disable Metrics/MethodLength
       def retitle(title)
-        follow_punct = false
+        return nil if title.nil? || title.empty?
 
-        title.split(/[\s,]/).each_with_object(String.new(title)) do |w, ret|
-          if follow_punct
-            follow_punct = w.match?(/:$/)
-            next
+        words = [nil] + title.split(/\s/) + [nil]
+
+        # Using / as the previous word forces capitalisation
+        words.each_cons(3).map do |before, word, after|
+          if before.nil? || after.nil?
+            word.titlecase('/')
+          else
+            word.titlecase(before)
           end
-
-          follow_punct = w.match?(/:$/)
-
-          next unless NO_CAPS.include?(w.downcase)
-          next if /^[A-Z]\.[A-Z]\./.match?(w)
-
-          ret.gsub!(/(#{SPACERS})#{w}(#{SPACERS})/, "\\1#{w.downcase}\\2")
-        end
+        end.join(' ')
       end
-      # rubocop:enable Metrics/MethodLength
 
       def self.help
         require_relative '../fileinfo'

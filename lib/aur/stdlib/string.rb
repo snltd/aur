@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require 'i18n'
+require_relative '../constants'
+
 I18n.available_locales = %i[en]
 
 # Extensions to stdlib String
@@ -57,5 +59,64 @@ class String
   #
   def safenum?
     match?(/^[0-9][0-9]$/) && to_i.positive?
+  end
+
+  # A somewhat-exclusive version of capitalize.
+  #
+  # rubocop:disable Metrics/CyclomaticComplexity
+  def titlecase(previous_word = 'none', run_together = false)
+    return titlecase_start_with_nonword(self) if /^\W/.match?(self)
+
+    return titlecase_follow_punct(self) if /[:=)]$/.match?(self)
+
+    %w[= - + / :].each do |sep|
+      return titlecase_contains_sep(self, sep) if include?(sep)
+    end
+
+    return self if titlecase_ignorecase?(self)
+
+    word = gsub(/\W/, '').downcase
+    return upcase if titlecase_upcase?(self, word)
+
+    return downcase if titlecase_downcase?(word, run_together, previous_word)
+
+    capitalize
+  end
+  # rubocop:enable Metrics/CyclomaticComplexity
+
+  private
+
+  def titlecase_ignorecase?(selfword)
+    IGNORE_CASE.include?(selfword.downcase)
+  end
+
+  def titlecase_downcase?(word, run_together, previous_word)
+    NO_CAPS.include?(word) && (run_together ||
+                               !previous_word.match(%r{[:\-/)?!]$}))
+  end
+
+  def titlecase_upcase?(selfword, word)
+    ALL_CAPS.include?(word) || selfword.match(/^\w\.\w\./) ||
+      selfword.match(/^\w,$/)
+  end
+
+  def titlecase_start_with_nonword(word)
+    word.sub(/^(\W+)(.*)/) do
+      "#{Regexp.last_match(1)}#{Regexp.last_match(2).titlecase('/')}"
+    end
+  end
+
+  def titlecase_follow_punct(word)
+    word.sub(/^(\w+)(\W)/) do
+      "#{Regexp.last_match(1).titlecase('/')}#{Regexp.last_match(2)}"
+    end
+  end
+
+  def titlecase_contains_sep(word, sep)
+    return unless word.include?(sep)
+
+    word.split(sep).map.with_index do |w, i|
+      w.titlecase('/', i.positive?)
+    end.join(sep)
   end
 end
