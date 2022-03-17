@@ -15,4 +15,18 @@ class Pathname
   def prefixed(prefix = '_')
     dirname + "#{prefix}#{basename}"
   end
+
+  def no_tnum
+    str = basename.to_s
+
+    bits = str.split('.')
+
+    return str if bits.count == 3
+
+    bits[1..].join('.')
+  end
+
+  def lastdir
+    dirname.basename.to_s
+  end
 end

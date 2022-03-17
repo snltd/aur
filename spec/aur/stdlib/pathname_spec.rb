@@ -19,4 +19,13 @@ class TestPathname < MiniTest::Test
     assert_equal(RES_DIR + 'xxtest_tone-100hz.flac',
                  (RES_DIR + 'test_tone-100hz.flac').prefixed('xx'))
   end
+
+  def test_no_tnum
+    assert_equal('slint.washer.flac',
+                 Pathname.new('/dir/04.slint.washer.flac').no_tnum)
+    assert_equal('slint.washer.mp3',
+                 Pathname.new('/dir/04.slint.washer.mp3').no_tnum)
+    assert_equal('slint.washer.flac',
+                 Pathname.new('/dir/slint.washer.flac').no_tnum)
+  end
 end

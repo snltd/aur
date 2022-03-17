@@ -9,6 +9,7 @@ require_relative '../lib/aur/action'
 CMDS = %i[
   artfix
   copytags
+  dupes
   flac2mp3
   help
   info
@@ -66,6 +67,7 @@ docopt = <<~EOCMDS
     aur lintdir [-r] <directory>...
     aur artfix [-n] <directory>...
     aur thes <file>...
+    aur dupes
     aur help <command>
 
   Options:

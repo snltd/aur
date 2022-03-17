@@ -33,7 +33,7 @@ ALL_CAPS = %w[ok dj lp ep l.a. bmr bbc scsi ii iii iv vi vii ix xi cd fm tko
               kb gr gb uk mdma tvr17 tvc wmc emi tda vsx lcd kg uv jlh bs ts
               ww3 wr fbi vvv tx qwerty nw abc gq olv sm57 wkrp hp hc ox4 jc qrj
               dvd tnt acd csi xr3 acac 4ad3dcd vip kfc uvtv nme gf bf abba bmx
-              fc 3cp a&r r&b ihop lsd lcd lp2 mbv pcp
+              fc 3cp a&r r&b ihop lsd lcd lp2 mbv pcp urc
               tv gtg bnoc nypd mtv od afx2 brkn01 brkn02 brkn03].freeze
 
 # These words should be ignored when examining case
