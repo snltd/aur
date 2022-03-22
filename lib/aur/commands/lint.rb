@@ -54,6 +54,8 @@ module Aur
       # 'track_number.artist_name.title.suffix'.
       #
       def correctly_named?(file)
+        return correctly_named_tracks?(file) if in_tracks?
+
         chunks = file.basename.to_s.split('.')
 
         if chunks.count == 4 &&
@@ -66,11 +68,29 @@ module Aur
         raise Aur::Exception::LintBadName
       end
 
+      # Unless it's in tracks/, in which case there should be no leading
+      # number.
+      def correctly_named_tracks?(file)
+        chunks = file.basename.to_s.split('.')
+
+        if chunks.count == 3 && chunks.all?(&:safe?) &&
+           !chunks[0].start_with?('the_')
+          return true
+        end
+
+        raise Aur::Exception::LintBadName
+      end
+
       # Do we have the tags we expect to have? For now, at least, we're not
       # going to worry about additional tags.
       #
       def correct_tags?
         missing_tags = REQ_TAGS[info.filetype.to_sym] - info.tags.keys
+
+        if in_tracks?
+          missing_tags.delete(:talb)
+          missing_tags.delete(:tyer)
+        end
 
         return true if missing_tags.empty?
 
@@ -80,7 +100,26 @@ module Aur
       # Are tags (reasonably) correctly populated?
       #
       def correct_tag_values?
+        return correct_tag_values_tracks? if in_tracks?
+
         info.our_tags.each do |tag, value|
+          unless validator.send(tag, value)
+            msg = opts[:summary] ? tag : "#{tag}: #{value}"
+            err(file, "Bad tag value: #{msg}")
+          end
+        rescue NoMethodError
+          raise Aur::Exception::InvalidTagValue, "Unparseable tag: #{value}"
+        end
+      end
+
+      # Are tags (reasonably) correctly populated?
+      #
+      def correct_tag_values_tracks?
+        unless info.our_tags[:album].nil?
+          raise Aur::Exception::InvalidTagValue, 'Album tag should not be set'
+        end
+
+        info.our_tags.except(:album).each do |tag, value|
           unless validator.send(tag, value)
             msg = opts[:summary] ? tag : "#{tag}: #{value}"
             err(file, "Bad tag value: #{msg}")
@@ -99,6 +138,12 @@ module Aur
             - all and only required tags are present
             - said tags are populated with sane values
         EOHELP
+      end
+
+      private
+
+      def in_tracks?
+        file.realpath.lastdir == 'tracks'
       end
     end
   end

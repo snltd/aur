@@ -12,7 +12,7 @@ module Aur
   #
   # Command dispatcher. When given an @action, the class will load a
   # file called 'commands/action.rb', and from it load a class called
-  # 'Aur::Command:Action', passing @opts to the initializer. That class
+  # 'Aur::Command::Action', passing @opts to the initializer. That class
   # contains a #run method, which runs the action.
   #
   # action.rb can optionally load files from commands/filetype/action.rb to
