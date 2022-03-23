@@ -17,7 +17,7 @@ module Aur
     #
     def self.recursive_dir_list(dirs)
       (dirs + dirs.map { |d| Pathname.glob("#{d}/**/*/") }.flatten)
-        .map(&:realpath).sort.uniq
+        .map(&:expand_path).sort.uniq
     end
   end
 end

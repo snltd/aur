@@ -19,6 +19,7 @@ module Aur
         if opts[:all]
           retitle_album
           retitle_title
+          retitle_artist
         elsif opts[:album]
           retitle_album
         else
@@ -56,10 +57,25 @@ module Aur
         raise Aur::Exception::InvalidTagValue, "#{file} has broken tags"
       end
 
+      def retitle_artist
+        original_artist = info.artist
+        new_artist = original_artist.strip
+
+        return if new_artist == original_artist
+
+        if opts[:noop]
+          puts "#{original_artist} -> #{new_artist}"
+        else
+          tagger.tag!(artist: new_artist)
+        end
+      rescue NoMethodError
+        raise Aur::Exception::InvalidTagValue, "#{file} has broken tags"
+      end
+
       def retitle(title)
         return nil if title.nil? || title.empty?
 
-        words = [nil] + title.split(/\s/) + [nil]
+        words = [nil] + title.strip.split(/\s/) + [nil]
 
         # Using / as the previous word forces capitalisation
         words.each_cons(3).map do |before, word, after|

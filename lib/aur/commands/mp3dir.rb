@@ -22,7 +22,7 @@ module Aur
         check_dependencies
         @dir = dir
         @opts = opts
-        @source_dir = dir.realpath
+        @source_dir = dir.expand_path
         @target_dir = mp3_target_dir(source_dir)
         safety_check
       end

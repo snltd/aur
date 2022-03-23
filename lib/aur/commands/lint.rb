@@ -18,6 +18,7 @@ module Aur
 
       def initialize(file = nil, opts = {})
         @file = file
+        extend Aur::Command::LintTracks if in_tracks?
         @info = Aur::FileInfo.new(file)
         @opts = opts
         @validator = Aur::TagValidator.new(info, opts)
@@ -56,12 +57,7 @@ module Aur
       def correctly_named?(file)
         chunks = file.basename.to_s.split('.')
 
-        if chunks.count == 4 &&
-           chunks.all?(&:safe?) &&
-           chunks.first.safenum? &&
-           !chunks[1].start_with?('the_')
-          return true
-        end
+        return true if name_checks_out?(chunks)
 
         raise Aur::Exception::LintBadName
       end
@@ -70,24 +66,25 @@ module Aur
       # going to worry about additional tags.
       #
       def correct_tags?
-        missing_tags = REQ_TAGS[info.filetype.to_sym] - info.tags.keys
+        missing_tags = required_tags - info.tags.keys
 
-        return true if missing_tags.empty?
+        unless missing_tags.empty?
+          raise Aur::Exception::LintBadTags, missing_tags.join(', ')
+        end
 
-        raise Aur::Exception::LintBadTags, missing_tags.join(', ')
+        surplus_tags = info.tags.keys - required_tags
+
+        unless surplus_tags.empty?
+          raise Aur::Exception::LintBadTags, surplus_tags.join(', ')
+        end
+
+        true
       end
 
       # Are tags (reasonably) correctly populated?
       #
       def correct_tag_values?
-        info.our_tags.each do |tag, value|
-          unless validator.send(tag, value)
-            msg = opts[:summary] ? tag : "#{tag}: #{value}"
-            err(file, "Bad tag value: #{msg}")
-          end
-        rescue NoMethodError
-          raise Aur::Exception::InvalidTagValue, "Unparseable tag: #{value}"
-        end
+        validate_tags(info.our_tags)
       end
 
       def self.help
@@ -99,6 +96,59 @@ module Aur
             - all and only required tags are present
             - said tags are populated with sane values
         EOHELP
+      end
+
+      private
+
+      def in_tracks?
+        file.expand_path.lastdir == 'tracks'
+      end
+
+      def validate_tags(tags)
+        tags.each do |tag, value|
+          check_tag(tag, value)
+        rescue NoMethodError
+          raise Aur::Exception::InvalidTagValue, "Unparseable tag: #{value}"
+        end
+      end
+
+      def check_tag(tag, value)
+        return if validator.send(tag, value)
+
+        msg = opts[:summary] ? tag : "#{tag}: #{value}"
+        err(file, "Bad tag value: #{msg}")
+      end
+
+      def required_tags
+        REQ_TAGS[info.filetype.to_sym]
+      end
+
+      def name_checks_out?(chunks)
+        chunks.count == 4 && chunks.all?(&:safe?) && chunks.first.safenum? &&
+          !chunks[1].start_with?('the_')
+      end
+    end
+
+    # We have different rules for things in a tracks/ directory.
+    #
+    module LintTracks
+      def correct_tag_values?
+        unless info.our_tags[:album].nil?
+          raise Aur::Exception::InvalidTagValue, 'Album tag should not be set'
+        end
+
+        validate_tags(info.our_tags.except(:album))
+      end
+
+      private
+
+      def name_checks_out?(chunks)
+        chunks.count == 3 && chunks.all?(&:safe?) &&
+          !chunks[0].start_with?('the_')
+      end
+
+      def required_tags
+        REQ_TAGS[info.filetype.to_sym] - %i[talb tyer]
       end
     end
   end

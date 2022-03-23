@@ -55,7 +55,7 @@ module Aur
     end
 
     def f_album
-      file.dirname.realpath.basename.to_s.split('.', 2).last
+      file.dirname.expand_path.basename.to_s.split('.', 2).last
     end
 
     def f_title
@@ -173,7 +173,7 @@ module Aur
     end
 
     def partner(this_file = file)
-      this_file.realpath.sub(%r{/flac/}, '/mp3/').sub_ext('.mp3')
+      this_file.expand_path.sub(%r{/flac/}, '/mp3/').sub_ext('.mp3')
     end
   end
 
@@ -217,7 +217,7 @@ module Aur
     end
 
     def partner(this_file = file)
-      this_file.realpath.sub(%r{/mp3/}, '/flac/').sub_ext('.flac')
+      this_file.expand_path.sub(%r{/mp3/}, '/flac/').sub_ext('.flac')
     end
   end
 end
