@@ -27,6 +27,10 @@ module Aur
         path.match(%r{/([^/]+\.[^/]+)})[1]
       end
 
+      def self.screen_flist(_flist, _opts)
+        [Pathname.new('/storage')]
+      end
+
       def self.help
         <<~EOHELP
           usage: aur wantflac
