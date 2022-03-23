@@ -51,6 +51,10 @@ module Aur
         end
       end
 
+      def self.screen_flist(_flist, opts)
+        opts[:'<directory>'].to_paths
+      end
+
       def self.help
         <<~EOHELP
           usage: aur artfix <directory>...

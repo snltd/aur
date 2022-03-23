@@ -19,7 +19,7 @@ module Aur
   # deal with different target filetypes.
   #
   class Action
-    attr_reader :flist, :action, :errs, :opts, :klass
+    attr_reader :flist, :errs, :opts, :klass
 
     # @param action [Symbol] the action to take.
     # @param flist [Array[Pathname]] list of files to which the
@@ -27,82 +27,22 @@ module Aur
     #
     # rubocop:disable Metrics/MethodLength
     def initialize(action, flist, opts = {})
-      @action = action.capitalize
       @opts = opts
       @errs = []
 
-      action_handler = "handle_#{action}".to_sym
+      require_action(action)
 
-      if respond_to?(action_handler)
-        send(action_handler)
-      else
-        @flist = screen_flist(flist.to_paths)
-        load_library(action.to_s)
-      end
+      @klass = action_class(action)
+
+      @flist = if klass.respond_to?(:screen_flist)
+                 klass.screen_flist(flist.to_paths, opts)
+               else
+                 screen_flist(flist.to_paths)
+               end
     rescue Errno::ENOENT
       abort 'File not found.'
     end
     # rubocop:enable Metrics/MethodLength
-
-    # Special handler for lintdir command, necessary because it operates on
-    # directories, and everything up to now operates on files. At the moment
-    # it's unique in that it's different. If we get another couple of oddballs
-    # we'll break them all out into something cleaner.
-    #
-    def handle_lintdir
-      dirs = opts[:'<directory>'].to_paths
-
-      @flist = opts[:recursive] ? recursive_dir_list(dirs) : dirs
-
-      load_library('lintdir')
-    end
-
-    def handle_ls
-      dirs = opts[:'<directory>'].to_paths
-
-      dirs = [Pathname.pwd] if dirs.empty?
-
-      @flist = opts[:recursive] ? recursive_dir_list(dirs) : dirs
-
-      load_library('ls')
-    end
-
-    def handle_help
-      require_relative 'commands/help'
-      Aur::Command::Help.new(opts[:'<command>'])
-      exit
-    end
-
-    def handle_artfix
-      @flist = opts[:'<directory>'].to_paths
-      load_library('artfix')
-    end
-
-    def handle_mp3dir
-      @flist = opts[:'<directory>'].to_paths
-      load_library('mp3dir')
-    end
-
-    def handle_syncflac
-      @flist = [Pathname.new('/storage')]
-      load_library('syncflac')
-    end
-
-    def handle_wantflac
-      @flist = [Pathname.new('/storage')]
-      load_library('wantflac')
-    end
-
-    # Blows up an array of directories to an array of those directories and
-    # all the directories under them, uniquely sorted.
-    # @param roots [Array[Pathname]]
-    # @return [Array[Pathname]] all directories under all roots
-    #
-    def recursive_dir_list(dirs)
-      (dirs + dirs.map do |d|
-        Pathname.glob("#{d}/**/*/")
-      end.flatten).map(&:realpath).uniq.sort
-    end
 
     def run!
       warn 'No valid files supplied.' if flist.empty?
@@ -128,8 +68,8 @@ module Aur
     # rubocop:disable Metrics/MethodLength
     # rubocop:disable Metrics/AbcSize
     def run_command(file)
-      @klass = action_class(file)
-      return klass.run if klass.respond_to?(:run)
+      action_class = @klass.new(file, opts)
+      return action_class.run if action_class.respond_to?(:run)
 
       raise Aur::Exception::UnsupportedFiletype
     rescue Aur::Exception::Collector => e
@@ -139,7 +79,10 @@ module Aur
     rescue FlacInfoReadError,
            Mp3InfoEOFError,
            Aur::Exception::FailedOperation => e
-      return klass.handle_err(file, e) if klass.respond_to?(:handle_err)
+      if action_class.respond_to?(:handle_err)
+        return action_class.handle_err(file,
+                                       e)
+      end
 
       warn "ERROR: cannot process '#{file}'.".bold
       @errs.<< file.to_s
@@ -168,8 +111,8 @@ module Aur
 
     # @param libfile [String]
     #
-    def load_library(libfile)
-      require_relative(File.join('commands', libfile))
+    def require_action(action)
+      require_relative(File.join('commands', action.to_s))
     rescue LoadError
       die "'#{libfile}' command is not implemented."
     end
@@ -180,27 +123,16 @@ module Aur
     # @return [Array[Pathname]]
     #
     def screen_flist(flist)
-      return flist if action == :Transcode # ffmpeg can transcode anything
-
       flist.select do |f|
         f.file? && SUPPORTED_TYPES.include?(f.extname.delete('.'))
       end
     end
 
-    # @param file [Pathname] file which needs action applied
-    # @return [Aur::Command::*] instance of class ready to deal with file
+    # @return [Aur::Command::*] instance of class ready to be instantiated
     #
-    def action_class(file)
-      create_class(format('Aur::Command::%<action>s', action: action), file)
-    end
-
-    # @param file [Pathname] file which needs action applied
-    # @return [Aur::Module::Class, nil]
-    #
-    def create_class(name, file)
-      return nil unless Object.const_defined?(name)
-
-      Object.const_get(name).new(file, opts)
+    def action_class(action)
+      Object.const_get(format('Aur::Command::%<action>s',
+                              action: action.to_s.capitalize))
     end
   end
 end

@@ -3,6 +3,7 @@
 require 'pathname'
 require_relative '../constants'
 require_relative '../exception'
+require_relative '../helpers'
 
 module Aur
   module Command
@@ -167,6 +168,11 @@ module Aur
       #
       def supported(files)
         files.select { |f| SUPPORTED_TYPES.include?(f.extname.delete('.')) }
+      end
+
+      def self.screen_flist(_flist, opts)
+        dirs = opts[:'<directory>'].to_paths
+        opts[:recursive] ? Aur::Helpers.recursive_dir_list(dirs) : dirs
       end
 
       def self.help

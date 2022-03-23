@@ -2,6 +2,7 @@
 
 require_relative 'base'
 require_relative '../fileinfo'
+require_relative '../helpers'
 
 module Aur
   module Command
@@ -55,6 +56,12 @@ module Aur
           "%-#{artist_col}<artist>s " \
           "%-#{title_col}<title>s " \
           "%#{album_col}<album>s"
+      end
+
+      def self.screen_flist(_flist, opts)
+        dirs = opts[:'<directory>'].to_paths
+        dirs = [Pathname.pwd] if dirs.empty?
+        opts[:recursive] ? Aur::Helpers.recursive_dir_list(dirs) : dirs
       end
 
       def self.help

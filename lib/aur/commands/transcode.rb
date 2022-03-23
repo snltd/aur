@@ -13,7 +13,7 @@ module Aur
       include Aur::Renamers
 
       def run
-        target = file.sub_ext(".#{opts[:'<newtype>']}")
+        target = target_file
 
         cmd = construct_cmd(file, target)
         puts "#{file} -> #{target}"
@@ -21,6 +21,10 @@ module Aur
         return if system(cmd)
 
         raise Aur::Exception::FailedOperation, "transcode #{file} #{target}"
+      end
+
+      def target_file
+        file.sub_ext(".#{opts[:'<newtype>']}")
       end
 
       def construct_cmd(file1, file2)
@@ -42,6 +46,10 @@ module Aur
 
       def setup_tagger
         {}
+      end
+
+      def self.screen_flist(flist, _opts)
+        flist.select(&:file?)
       end
 
       def self.help
