@@ -9,6 +9,8 @@ require_relative '../../../../lib/aur/commands/mixins/file_tree'
 class Test < MiniTest::Test
   include Aur::Mixin::FileTree
 
+  TEST_DIR = RES_DIR + 'lintdir' + 'flac'
+
   def test_content_under
     assert_equal(
       [
@@ -16,9 +18,21 @@ class Test < MiniTest::Test
         [Pathname.new('slint.spiderland_remastered'), 6],
         [Pathname.new('slint.spiderland_remastered/bonus_disc'), 14]
       ],
-      content_under(RES_DIR + 'lintdir' + 'flac', '.flac')
+      content_under(TEST_DIR, '.flac')
     )
 
-    assert_equal([], content_under(RES_DIR + 'lintdir' + 'flac', '.mp3'))
+    assert_equal([], content_under(TEST_DIR, '.mp3'))
+  end
+
+  def test_files_under
+    result = files_under(TEST_DIR, '.flac')
+
+    assert_instance_of(Hash, result)
+    assert_equal(24, result.size)
+    assert(result.all? { |k, v| k.is_a?(Pathname) && v.is_a?(String) })
+    assert_equal(
+      Pathname.new(TEST_DIR + 'fall.eds_babe' + '04.fall.free_ranger.flac'),
+      result.key('fall.free_ranger.flac')
+    )
   end
 end

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'mp3dir'
+require_relative '../constants'
 require_relative 'mixins/file_tree'
 
 module Aur
@@ -53,7 +54,7 @@ module Aur
       end
 
       def self.screen_flist(_flist, _opts)
-        [Pathname.new('/storage')]
+        [DATA_DIR]
       end
 
       def self.help

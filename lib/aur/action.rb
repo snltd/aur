@@ -80,8 +80,7 @@ module Aur
            Mp3InfoEOFError,
            Aur::Exception::FailedOperation => e
       if action_class.respond_to?(:handle_err)
-        return action_class.handle_err(file,
-                                       e)
+        return action_class.handle_err(file, e)
       end
 
       warn "ERROR: cannot process '#{file}'.".bold

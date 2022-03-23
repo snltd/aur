@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'syncflac'
+require_relative '../constants'
 
 module Aur
   module Command
@@ -28,7 +29,7 @@ module Aur
       end
 
       def self.screen_flist(_flist, _opts)
-        [Pathname.new('/storage')]
+        [DATA_DIR]
       end
 
       def self.help
