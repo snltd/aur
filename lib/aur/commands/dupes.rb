@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative '../stdlib/pathname'
+require_relative '../constants'
 require_relative 'mixins/file_tree'
 
 module Aur
@@ -9,12 +10,9 @@ module Aur
     # Finds things in tracks/ that may exist elsewhere
     #
     class Dupes
-      attr_reader :fdir, :mdir, :opts
-
       include Aur::Mixin::FileTree
 
-      def initialize(root, opts = {})
-        @opts = opts
+      def initialize(root, _opts = {})
         @fdir = root + 'flac'
         @mdir = root + 'mp3'
       end
@@ -31,9 +29,7 @@ module Aur
 
         dupes.each do |track, matches|
           puts track
-          matches.each do |match|
-            puts "  #{match}"
-          end
+          puts(matches.map { |match| "  #{match}" })
           puts
         end
       end
@@ -50,11 +46,15 @@ module Aur
       end
 
       def all_flacs
-        files_under(fdir, '.flac')
+        files_under(@fdir, '.flac')
       end
 
       def all_mp3s
-        files_under(mdir, '.mp3')
+        files_under(@mdir, '.mp3')
+      end
+
+      def self.screen_flist(_flist, _opts)
+        [DATA_DIR]
       end
 
       def self.help

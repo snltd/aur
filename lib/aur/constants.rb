@@ -2,6 +2,8 @@
 
 require 'pathname'
 
+DATA_DIR = Pathname.new('/storage')
+
 SUPPORTED_TYPES = %w[flac mp3].freeze
 
 BIN = {
