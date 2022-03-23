@@ -38,5 +38,5 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'rubocop-rake', '~> 0.6'
   gem.add_development_dependency 'spy', '~> 1.0.0'
 
-  gem.required_ruby_version = Gem::Requirement.new('>= 2.7.2')
+  gem.required_ruby_version = Gem::Requirement.new('>= 3.0.0')
 end
