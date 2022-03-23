@@ -43,6 +43,44 @@ class TestLintCommand < MiniTest::Test
     end
   end
 
+  T_DIR = RES_DIR + 'lint' + 'tracks'
+
+  def test_good_flac_tracks
+    assert_silent { act(T_DIR + 'good.tracks_file.flac') }
+  end
+
+  def test_has_album_tag_tracks
+    assert_output(nil, /Bad tag value: Album tag should not be set$/) do
+      act(T_DIR + 'good.album_file.flac')
+    end
+  end
+
+  def test_unstripped_tracks
+    assert_output(nil, /Bad tags: composer, encoder, tempo$/) do
+      act(T_DIR + 'artist.unstripped.flac')
+    end
+  end
+
+  def test_bad_filename_tracks
+    assert_output(nil, /Invalid file name$/) { act(T_DIR + 'album_file.flac') }
+
+    assert_output(nil, /Invalid file name$/) do
+      act(T_DIR + '01.test_artist.incorrect_tags.flac')
+    end
+  end
+
+  def test_missing_tags_and_wrong_album_tracks
+    file = T_DIR + 'test_artist.missing_tags.flac'
+
+    out, err = capture_io { act(file) }
+    assert_empty(out)
+
+    assert_match(/#{file}\s+Bad tag value: t_num/, err)
+    assert_match(/#{file}\s+Bad tag value: genre/, err)
+    assert_match(/#{file}\s+Bad tag value: year/, err)
+    assert_equal(3, err.lines.count)
+  end
+
   private
 
   def act(*files)
