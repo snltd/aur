@@ -11,7 +11,6 @@ class TestITagCommand < MiniTest::Test
 
   def test_flac_inumber
     SUPPORTED_TYPES.each do |type|
-      f = "test_artist.untagged_song.#{type}"
       with_test_file("01.test_artist.untagged_song.#{type}") do |f|
         out, = capture_io { Aur::Action.new(:info, [f]).run! }
         refute_match(/Title : New Title/, out)
@@ -34,10 +33,11 @@ class TestITagCommand < MiniTest::Test
           end
         end
 
-        out, err =  capture_io {  Aur::Action.new(:info, [f]).run! }
+        out, err = capture_io { Aur::Action.new(:info, [f]).run! }
 
         assert_match(/Title : New Title$/, out)
         assert_match(/Artist : New Artist$/, out)
+        assert_empty(err)
       end
     end
   end

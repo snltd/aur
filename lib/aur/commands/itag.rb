@@ -19,7 +19,7 @@ module Aur
       end
 
       def valid_tag?(tag)
-        return true if info.our_tags.keys.include?(tag)
+        return true if info.our_tags.key?(tag)
 
         raise Aur::Exception::InvalidTagName
       end

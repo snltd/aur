@@ -7,7 +7,7 @@ require_relative '../../../lib/aur/commands/itag'
 
 # Tests for interactive tagging
 #
-class TestInumber < MiniTest::Test
+class TestItag < MiniTest::Test
   attr_reader :t
 
   def setup
