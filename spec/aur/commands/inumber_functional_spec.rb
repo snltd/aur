@@ -4,9 +4,9 @@
 require_relative '../../spec_helper'
 require_relative '../../../lib/aur/action'
 
-# Run 'aur numname' commands against things, and verify the results
+# Run 'aur inumber' commands against things, and verify the results
 #
-class TestNumberCommand < MiniTest::Test
+class TestUNumberCommand < MiniTest::Test
   include Aur::CommandTests
 
   def test_flac_inumber

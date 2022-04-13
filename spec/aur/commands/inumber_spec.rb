@@ -5,7 +5,7 @@ require 'pathname'
 require_relative '../../spec_helper'
 require_relative '../../../lib/aur/commands/inumber'
 
-# Tests
+# Tests for interactive numbering
 #
 class TestInumber < MiniTest::Test
   attr_reader :totest
