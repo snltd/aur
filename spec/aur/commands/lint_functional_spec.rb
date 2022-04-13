@@ -27,8 +27,7 @@ class TestLintCommand < MiniTest::Test
 
     assert_match(/#{file}\s+Invalid tag value: t_num/, err)
     assert_match(/#{file}\s+Invalid tag value: genre/, err)
-    assert_match(/#{file}\s+Invalid tag value: year/, err)
-    assert_equal(3, err.lines.count)
+    assert_equal(2, err.lines.count)
   end
 
   def test_good_flac_with_bad_name

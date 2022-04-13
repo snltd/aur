@@ -82,8 +82,9 @@ module Aur
   # their values cannot be derived from the filename.)
   #
   module TagValidatorCommon
+    # Years can be nil
     def year(year)
-      return false if year.nil?
+      return true if year.nil?
 
       year.to_s.match?(/^[12]\d{3}$/) && year.to_i.between?(1938, Time.now.year)
     end
