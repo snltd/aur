@@ -64,12 +64,12 @@ class TestTagValidator < MiniTest::Test
   # year and genre are the same whether linting is strict or lax
   def test_year_lax
     assert lax.year('1994')
+    assert lax.year(nil)
     refute lax.year(Time.now.year + 1)
     refute lax.year('1930')
     refute lax.year('')
     refute lax.year('1996/2020')
     refute lax.year('1989 02 03')
-    refute lax.year(nil)
   end
 
   def test_genre_lax

@@ -30,6 +30,8 @@ module Aur
             t_num
             year
             genre
+
+          Setting year to the string NIL clears its value.
         EOHELP
       end
     end
