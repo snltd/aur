@@ -21,19 +21,19 @@ module Aur
     # @return [String] the artist name, taken from the tag and turned into a
     #   safe filename segment.
     def artist_fname(info)
-      (info.artist.strip || 'unknown_artist').to_safe.sub(/^the_/, '')
+      (info.artist || 'unknown_artist').to_safe.sub(/^the_/, '')
     end
 
     # @return [String] the album name, taken from the tag and turned into a
     #   safe filename segment.
     def album_fname(info)
-      (info.album.strip || 'unknown_album').to_safe
+      (info.album || 'unknown_album').to_safe
     end
 
     # @return [String] the track title, taken from the tag and turned into a
     #   safe filename segment.
     def track_fname(info)
-      (info.title.strip || 'no_title').to_safe
+      (info.title || 'no_title').to_safe
     end
 
     def file_suffix(info)
