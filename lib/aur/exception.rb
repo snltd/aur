@@ -21,7 +21,9 @@ module Aur
 
     class LintBadName < RuntimeError; end
 
-    class LintBadTags < RuntimeError; end
+    class LintMissingTags < RuntimeError; end
+
+    class LintSurplusTags < RuntimeError; end
 
     class LintDirBadFile < RuntimeError; end
 

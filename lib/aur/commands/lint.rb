@@ -37,8 +37,10 @@ module Aur
         correct_tag_values?
       rescue Aur::Exception::LintBadName
         err(file, 'Invalid file name')
-      rescue Aur::Exception::LintBadTags => e
-        err(file, "Bad tags: #{e}")
+      rescue Aur::Exception::LintMissingTags => e
+        err(file, "Missing tags: #{e}")
+      rescue Aur::Exception::LintSurplusTags => e
+        err(file, "Unwanted tags: #{e}")
       rescue Aur::Exception::InvalidTagValue => e
         err(file, "Bad tag value: #{e}")
       end
@@ -66,19 +68,22 @@ module Aur
       # going to worry about additional tags.
       #
       def correct_tags?
+        missing_tags?
+        surplus_tags?
+      end
+
+      def missing_tags?
         missing_tags = required_tags - info.tags.keys
+        return true if missing_tags.empty?
 
-        unless missing_tags.empty?
-          raise Aur::Exception::LintBadTags, missing_tags.join(', ')
-        end
+        raise Aur::Exception::LintMissingTags, missing_tags.join(', ')
+      end
 
+      def surplus_tags?
         surplus_tags = info.tags.keys - required_tags
+        return true if surplus_tags.empty?
 
-        unless surplus_tags.empty?
-          raise Aur::Exception::LintBadTags, surplus_tags.join(', ')
-        end
-
-        true
+        raise Aur::Exception::LintSurplusTags, surplus_tags.join(', ')
       end
 
       # Are tags (reasonably) correctly populated?
@@ -138,6 +143,15 @@ module Aur
         end
 
         validate_tags(info.our_tags.except(:album))
+      end
+
+      # We won't complain whether we have a year tag or not
+      #
+      def surplus_tags?
+        surplus_tags = info.tags.keys - required_tags
+        return true if surplus_tags.empty? || surplus_tags == [:tyer]
+
+        raise Aur::Exception::LintSurplusTags, surplus_tags.join(', ')
       end
 
       private

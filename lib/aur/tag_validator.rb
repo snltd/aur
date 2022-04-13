@@ -89,7 +89,9 @@ module Aur
     end
 
     def genre(genre)
-      return false if genre.nil? || genre.empty?
+      if genre.nil? || genre.empty? || !genre.match?(/^[A-Z][a-zA-Z\- ]+$/)
+        return false
+      end
 
       genre == tag_factory.genre(genre)
     end
