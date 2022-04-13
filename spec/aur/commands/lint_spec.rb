@@ -50,9 +50,19 @@ class TestLint < MiniTest::Test
     assert t.correct_tags?
 
     capture_io do # because the MP3 library stderrs a warning
-      assert_raises(Aur::Exception::LintBadTags) do
+      err = assert_raises(Aur::Exception::LintMissingTags) do
+        Aur::Command::Lint.new(RES_DIR + 'missing_tags.mp3').correct_tags?
+      end
+
+      assert_equal('tcon', err.message)
+    end
+
+    capture_io do
+      err = assert_raises(Aur::Exception::LintUnwantedTags) do
         Aur::Command::Lint.new(RES_DIR + 'unstripped.mp3').correct_tags?
       end
+
+      assert_equal('tlen, tenc, tcom, txxx, tsse, apic', err.message)
     end
   end
 
@@ -107,8 +117,8 @@ class TestLintTracks < MiniTest::Test
     assert t.correct_tags?
 
     capture_io do # because the MP3 library stderrs a warning
-      assert_raises(Aur::Exception::LintBadTags) do
-        Aur::Command::Lint.new(L_DIR + 'unstripped.mp3').correct_tags?
+      assert_raises(Aur::Exception::LintMissingTags) do
+        Aur::Command::Lint.new(L_DIR + 'missing_tags.mp3').correct_tags?
       end
     end
   end

@@ -23,7 +23,7 @@ module Aur
 
     class LintMissingTags < RuntimeError; end
 
-    class LintSurplusTags < RuntimeError; end
+    class LintUnwantedTags < RuntimeError; end
 
     class LintDirBadFile < RuntimeError; end
 

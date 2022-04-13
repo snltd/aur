@@ -25,9 +25,9 @@ class TestLintCommand < MiniTest::Test
     out, err = capture_io { act(file) }
     assert_empty(out)
 
-    assert_match(/#{file}\s+Bad tag value: t_num/, err)
-    assert_match(/#{file}\s+Bad tag value: genre/, err)
-    assert_match(/#{file}\s+Bad tag value: year/, err)
+    assert_match(/#{file}\s+Invalid tag value: t_num/, err)
+    assert_match(/#{file}\s+Invalid tag value: genre/, err)
+    assert_match(/#{file}\s+Invalid tag value: year/, err)
     assert_equal(3, err.lines.count)
   end
 
@@ -47,16 +47,18 @@ class TestLintCommand < MiniTest::Test
 
   def test_good_flac_tracks
     assert_silent { act(T_DIR + 'good.tracks_file.flac') }
+    assert_silent { act(T_DIR + 'tester.no_year_is_ok_here.flac') }
+    assert_silent { act(T_DIR + 'tester.no_year_is_ok_here.mp3') }
   end
 
   def test_has_album_tag_tracks
-    assert_output(nil, /Bad tag value: Album tag should not be set$/) do
+    assert_output(nil, /Invalid tag value: Album tag should not be set$/) do
       act(T_DIR + 'good.album_file.flac')
     end
   end
 
   def test_unstripped_tracks
-    assert_output(nil, /Bad tags: composer, encoder, tempo$/) do
+    assert_output(nil, /Unwanted tags: composer, encoder, tempo$/) do
       act(T_DIR + 'artist.unstripped.flac')
     end
   end
@@ -71,14 +73,7 @@ class TestLintCommand < MiniTest::Test
 
   def test_missing_tags_and_wrong_album_tracks
     file = T_DIR + 'test_artist.missing_tags.flac'
-
-    out, err = capture_io { act(file) }
-    assert_empty(out)
-
-    assert_match(/#{file}\s+Bad tag value: t_num/, err)
-    assert_match(/#{file}\s+Bad tag value: genre/, err)
-    assert_match(/#{file}\s+Bad tag value: year/, err)
-    assert_equal(3, err.lines.count)
+    assert_output(nil, /#{file}\s+Invalid tag value: artist/) { act(file) }
   end
 
   private

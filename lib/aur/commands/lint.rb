@@ -31,6 +31,7 @@ module Aur
         false
       end
 
+      # rubocop:disable Metrics/MethodLength
       def lint(file)
         correctly_named?(file)
         correct_tags?
@@ -39,11 +40,12 @@ module Aur
         err(file, 'Invalid file name')
       rescue Aur::Exception::LintMissingTags => e
         err(file, "Missing tags: #{e}")
-      rescue Aur::Exception::LintSurplusTags => e
+      rescue Aur::Exception::LintUnwantedTags => e
         err(file, "Unwanted tags: #{e}")
       rescue Aur::Exception::InvalidTagValue => e
-        err(file, "Bad tag value: #{e}")
+        err(file, "Invalid tag value: #{e}")
       end
+      # rubocop:enable Metrics/MethodLength
 
       def err(file, msg)
         if opts[:summary]
@@ -69,27 +71,31 @@ module Aur
       #
       def correct_tags?
         missing_tags?
-        surplus_tags?
+        unwanted_tags?
       end
 
       def missing_tags?
-        missing_tags = required_tags - info.tags.keys
+        missing_tags = required_tags - info.tags.keys - optional_tags
         return true if missing_tags.empty?
 
         raise Aur::Exception::LintMissingTags, missing_tags.join(', ')
       end
 
-      def surplus_tags?
-        surplus_tags = info.tags.keys - required_tags
-        return true if surplus_tags.empty?
+      def unwanted_tags?
+        unwanted_tags = info.tags.keys - required_tags
+        return true if unwanted_tags.empty?
 
-        raise Aur::Exception::LintSurplusTags, surplus_tags.join(', ')
+        raise Aur::Exception::LintUnwantedTags, unwanted_tags.join(', ')
       end
 
       # Are tags (reasonably) correctly populated?
       #
       def correct_tag_values?
         validate_tags(info.our_tags)
+      end
+
+      def optional_tags
+        []
       end
 
       def self.help
@@ -121,7 +127,7 @@ module Aur
         return if validator.send(tag, value)
 
         msg = opts[:summary] ? tag : "#{tag}: #{value}"
-        err(file, "Bad tag value: #{msg}")
+        err(file, "Invalid tag value: #{msg}")
       end
 
       def required_tags
@@ -142,16 +148,18 @@ module Aur
           raise Aur::Exception::InvalidTagValue, 'Album tag should not be set'
         end
 
-        validate_tags(info.our_tags.except(:album))
+        tags = info.our_tags.except(:album)
+        optional_tags.each { |t| tags.delete(t) if tags[t].nil? }
+        validate_tags(tags)
       end
 
       # We won't complain whether we have a year tag or not
       #
-      def surplus_tags?
-        surplus_tags = info.tags.keys - required_tags
-        return true if surplus_tags.empty? || surplus_tags == [:tyer]
+      def unwanted_tags?
+        unwanted_tags = info.tags.keys - required_tags
+        return true if unwanted_tags.empty? || unwanted_tags == [:tyer]
 
-        raise Aur::Exception::LintSurplusTags, surplus_tags.join(', ')
+        raise Aur::Exception::LintUnwantedTags, unwanted_tags.join(', ')
       end
 
       private
@@ -161,8 +169,8 @@ module Aur
           !chunks[0].start_with?('the_')
       end
 
-      def required_tags
-        REQ_TAGS[info.filetype.to_sym] - %i[talb tyer]
+      def optional_tags
+        %i[date talb tyer year t_num genre]
       end
     end
   end
