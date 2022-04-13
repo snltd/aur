@@ -9,7 +9,10 @@ module Aur
     #
     class Set < Base
       def run
-        tagger.tag!(opts[:'<tag>'].to_sym => opts[:'<value>'])
+        val = opts[:'<value>']
+        val = nil if val == 'NIL'
+
+        tagger.tag!(opts[:'<tag>'].to_sym => val)
       end
 
       def self.help

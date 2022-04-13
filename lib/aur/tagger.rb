@@ -54,6 +54,8 @@ module Aur
     alias validate_genre validate_title
 
     def validate_year(year)
+      return nil if year.nil?
+
       ryear = year.to_i
       return ryear if ryear.between?(1940, Time.now.year)
 
