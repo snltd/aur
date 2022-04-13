@@ -50,6 +50,7 @@ class TestStripCommand < MiniTest::Test
                       tpe1: 'Singer',
                       trck: '3',
                       talb: 'Their Album',
+                      tcon: 'Test',
                       tyer: '2021' }
 
     with_test_file('unstripped.mp3') do |f|
@@ -57,7 +58,7 @@ class TestStripCommand < MiniTest::Test
       original = nil
       capture_io { original = Aur::FileInfo.new(f) }
 
-      assert_equal(11, original.tags.size)
+      assert_equal(12, original.tags.size)
       refute_equal(required_tags, original.tags)
       assert_equal('Someone Clever', original.tags[:tcom])
       assert original.picture?

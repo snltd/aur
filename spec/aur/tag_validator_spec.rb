@@ -84,5 +84,6 @@ class TestTagValidator < MiniTest::Test
     refute lax.genre('noise')
     refute lax.genre('')
     refute lax.genre(nil)
+    refute lax.genre('(20)')
   end
 end
