@@ -15,6 +15,7 @@ class StringTest < MiniTest::Test
     assert_equal('say_yes', 'Say "Yes!"'.to_safe)
     assert_equal('simple--string', 'simple-String'.to_safe)
     assert_equal('simple_string', 'Simple String'.to_safe)
+    assert_equal('stripped_string', 'Stripped String  '.to_safe)
     assert_equal('a_long_complicated_string--type--thing',
                  'a long, complicated string-type-thing.'.to_safe)
     assert_equal('content', '!|~~c*o*n*t*e*n*t~~;:'.to_safe)

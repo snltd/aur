@@ -20,6 +20,7 @@ class String
   #
   def to_safe
     I18n.transliterate(String.new(self).force_encoding('utf-8'))
+        .strip
         .downcase
         .gsub('&', 'and')
         .gsub(/(\S)-(\S)/, '\1--\2')
