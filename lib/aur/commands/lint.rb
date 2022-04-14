@@ -95,7 +95,7 @@ module Aur
       end
 
       def optional_tags
-        []
+        [:encoder]
       end
 
       def self.help
@@ -170,7 +170,7 @@ module Aur
       end
 
       def optional_tags
-        %i[date talb tyer year t_num genre]
+        %i[date talb tyer year t_num genre encoder]
       end
     end
   end
