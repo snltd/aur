@@ -7,8 +7,8 @@ require 'date'
 
 Gem::Specification.new do |gem|
   gem.name          = 'aur'
-  gem.version       = ENV['RELEASE_VERSION'] ||
-                      "0.0.#{Time.now.strftime('%Y%m%d')}"
+  gem.version       = ENV.fetch('RELEASE_VERSION',
+                                "0.0.#{Time.now.strftime('%Y%m%d')}")
 
   gem.summary       = 'audio file management tool'
   gem.description   = 'audio file management tool'

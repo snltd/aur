@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'pathname'
-require_relative 'base'
 require_relative '../fileinfo'
 require_relative '../constants'
 require_relative '../exception'
