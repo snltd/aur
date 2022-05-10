@@ -91,6 +91,27 @@ module Aur
       #
       def correct_tag_values?
         validate_tags(info.our_tags)
+        validate_album_disc
+      end
+
+      def validate_album_disc
+        album_match = info.album.match(/\(Disc (\d+)\)$/)
+        dir_match = file.dirname.basename.to_s.match(/^disc_(\d+)/)
+
+        tag_num = album_match.nil? ? nil : album_match[1].to_i
+        dir_num = dir_match.nil? ? nil : dir_match[1].to_i
+
+        return if tag_num == dir_num
+
+        err = if tag_num.nil? && dir_num
+          "file in disc_ dir, but has no disc number in album tag"
+        elsif tag_num && dir_num.nil?
+          "album tag: disc #{tag_num} but not in disc_ dir"
+        else
+          "album tag: disc #{tag_num}; directory disc #{dir_num}"
+        end
+
+        raise Aur::Exception::InvalidTagValue, err
       end
 
       def optional_tags
