@@ -59,7 +59,7 @@ module Aur
 
       def retitle_artist
         original_artist = info.artist
-        new_artist = original_artist.strip
+        new_artist = retitle(original_artist)
 
         return if new_artist == original_artist
 
