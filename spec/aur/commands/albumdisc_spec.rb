@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 require_relative '../../spec_helper'
 require_relative '../../../lib/aur/commands/albumdisc'
@@ -9,14 +10,19 @@ class TestAlbumdisc < MiniTest::Test
   attr_reader :t
 
   def setup
-    @t = Aur::Command::Albumdisc.new(RES_DIR + '01.test_artist.untagged_song.flac')
+    @t = Aur::Command::Albumdisc.new(
+      RES_DIR + '01.test_artist.untagged_song.flac'
+    )
   end
 
   def test_disc_number
-    assert_nil t.disc_number(Pathname.new('/a/artist.album/01.artist.song.flac'))
+    assert_nil t.disc_number(
+      Pathname.new('/a/artist.album/01.artist.song.flac')
+    )
+
     assert_equal(3,
                  t.disc_number(
-                  Pathname.new('/a/artist.album/disc_3/01.artist.song.flac')
+                   Pathname.new('/a/artist.album/disc_3/01.artist.song.flac')
                  ))
   end
 

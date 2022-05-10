@@ -15,7 +15,8 @@ class TestAlbumdiscCommand < MiniTest::Test
     with_test_file(AT_DIR + 'artist.album' + '01.artist.song.flac') do |f|
       assert_tag(f, :album, 'Album')
       assert_raises(SystemExit) do
-        assert_output('ERROR: Bad input: file is not in disc_n directory', '') do
+        assert_output('ERROR: Bad input: file is not in disc_n directory',
+                      '') do
           Aur::Action.new(action, [f]).run!
         end
       end

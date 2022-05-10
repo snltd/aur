@@ -30,7 +30,7 @@ module Aur
       end
 
       def new_album(album, disc)
-        return nil if album.match(/\(Disc \d+\)$/)
+        return nil if /\(Disc \d+\)$/.match?(album)
 
         "#{album} (Disc #{disc})"
       end
@@ -39,9 +39,10 @@ module Aur
         require_relative '../fileinfo'
 
         <<~EOHELP
-          usage: aur retitle <file>...
+          usage: aur albumdisc <file>...
 
-          Fix the title capitalization on the given file(s).
+          If a file is in a disc_n directory, add (Disc n) to the album tag,
+          if it isn't there already.
         EOHELP
       end
     end
