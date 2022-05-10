@@ -130,4 +130,31 @@ class TestLintTracks < MiniTest::Test
 
     assert_equal('Album tag should not be set', err.message)
   end
+
+  def test_validate_album_disc
+    assert t.validate_album_disc('Album (Disc 1)', 'disc_1')
+    assert t.validate_album_disc('(Disc 2 - Paris 1972-05-24)', 'disc_2')
+    assert t.validate_album_disc('An Album', 'band.an_album')
+    assert t.validate_album_disc('Black Sheep (Disc 1: Return of the Native)',
+                                 'disc_1-return_of_the_native')
+
+    err = assert_raises(Aur::Exception::InvalidTagValue) do
+      t.validate_album_disc('Album', 'disc_2')
+    end
+
+    assert_equal(err.message,
+                 'file in disc_ dir, but has no disc number in album tag')
+
+    err = assert_raises(Aur::Exception::InvalidTagValue) do
+      t.validate_album_disc('Album (Disc 1)', 'band.album')
+    end
+
+    assert_equal(err.message, 'album tag: disc 1 but not in disc_ dir')
+
+    err = assert_raises(Aur::Exception::InvalidTagValue) do
+      t.validate_album_disc('Album (Disc 1)', 'disc_2')
+    end
+
+    assert_equal(err.message, 'album tag: disc 1; directory disc 2')
+  end
 end

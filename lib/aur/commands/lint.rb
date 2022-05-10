@@ -91,27 +91,23 @@ module Aur
       #
       def correct_tag_values?
         validate_tags(info.our_tags)
-        validate_album_disc
+        validate_album_disc(info.album, file.dirname.basename.to_s)
       end
 
-      def validate_album_disc
-        album_match = info.album.match(/\(Disc (\d+)\)$/)
-        dir_match = file.dirname.basename.to_s.match(/^disc_(\d+)/)
+      # If a file is in a disc_n directory, does it have an appropriate album
+      # tag? And if it has an album tag denoting a particular disc, is it in a
+      # disc_n directory?
+      #
+      def validate_album_disc(album_tag, file_dir_name)
+        album_match = album_tag.match(/\(Disc (\d+)[ \):]/)
+        dir_match = file_dir_name.match(/^disc_(\d+)/)
 
         tag_num = album_match.nil? ? nil : album_match[1].to_i
         dir_num = dir_match.nil? ? nil : dir_match[1].to_i
 
-        return if tag_num == dir_num
+        return true if tag_num == dir_num
 
-        err = if tag_num.nil? && dir_num
-          "file in disc_ dir, but has no disc number in album tag"
-        elsif tag_num && dir_num.nil?
-          "album tag: disc #{tag_num} but not in disc_ dir"
-        else
-          "album tag: disc #{tag_num}; directory disc #{dir_num}"
-        end
-
-        raise Aur::Exception::InvalidTagValue, err
+        raise Aur::Exception::InvalidTagValue, disc_error(tag_num, dir_num)
       end
 
       def optional_tags
@@ -130,6 +126,16 @@ module Aur
       end
 
       private
+
+      def disc_error(tag_num, dir_num)
+        if tag_num.nil? && dir_num
+          'file in disc_ dir, but has no disc number in album tag'
+        elsif tag_num && dir_num.nil?
+          "album tag: disc #{tag_num} but not in disc_ dir"
+        else
+          "album tag: disc #{tag_num}; directory disc #{dir_num}"
+        end
+      end
 
       def in_tracks?
         file.expand_path.lastdir == 'tracks'
