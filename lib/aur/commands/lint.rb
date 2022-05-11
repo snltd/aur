@@ -99,7 +99,7 @@ module Aur
       # disc_n directory?
       #
       def validate_album_disc(album_tag, file_dir_name)
-        album_match = album_tag.match(/\(Disc (\d+)[ \):]/)
+        album_match = album_tag.match(/\(Disc (\d+)[ ):]/)
         dir_match = file_dir_name.match(/^disc_(\d+)/)
 
         tag_num = album_match.nil? ? nil : album_match[1].to_i
@@ -111,7 +111,7 @@ module Aur
       end
 
       def optional_tags
-        [:encoder, :tsse, :tlen]
+        %i[encoder tsse tlen]
       end
 
       def self.help

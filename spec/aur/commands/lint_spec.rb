@@ -62,7 +62,7 @@ class TestLint < MiniTest::Test
         Aur::Command::Lint.new(RES_DIR + 'unstripped.mp3').correct_tags?
       end
 
-      assert_equal('tlen, tenc, tcom, txxx, tsse, apic', err.message)
+      assert_equal('tenc, tcom, txxx, apic', err.message)
     end
   end
 
