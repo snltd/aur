@@ -41,7 +41,8 @@ ALL_CAPS = %w[ok dj lp ep l.a. bmr bbc scsi ii iii iv vi vii ix xi cd fm tko
 # These words should be ignored when examining case
 #
 IGNORE_CASE = %w[d'isan o'keefe mcgee mcintyre ça b's mccay mccoy lps eps mxbx
-                 a: iiia iiib 5-6-7-8's v/vm mccartney mms mcdonalds].freeze
+                 mccarthy d'or a: iiia iiib 5-6-7-8's v/vm mccartney mms
+                 mcdonalds].freeze
 
 # The keys of this hash are expanded to the corresponding value when
 # generating tags. Some of these contractions are, of course, real words, but
