@@ -81,7 +81,7 @@ module Aur
       end
 
       def unwanted_tags?
-        unwanted_tags = info.tags.keys - required_tags
+        unwanted_tags = info.tags.keys - required_tags - optional_tags
         return true if unwanted_tags.empty?
 
         raise Aur::Exception::LintUnwantedTags, unwanted_tags.join(', ')
@@ -111,7 +111,7 @@ module Aur
       end
 
       def optional_tags
-        [:encoder]
+        [:encoder, :tsse, :tlen]
       end
 
       def self.help
