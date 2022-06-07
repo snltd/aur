@@ -8,10 +8,12 @@ require_relative '../../../lib/aur/fileinfo'
 # Run 'aur reencode' commands against a real file, and verify the results
 #
 class TestReencodeCommand < MiniTest::Test
+  def setup
+    skip unless BIN[:ffmpeg].exist?
+  end
+
   def test_reencode_flac
     with_test_file('test_tone-100hz.flac') do |f|
-      skip unless BIN[:ffmpeg].exist?
-
       original_mtime = f.mtime
       original_tags = Aur::FileInfo.new(f).our_tags
 
@@ -29,8 +31,6 @@ class TestReencodeCommand < MiniTest::Test
 
   def test_reencode_mp3
     with_test_file('test_tone-100hz.mp3') do |f|
-      skip unless BIN[:ffmpeg].exist?
-
       original_mtime = f.mtime
       original_tags = Aur::FileInfo.new(f).our_tags
 

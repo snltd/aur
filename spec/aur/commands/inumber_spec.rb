@@ -11,7 +11,7 @@ class TestInumber < MiniTest::Test
   attr_reader :t
 
   def setup
-    @t = Aur::Command::Inumber.new(RES_DIR + 'test_tone-100hz.flac')
+    @t = Aur::Command::Inumber.new(RES_DIR.join('test_tone-100hz.flac'))
   end
 
   def test_validate

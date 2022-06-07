@@ -17,8 +17,8 @@ class TestMp3dir < MiniTest::Test
     skip unless BIN[:lame].exist?
 
     with_test_file('mp3dir') do |dir|
-      source_dir = dir + 'flac' + 'artist.first_album'
-      expected_dir = dir + 'mp3' + 'artist.first_album'
+      source_dir = dir.join('flac', 'artist.first_album')
+      expected_dir = dir.join('mp3', 'artist.first_album')
       assert(source_dir.exist?)
       refute(expected_dir.exist?)
 
@@ -33,12 +33,12 @@ class TestMp3dir < MiniTest::Test
 
       original_mtimes = expected_dir.children.map(&:mtime)
 
-      assert (expected_dir + '01.artist.song_1.mp3').exist?
-      assert (expected_dir + '02.artist.song_2.mp3').exist?
+      assert expected_dir.join('01.artist.song_1.mp3').exist?
+      assert expected_dir.join('02.artist.song_2.mp3').exist?
 
       assert_equal(
-        Aur::FileInfo.new(source_dir + '01.artist.song_1.flac').our_tags,
-        Aur::FileInfo.new(expected_dir + '01.artist.song_1.mp3').our_tags
+        Aur::FileInfo.new(source_dir.join('01.artist.song_1.flac')).our_tags,
+        Aur::FileInfo.new(expected_dir.join('01.artist.song_1.mp3')).our_tags
       )
 
       # Running again should do nothing, because the MP3s already exist
@@ -49,19 +49,20 @@ class TestMp3dir < MiniTest::Test
       # Now remove one file and run again. It should be replaced, and the
       # other should be left alone
       #
-      (expected_dir + '02.artist.song_2.mp3').unlink
+      expected_dir.join('02.artist.song_2.mp3').unlink
 
       assert_output("#{source_dir}\n  -> 02.artist.song_2.mp3\n", '') do
         act(source_dir)
       end
 
       assert_equal(
-        original_mtimes.first, (expected_dir + '01.artist.song_1.mp3').mtime
+        original_mtimes.first,
+        expected_dir.join('01.artist.song_1.mp3').mtime
       )
 
       refute_equal(
         original_mtimes.last,
-        (expected_dir + '02.artist.song_2.mp3').mtime
+        expected_dir.join('02.artist.song_2.mp3').mtime
       )
 
       # Running with -f should overwrite both files
@@ -82,13 +83,13 @@ class TestMp3dir < MiniTest::Test
     skip unless BIN[:lame].exist?
 
     with_test_file('mp3dir') do |dir|
-      source_dir = dir + 'flac' + 'artist.first_album'
-      expected_dir = dir + 'mp3' + 'artist.first_album'
+      source_dir = dir.join('flac', 'artist.first_album')
+      expected_dir = dir.join('mp3', 'artist.first_album')
 
       FileUtils.mkdir_p(expected_dir)
-      bonus = expected_dir + '03.artist.rubbish_bonus_track.mp3'
+      bonus = expected_dir.join('03.artist.rubbish_bonus_track.mp3')
 
-      FileUtils.cp(RES_DIR + 'test_tone-100hz.mp3', bonus)
+      FileUtils.cp(RES_DIR.join('test_tone-100hz.mp3'), bonus)
 
       assert(source_dir.exist?)
       assert(expected_dir.exist?)
@@ -104,8 +105,8 @@ class TestMp3dir < MiniTest::Test
 
       assert expected_dir.exist?
 
-      assert (expected_dir + '01.artist.song_1.mp3').exist?
-      assert (expected_dir + '02.artist.song_2.mp3').exist?
+      assert expected_dir.join('01.artist.song_1.mp3').exist?
+      assert expected_dir.join('02.artist.song_2.mp3').exist?
       refute bonus.exist?
     end
   end

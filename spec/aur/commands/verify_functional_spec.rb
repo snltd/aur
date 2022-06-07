@@ -14,7 +14,7 @@ class TestVerifyCmd < MiniTest::Test
 
   def test_verify_nothing
     assert_output('', "No valid files supplied.\n") do
-      Aur::Action.new(:verify, [RES_DIR + 'front.png']).run!
+      Aur::Action.new(:verify, [RES_DIR.join('front.png')]).run!
     end
   end
 
@@ -22,13 +22,13 @@ class TestVerifyCmd < MiniTest::Test
     skip unless BIN[:flac].exist?
 
     assert_output(/^bad_name.flac\s+OK$/, '') do
-      Aur::Action.new(:verify, [RES_DIR + 'bad_name.flac']).run!
+      Aur::Action.new(:verify, [RES_DIR.join('bad_name.flac')]).run!
     end
   end
 
   def test_mp3_verify
     assert_output('', "MP3 files cannot be verified.\n") do
-      Aur::Action.new(:verify, [RES_DIR + 'bad_name.mp3']).run!
+      Aur::Action.new(:verify, [RES_DIR.join('bad_name.mp3')]).run!
     end
   end
 

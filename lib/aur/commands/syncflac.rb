@@ -16,8 +16,8 @@ module Aur
 
       def initialize(root, opts = {})
         @opts = opts
-        @fdir = root + 'flac'
-        @mdir = root + 'mp3'
+        @fdir = root.join('flac')
+        @mdir = root.join('mp3')
       end
 
       def run
@@ -44,13 +44,13 @@ module Aur
       #   which need mp3ing.
       #
       def difference(flacdirs, mp3dirs)
-        (flacdirs - mp3dirs).map { |d| fdir + d.first }.reject do |d|
+        (flacdirs - mp3dirs).map { |d| fdir.join(d.first) }.reject do |d|
           d.to_s.end_with?('/new') || d.to_s.include?('/new/')
         end
       end
 
       def deep_difference(flacdirs)
-        flacdirs.each { |d, _count| action(fdir + d) }
+        flacdirs.each { |d, _count| action(fdir.join(d)) }
       end
 
       def self.screen_flist(_flist, _opts)

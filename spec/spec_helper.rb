@@ -7,7 +7,7 @@ require 'spy/integration'
 require_relative 'common_command_tests'
 require_relative '../lib/aur/fileinfo'
 
-RES_DIR = Pathname.new(__dir__) + 'resources'
+RES_DIR = Pathname.new(__dir__).join('resources')
 TMP_DIR = Pathname.new('/tmp/aurtest')
 
 TW = 70
@@ -37,9 +37,9 @@ end
 #
 def with_test_file(file)
   setup_test_dir
-  FileUtils.cp_r(RES_DIR + file, TMP_DIR)
+  FileUtils.cp_r(RES_DIR.join(file), TMP_DIR)
   file = file.basename if file.is_a?(Pathname)
-  yield(TMP_DIR + file)
+  yield(TMP_DIR.join(file))
   cleanup_test_dir
 end
 

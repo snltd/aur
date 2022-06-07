@@ -10,7 +10,7 @@ class TestTagconv < MiniTest::Test
   attr_reader :t
 
   def setup
-    @t = Aur::Command::Tagconv.new(RES_DIR + 'test_tone-100hz.mp3')
+    @t = Aur::Command::Tagconv.new(RES_DIR.join('test_tone-100hz.mp3'))
   end
 
   def test_convert_tags

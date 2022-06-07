@@ -45,7 +45,7 @@ class String
   # be perfect, but I think it's near enough.
   #
   def initials
-    (tr('-', '.') + '.').upcase
+    "#{tr('-', '.')}.".upcase
   end
 
   # Checks a string is a safe filename segment
@@ -65,7 +65,7 @@ class String
   # A somewhat-exclusive version of capitalize.
   #
   # rubocop:disable Metrics/CyclomaticComplexity
-  def titlecase(previous_word = 'none', run_together = false)
+  def titlecase(previous_word = 'none', run_together: false)
     return titlecase_start_with_nonword(self) if /^\W/.match?(self)
 
     return titlecase_follow_punct(self) if /[:=)]$/.match?(self)
@@ -117,7 +117,7 @@ class String
     return unless word.include?(sep)
 
     word.split(sep).map.with_index do |w, i|
-      w.titlecase('/', i.positive?)
+      w.titlecase('/', run_together: i.positive?)
     end.join(sep)
   end
 end

@@ -10,8 +10,8 @@ class TestNum2name < MiniTest::Test
   attr_reader :flac, :mp3
 
   def setup
-    @flac = Aur::Command::Num2name.new(RES_DIR + 'test_tone-100hz.flac')
-    @mp3 = Aur::Command::Num2name.new(RES_DIR + 'test_tone-100hz.mp3')
+    @flac = Aur::Command::Num2name.new(RES_DIR.join('test_tone-100hz.flac'))
+    @mp3 = Aur::Command::Num2name.new(RES_DIR.join('test_tone-100hz.mp3'))
   end
 
   def test_run
@@ -22,8 +22,8 @@ class TestNum2name < MiniTest::Test
     end
 
     assert(mv.has_been_called?)
-    assert_equal([RES_DIR + 'test_tone-100hz.flac',
-                  RES_DIR + '06.test_tone-100hz.flac'],
+    assert_equal([RES_DIR.join('test_tone-100hz.flac'),
+                  RES_DIR.join('06.test_tone-100hz.flac')],
                  mv.calls.first.args)
   end
 

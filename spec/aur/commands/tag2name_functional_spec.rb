@@ -19,7 +19,7 @@ class TestTag2NameCommand < MiniTest::Test
         end
 
         refute(f.exist?)
-        assert (TMP_DIR + expected).exist?
+        assert TMP_DIR.join(expected).exist?
       end
     end
   end

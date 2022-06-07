@@ -10,8 +10,8 @@ require_relative '../../../lib/aur/fileinfo'
 class TestCopytagsCommand < MiniTest::Test
   def test_remove_v1_tags_from_file_with_both
     with_test_file('copytags') do |dir|
-      flac = dir + 'flac' + '01.artist.song.flac'
-      mp3 = dir + 'mp3' + '01.artist.song.mp3'
+      flac = dir.join('flac', '01.artist.song.flac')
+      mp3 = dir.join('mp3', '01.artist.song.mp3')
 
       flacinfo = Aur::FileInfo.new(flac)
       mp3info = Aur::FileInfo.new(mp3)

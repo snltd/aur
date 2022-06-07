@@ -14,7 +14,7 @@ class TestFlac2Mp3Command < MiniTest::Test
     skip unless BIN[:lame].exist?
 
     with_test_file('test_tone-100hz.flac') do |f|
-      expected_file = TMP_DIR + 'test_tone-100hz.mp3'
+      expected_file = TMP_DIR.join('test_tone-100hz.mp3')
       refute(expected_file.exist?)
 
       assert_output("#{f} -> #{TMP_DIR}/test_tone-100hz.mp3\n", '') do
@@ -34,7 +34,7 @@ class TestFlac2Mp3Command < MiniTest::Test
     with_test_file('test_tone-100hz.mp3') do |f|
       assert_output(
         nil,
-        "ERROR: Unhandled error on #{TMP_DIR + 'test_tone-100hz.mp3'}\n"
+        "ERROR: Unhandled error on #{TMP_DIR.join('test_tone-100hz.mp3')}\n"
       ) do
         assert_raises(SystemExit) { Aur::Action.new(:flac2mp3, [f]).run! }
       end

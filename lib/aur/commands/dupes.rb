@@ -13,8 +13,8 @@ module Aur
       include Aur::Mixin::FileTree
 
       def initialize(root, _opts = {})
-        @fdir = root + 'flac'
-        @mdir = root + 'mp3'
+        @fdir = root.join('flac')
+        @mdir = root.join('mp3')
       end
 
       def run
