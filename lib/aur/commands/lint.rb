@@ -12,6 +12,7 @@ module Aur
     #
     # Examines files and compares them with our standards.
     #
+    # rubocop:disable Metrics/ClassLength
     class Lint
       attr_reader :file, :info, :opts, :validator
 
@@ -165,6 +166,7 @@ module Aur
           !chunks[1].start_with?('the_')
       end
     end
+    # rubocop:enable Metrics/ClassLength
 
     # We have different rules for things in a tracks/ directory.
     #

@@ -9,29 +9,29 @@ module Aur
     def test_bad_flac_info
       assert_output(
         '',
-        "ERROR: cannot process '#{RES_DIR + 'not_really_a.flac'}'.\n"
+        "ERROR: cannot process '#{RES_DIR.join('not_really_a.flac')}'.\n"
       ) do
-        Aur::Action.new(action, [RES_DIR + 'not_really_a.flac']).run!
+        Aur::Action.new(action, [RES_DIR.join('not_really_a.flac')]).run!
       end
     end
 
     def _test_bad_mp3_info
       assert_output(
         '',
-        "ERROR: cannot process '#{RES_DIR + 'not_really_a.mp3'}'.\n"
+        "ERROR: cannot process '#{RES_DIR.join('not_really_a.mp3')}'.\n"
       ) do
-        Aur::Action.new(action, [RES_DIR + 'not_really_a.mp3']).run!
+        Aur::Action.new(action, [RES_DIR.join('not_really_a.mp3')]).run!
       end
     end
 
     def _test_both_bad_files
       assert_output(
         '',
-        "ERROR: cannot process '#{RES_DIR + 'not_really_a.flac'}'.\n" \
-        "ERROR: cannot process '#{RES_DIR + 'not_really_a.mp3'}'.\n"
+        "ERROR: cannot process '#{RES_DIR.join('not_really_a.flac')}'.\n" \
+        "ERROR: cannot process '#{RES_DIR.join('not_really_a.mp3')}'.\n"
       ) do
-        Aur::Action.new(action, [RES_DIR + 'not_really_a.flac',
-                                 RES_DIR + 'not_really_a.mp3']).run!
+        Aur::Action.new(action, [RES_DIR.join('not_really_a.flac'),
+                                 RES_DIR.join('not_really_a.mp3')]).run!
       end
     end
   end

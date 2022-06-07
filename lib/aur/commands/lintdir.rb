@@ -12,6 +12,7 @@ module Aur
     # This Command doesn't fit with the rest of the module because it does not
     # extend the Base class.
     #
+    # rubocop:disable Metrics/ClassLength
     class Lintdir
       def initialize(dir = nil, opts = {})
         @dir = dir
@@ -69,13 +70,13 @@ module Aur
       # we find content in an incorrectly named directory, we examine the
       # parent, and return true if that looks okay.
       #
-      def correctly_named?(dir, on_retry = false)
+      def correctly_named?(dir, on_retry: false)
         name = dir.basename.to_s
 
         return true if name.match(/^[a-z0-9][a-z\-._0-9]+[a-z0-9]$/) &&
                        name.split('.').size == 2 && !name.start_with?('the_')
 
-        return correctly_named?(dir.parent, true) if on_retry == false
+        return correctly_named?(dir.parent, on_retry: true) if on_retry == false
 
         raise Aur::Exception::LintDirBadName
       end
@@ -191,5 +192,6 @@ module Aur
         EOHELP
       end
     end
+    # rubocop:enable Metrics/ClassLength
   end
 end

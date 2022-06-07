@@ -9,7 +9,7 @@ require_relative '../../../../lib/aur/commands/mixins/file_tree'
 class Test < MiniTest::Test
   include Aur::Mixin::FileTree
 
-  TEST_DIR = RES_DIR + 'lintdir' + 'flac'
+  TEST_DIR = RES_DIR.join('lintdir', 'flac')
 
   def test_content_under
     assert_equal(
@@ -31,7 +31,7 @@ class Test < MiniTest::Test
     assert_equal(24, result.size)
     assert(result.all? { |k, v| k.is_a?(Pathname) && v.is_a?(String) })
     assert_equal(
-      Pathname.new(TEST_DIR + 'fall.eds_babe' + '04.fall.free_ranger.flac'),
+      TEST_DIR.join('fall.eds_babe', '04.fall.free_ranger.flac'),
       result.key('fall.free_ranger.flac')
     )
   end

@@ -11,7 +11,7 @@ class TestAlbumdisc < MiniTest::Test
 
   def setup
     @t = Aur::Command::Albumdisc.new(
-      RES_DIR + '01.test_artist.untagged_song.flac'
+      RES_DIR.join('01.test_artist.untagged_song.flac')
     )
   end
 

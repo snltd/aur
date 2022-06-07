@@ -7,11 +7,13 @@ require_relative '../../../lib/aur/commands/name2tag'
 # Test for name2tag command
 #
 class TestName2tag < MiniTest::Test
-  N2T_DIR = RES_DIR + 'name2tag' + 'null_set.some_stuff_by'
+  N2T_DIR = RES_DIR.join('name2tag', 'null_set.some_stuff_by')
 
   def test_flac_and_mp3
     SUPPORTED_TYPES.each do |_type|
-      t1 = Aur::Command::Name2tag.new(RES_DIR + 'test_tone-100hz.flac')
+      t1 = Aur::Command::Name2tag.new(
+        RES_DIR.join('test_tone-100hz.flac')
+      )
 
       assert_equal(
         { artist: 'Unknown Artist',
@@ -21,7 +23,9 @@ class TestName2tag < MiniTest::Test
         t1.tags_from_filename
       )
 
-      t2 = Aur::Command::Name2tag.new(N2T_DIR + '01.the_null_set.song_one.mp3')
+      t2 = Aur::Command::Name2tag.new(
+        N2T_DIR.join('01.the_null_set.song_one.mp3')
+      )
 
       assert_equal(
         { artist: 'The Null Set',

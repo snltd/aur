@@ -73,7 +73,7 @@ class TestSetCommand < MiniTest::Test
   def test_set_invalid_tag
     SUPPORTED_TYPES.each do |type|
       with_test_file("01.test_artist.untagged_song.#{type}") do |f|
-        assert_output('', +"ERROR: #{f}: 'Five' is an invalid t_num\n") do
+        assert_output('', "ERROR: #{f}: 'Five' is an invalid t_num\n") do
           assert_raises(SystemExit) { set_command(f, 't_num', 'Five') }
         end
 

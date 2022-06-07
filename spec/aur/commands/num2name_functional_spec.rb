@@ -12,7 +12,7 @@ class TestNum2NameCommand < MiniTest::Test
   def test_num2name
     SUPPORTED_TYPES.each do |type|
       with_test_file("bad_name.#{type}") do |f|
-        expected_file = TMP_DIR + "02.bad_name.#{type}"
+        expected_file = TMP_DIR.join("02.bad_name.#{type}")
         refute(expected_file.exist?)
 
         assert_output("bad_name.#{type} -> 02.bad_name.#{type}\n", '') do
@@ -35,8 +35,8 @@ class TestNum2NameCommand < MiniTest::Test
   def test_num2name_no_number_tag
     SUPPORTED_TYPES.each do |type|
       setup_test_dir
-      source_file = TMP_DIR + "untagged_file.#{type}"
-      FileUtils.cp(RES_DIR + "01.test_artist.untagged_song.#{type}",
+      source_file = TMP_DIR.join("untagged_file.#{type}")
+      FileUtils.cp(RES_DIR.join("01.test_artist.untagged_song.#{type}"),
                    source_file)
 
       assert(source_file.exist?)
@@ -48,7 +48,7 @@ class TestNum2NameCommand < MiniTest::Test
       end
 
       refute(source_file.exist?)
-      assert (TMP_DIR + "00.untagged_file.#{type}").exist?
+      assert TMP_DIR.join("00.untagged_file.#{type}").exist?
       cleanup_test_dir
     end
   end

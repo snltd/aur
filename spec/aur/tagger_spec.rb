@@ -5,16 +5,18 @@ require_relative '../spec_helper'
 require_relative '../../lib/aur/tagger'
 require_relative '../../lib/aur/fileinfo'
 
+# Ensure files are tagged correctly
+#
 class TestTagger < MiniTest::Test
   attr_reader :t_mp3
 
   def setup
-    mp3info = Aur::FileInfo.new(RES_DIR + 'test_tone-100hz.mp3')
+    mp3info = Aur::FileInfo.new(RES_DIR.join('test_tone-100hz.mp3'))
     @t_mp3 = Aur::Tagger.new(mp3info, {})
   end
 
   def test_flac
-    flacinfo = Aur::FileInfo.new(RES_DIR + 'test_tone-100hz.flac')
+    flacinfo = Aur::FileInfo.new(RES_DIR.join('test_tone-100hz.flac'))
     t = Aur::Tagger.new(flacinfo, {})
 
     del = Spy.on(t.info.raw, :comment_del)
@@ -49,7 +51,7 @@ class TestTagger < MiniTest::Test
   end
 
   def test_validate
-    flacinfo = Aur::FileInfo.new(RES_DIR + 'test_tone-100hz.flac')
+    flacinfo = Aur::FileInfo.new(RES_DIR.join('test_tone-100hz.flac'))
     t = Aur::Tagger.new(flacinfo, {})
 
     assert_equal({ artist: 'Prince' }, t.validate(artist: 'Prince'))

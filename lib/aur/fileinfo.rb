@@ -45,7 +45,7 @@ module Aur
 
       return raw if raw.length <= max
 
-      raw[0..(max - 4)] + '...'
+      "#{raw[0..(max - 4)]}..."
     end
 
     # The f_ methods assume a file has a dot-separated name

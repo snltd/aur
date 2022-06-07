@@ -14,27 +14,32 @@ class TestArtfix < MiniTest::Test
   end
 
   def test_candidates
+    afdir = RES_DIR.join('artfix')
+
     assert_equal(
-      [RES_DIR + 'artfix' + 'albums/jesus_lizard.liar/cover.jpg',
-       RES_DIR + 'artfix' + 'albums/windy_and_carl.portal/Front.JPG',
-       RES_DIR + 'artfix' + 'eps/water_world.dead/front cover.Png'],
-      t.candidates(RES_DIR + 'artfix').sort
+      [
+        afdir.join('albums', 'jesus_lizard.liar/cover.jpg'),
+        afdir.join('albums', 'windy_and_carl.portal/Front.JPG'),
+        afdir.join('eps', 'water_world.dead/front cover.Png')
+      ],
+      t.candidates(afdir).sort
     )
 
-    assert_equal([], t.candidates(RES_DIR + 'lintdir' + 'flac'))
+    assert_equal([],
+                 t.candidates(RES_DIR.join('lintdir', 'flac')))
   end
 
   def test_new_name
     %w[something.jpg something.jpeg something.Jpg something.JPG].each do |f|
-      assert_equal(TMP_DIR + 'front.jpg', t.new_name(TMP_DIR + f))
+      assert_equal(TMP_DIR.join('front.jpg'), t.new_name(TMP_DIR + f))
     end
 
     %w[something.png something.PNG].each do |f|
-      assert_equal(TMP_DIR + 'front.png', t.new_name(TMP_DIR + f))
+      assert_equal(TMP_DIR.join('front.png'), t.new_name(TMP_DIR + f))
     end
 
     assert_raises(Aur::Exception::UnsupportedFiletype) do
-      t.new_name(TMP_DIR + 'something.tiff')
+      t.new_name(TMP_DIR.join('something.tiff'))
     end
   end
 end

@@ -12,7 +12,7 @@ class TestReencodeCommand < MiniTest::Test
     skip unless BIN[:ffmpeg].exist?
 
     with_test_file('test_tone-100hz.flac') do |f|
-      wav = TMP_DIR + 'test_tone-100hz.wav'
+      wav = TMP_DIR.join('test_tone-100hz.wav')
       original_tags = Aur::FileInfo.new(f).our_tags
 
       assert_output("#{f} -> #{wav}\n", '') do
@@ -42,8 +42,8 @@ class TestReencodeCommand < MiniTest::Test
     skip unless BIN[:ffmpeg].exist?
 
     SUPPORTED_TYPES.each do |type|
-      with_test_file(RES_DIR + "not_really_a.#{type}") do |f|
-        assert_output("#{f} -> #{TMP_DIR}/not_really_a.wav\n",
+      with_test_file(RES_DIR.join("not_really_a.#{type}")) do |f|
+        assert_output("#{f} -> #{TMP_DIR.join('not_really_a.wav')}\n",
                       "ERROR: cannot process '#{f}'.\n") do
           Aur::Action.new(:transcode, [f], '<newtype>': 'wav').run!
         end

@@ -4,6 +4,8 @@
 require_relative '../spec_helper'
 require_relative '../../lib/aur/tag_factory'
 
+# Ensure tags are generated correctly
+#
 class TestName2Tag < MiniTest::Test
   attr_reader :t
 

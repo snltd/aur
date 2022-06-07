@@ -31,6 +31,6 @@ class TestHelp < MiniTest::Test
   end
 
   def command_dir
-    Pathname.new(__dir__).parent.parent.parent + 'lib' + 'aur' + 'commands'
+    Pathname.new(__dir__).parent.parent.parent.join('lib', 'aur', 'commands')
   end
 end

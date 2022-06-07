@@ -10,7 +10,7 @@ class TestInfo < MiniTest::Test
   attr_reader :flac
 
   def setup
-    @flac = Aur::Command::Info.new(RES_DIR + 'test_tone-100hz.flac')
+    @flac = Aur::Command::Info.new(RES_DIR.join('test_tone-100hz.flac'))
   end
 
   def test_fmt_line

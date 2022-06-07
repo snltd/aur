@@ -10,7 +10,7 @@ class TestRetitle < MiniTest::Test
   attr_reader :t
 
   def setup
-    @t = Aur::Command::Retitle.new(RES_DIR + 'bad_name.flac')
+    @t = Aur::Command::Retitle.new(RES_DIR.join('bad_name.flac'))
   end
 
   def test_retitle

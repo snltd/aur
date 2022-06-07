@@ -3,6 +3,7 @@
 
 require_relative '../../spec_helper'
 require_relative '../../../lib/aur/commands/flac2mp3'
+require_relative '../../../lib/aur/constants'
 
 # Tests for flac2mp3 command
 #
@@ -10,19 +11,19 @@ class TestFlac2Mp3 < MiniTest::Test
   attr_reader :t
 
   def setup
-    @t = Aur::Command::Flac2mp3.new(RES_DIR + 'test_tone-100hz.flac')
+    @t = Aur::Command::Flac2mp3.new(RES_DIR.join('test_tone-100hz.flac'))
   end
 
   def test_construct_command
     assert_equal(
-      "/opt/local/bin/flac -dsc \"#{RES_DIR + 'test_tone-100hz.flac'}\" " \
-      '| /opt/local/bin/lame ' \
+      "#{BIN[:flac]} -dsc \"#{RES_DIR.join('test_tone-100hz.flac')}\" " \
+      "| #{BIN[:lame]} " \
       '-h --vbr-new --preset 128 --id3v2-only --add-id3v2 --silent ' \
       '--tt "Song Title" --ta "Band" --tl "Album Title" --ty "1993" ' \
-      "--tn \"4\" --tg \"Noise\" - \"#{RES_DIR + 'test_tone-100hz.mp3'}\"",
+      "--tn \"4\" --tg \"Noise\" - \"#{RES_DIR.join('test_tone-100hz.mp3')}\"",
       t.construct_command(
-        RES_DIR + 'test_tone-100hz.flac',
-        RES_DIR + 'test_tone-100hz.mp3',
+        RES_DIR.join('test_tone-100hz.flac'),
+        RES_DIR.join('test_tone-100hz.mp3'),
         test_tags
       )
     )

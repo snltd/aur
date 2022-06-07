@@ -8,7 +8,7 @@ module Aur
     class Help
       def initialize(command)
         require_relative command
-        puts "\n" + command_class(command).help + "\n"
+        puts "\n#{command_class(command).help}\n"
       end
 
       def command_class(command)

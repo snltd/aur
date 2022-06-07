@@ -7,17 +7,18 @@ require_relative '../../../lib/aur/action'
 # Run 'aur mp3dir' commands against real directories, and verify the results.
 #
 class TestMp3dir < MiniTest::Test
-  #
+  def setup
+    skip unless BIN[:flac].exist? && BIN[:lame].exist?
+  end
+
   # This might look a bit i_suck_and_my_tests_are_order_dependent, but I swear
   # it's fine. It saves me having to carry around a stack of different
   # half-populated directories.
   #
   def test_mp3dir
-    skip unless BIN[:flac].exist?
-
     with_test_file('mp3dir') do |dir|
-      source_dir = dir + 'flac' + 'artist.first_album'
-      expected_dir = dir + 'mp3' + 'artist.first_album'
+      source_dir = dir.join('flac', 'artist.first_album')
+      expected_dir = dir.join('mp3', 'artist.first_album')
       assert(source_dir.exist?)
       refute(expected_dir.exist?)
 
@@ -32,12 +33,12 @@ class TestMp3dir < MiniTest::Test
 
       original_mtimes = expected_dir.children.map(&:mtime)
 
-      assert (expected_dir + '01.artist.song_1.mp3').exist?
-      assert (expected_dir + '02.artist.song_2.mp3').exist?
+      assert expected_dir.join('01.artist.song_1.mp3').exist?
+      assert expected_dir.join('02.artist.song_2.mp3').exist?
 
       assert_equal(
-        Aur::FileInfo.new(source_dir + '01.artist.song_1.flac').our_tags,
-        Aur::FileInfo.new(expected_dir + '01.artist.song_1.mp3').our_tags
+        Aur::FileInfo.new(source_dir.join('01.artist.song_1.flac')).our_tags,
+        Aur::FileInfo.new(expected_dir.join('01.artist.song_1.mp3')).our_tags
       )
 
       # Running again should do nothing, because the MP3s already exist
@@ -48,7 +49,7 @@ class TestMp3dir < MiniTest::Test
       # Now remove one file and run again. It should be replaced, and the
       # other should be left alone
       #
-      (expected_dir + '02.artist.song_2.mp3').unlink
+      expected_dir.join('02.artist.song_2.mp3').unlink
 
       assert_output("#{source_dir}\n" \
                     "  -> 02.artist.song_2.mp3\n",
@@ -57,12 +58,13 @@ class TestMp3dir < MiniTest::Test
       end
 
       assert_equal(
-        original_mtimes.first, (expected_dir + '01.artist.song_1.mp3').mtime
+        original_mtimes.first,
+        expected_dir.join('01.artist.song_1.mp3').mtime
       )
 
       refute_equal(
         original_mtimes.last,
-        (expected_dir + '02.artist.song_2.mp3').mtime
+        expected_dir.join('02.artist.song_2.mp3').mtime
       )
 
       # Running with -f should overwrite both files
@@ -79,16 +81,14 @@ class TestMp3dir < MiniTest::Test
   end
 
   def test_mp3dir_tidy_up
-    skip unless BIN[:flac].exist?
-
     with_test_file('mp3dir') do |dir|
-      source_dir = dir + 'flac' + 'artist.first_album'
-      expected_dir = dir + 'mp3' + 'artist.first_album'
+      source_dir = dir.join('flac', 'artist.first_album')
+      expected_dir = dir.join('mp3', 'artist.first_album')
 
       FileUtils.mkdir_p(expected_dir)
-      bonus = expected_dir + '03.artist.rubbish_bonus_track.mp3'
+      bonus = expected_dir.join('03.artist.rubbish_bonus_track.mp3')
 
-      FileUtils.cp(RES_DIR + 'test_tone-100hz.mp3', bonus)
+      FileUtils.cp(RES_DIR.join('test_tone-100hz.mp3'), bonus)
 
       assert(source_dir.exist?)
       assert(expected_dir.exist?)
@@ -104,17 +104,15 @@ class TestMp3dir < MiniTest::Test
 
       assert expected_dir.exist?
 
-      assert (expected_dir + '01.artist.song_1.mp3').exist?
-      assert (expected_dir + '02.artist.song_2.mp3').exist?
+      assert expected_dir.join('01.artist.song_1.mp3').exist?
+      assert expected_dir.join('02.artist.song_2.mp3').exist?
       refute bonus.exist?
     end
   end
 
   def test_running_in_the_wrong_place
-    skip unless BIN[:flac].exist?
-
     with_test_file('lintdir') do |dir|
-      d = dir + 'mp3' + 'pram.meshes'
+      d = dir.join('mp3', 'pram.meshes')
 
       assert_output('',
                     "ERROR: Bad input: #{d} is not in /flac/ hierarchy\n") do
@@ -124,12 +122,10 @@ class TestMp3dir < MiniTest::Test
   end
 
   def test_running_against_a_file
-    skip unless BIN[:flac].exist?
-
     with_test_file('lintdir') do |dir|
-      f = dir + 'flac' + 'fall.eds_babe' + '04.fall.free_ranger.flac'
+      f = dir.join('flac', 'fall.eds_babe', '04.fall.free_ranger.flac')
 
-      assert_output(f.to_s + "\n", "ERROR: Argument must be a directory.\n") do
+      assert_output("#{f}\n", "ERROR: Argument must be a directory.\n") do
         assert_raises(SystemExit) { act(f) }
       end
     end

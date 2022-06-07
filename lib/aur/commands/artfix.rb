@@ -32,9 +32,9 @@ module Aur
 
         case old_name.extname.downcase
         when '.jpg', '.jpeg'
-          dir + 'front.jpg'
+          dir.join('front.jpg')
         when '.png'
-          dir + 'front.png'
+          dir.join('front.png')
         else
           raise Aur::Exception::UnsupportedFiletype
         end

@@ -4,15 +4,17 @@
 require_relative '../spec_helper'
 require_relative '../../lib/aur/tag_validator'
 
+# Ensure tags are validated correctly
+#
 class TestTagValidator < MiniTest::Test
   attr_reader :lax, :strict
 
   def setup
     @lax = Aur::TagValidator.new(nil, strict: false)
     @strict = Aur::TagValidator.new(
-      Aur::FileInfo.new(RES_DIR +
-                        'lint' +
-                        '02.singer_and_the_band.file_for_test.flac'),
+      Aur::FileInfo.new(
+        RES_DIR.join('lint', '02.singer_and_the_band.file_for_test.flac')
+      ),
       strict: true
     )
   end

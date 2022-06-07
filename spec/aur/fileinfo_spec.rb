@@ -10,8 +10,8 @@ class TestFileInfo < MiniTest::Test
   attr_reader :flac, :mp3
 
   def setup
-    @flac = Aur::FileInfo.new(RES_DIR + 'test_tone-100hz.flac')
-    @mp3 = Aur::FileInfo.new(RES_DIR + 'test_tone-100hz.mp3')
+    @flac = Aur::FileInfo.new(RES_DIR.join('test_tone-100hz.flac'))
+    @mp3 = Aur::FileInfo.new(RES_DIR.join('test_tone-100hz.mp3'))
   end
 
   def test_bitrate
@@ -55,46 +55,48 @@ class TestFileInfo < MiniTest::Test
   end
 
   def test_partner
-    fdir = TMP_DIR + 'flac' + 'singer.lp'
-    mdir = TMP_DIR + 'mp3' + 'singer.lp'
+    fdir = TMP_DIR.join('flac', 'singer.lp')
+    mdir = TMP_DIR.join('mp3', 'singer.lp')
 
     FileUtils.mkdir_p(fdir)
-    FileUtils.touch(fdir + '01.singer.song.flac')
+    FileUtils.touch(fdir.join('01.singer.song.flac'))
     FileUtils.mkdir_p(mdir)
-    FileUtils.touch(mdir + '01.singer.song.mp3')
+    FileUtils.touch(mdir.join('01.singer.song.mp3'))
 
     assert_equal(
-      fdir + '01.singer.song.flac', mp3.partner(mdir + '01.singer.song.mp3')
+      fdir.join('01.singer.song.flac'),
+      mp3.partner(mdir.join('01.singer.song.mp3'))
     )
 
     assert_equal(
-      mdir + '01.singer.song.mp3', flac.partner(fdir + '01.singer.song.flac')
+      mdir.join('01.singer.song.mp3'),
+      flac.partner(fdir.join('01.singer.song.flac'))
     )
 
-    FileUtils.rm_r(TMP_DIR + 'flac')
-    FileUtils.rm_r(TMP_DIR + 'mp3')
+    FileUtils.rm_r(TMP_DIR.join('flac'))
+    FileUtils.rm_r(TMP_DIR.join('mp3'))
   end
 
   def test_prt_name
     assert_equal(
       'test_tone-100hz.flac',
-      Aur::FileInfo.new(RES_DIR + 'test_tone-100hz.flac').prt_name
+      Aur::FileInfo.new(RES_DIR.join('test_tone-100hz.flac')).prt_name
     )
     assert_equal(
       'test_tone...',
-      Aur::FileInfo.new(RES_DIR + 'test_tone-100hz.flac').prt_name(12)
+      Aur::FileInfo.new(RES_DIR.join('test_tone-100hz.flac')).prt_name(12)
     )
   end
 
   def test_picture?
     refute(flac.picture?)
-    with_pic = Aur::FileInfo.new(RES_DIR + 'unstripped.flac')
+    with_pic = Aur::FileInfo.new(RES_DIR.join('unstripped.flac'))
     assert(with_pic.picture?)
   end
 
   def test_unsupported
     assert_raises(Aur::Exception::UnsupportedFiletype) do
-      Aur::FileInfo.new(RES_DIR + 'front.png')
+      Aur::FileInfo.new(RES_DIR.join('front.png'))
     end
 
     assert_raises(Aur::Exception::UnsupportedFiletype) do
