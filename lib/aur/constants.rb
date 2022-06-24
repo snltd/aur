@@ -37,14 +37,13 @@ ALL_CAPS = %w[ok dj lp ep l.a. bmr bbc scsi ii iii iv vi vii ix xi cd fm tko
               dvd tnt acd csi xr3 acac 4ad3dcd vip kfc uvtv nme gf bf abba bmx
               fc 3cp a&r r&b ihop lsd lcd lp2 mbv pcp urc uk nato afx mj ac/dc
               jxl tm usm klf m/a/r/r/s mc5 ps tv gtg bnoc nypd mtv od afx2
-              mc brkn01 brkn02 brkn03].freeze
+              npl mc brkn01 brkn02 brkn03].freeze
 
 # These words should be ignored when examining case
 #
 IGNORE_CASE = %w[d'isan o'keefe mcgee mcintyre ça b's mccay mccoy lps eps mxbx
                  mccarthy d'or a: iiia iiib 5-6-7-8's v/vm mccartney mms
-                 mcalmont mccarthy
-                 tatu d'arby mccombs mcdonalds].freeze
+                 mcalmont mccarthy x tatu d'arby mccombs mcdonalds us].freeze
 
 # The keys of this hash are expanded to the corresponding value when
 # generating tags. Some of these contractions are, of course, real words, but
