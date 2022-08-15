@@ -17,14 +17,20 @@ module Aur
 
       def run
         if opts[:all]
-          retitle_album
-          retitle_title
-          retitle_artist
+          retitle_all
         elsif opts[:album]
           retitle_album
+        elsif opts[:artist]
+          retitle_artist
         else
           retitle_title
         end
+      end
+
+      def retitle_all
+        retitle_album
+        retitle_title
+        retitle_artist
       end
 
       def retitle_album

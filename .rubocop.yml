@@ -1,5 +1,8 @@
 ---
 
+Layout/LineContinuationLeadingSpace:
+  Enabled: false
+
 AllCops:
   TargetRubyVersion: 3.0
   NewCops: enable
