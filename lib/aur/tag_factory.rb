@@ -10,18 +10,13 @@ module Aur
   #
   class TagFactory
     #
-    # Turn a filename-safe string, like 'Blue Bell Knoll' into a tag like
+    # Turn a filename-safe string, like 'blue_bell_knoll' into a tag like
     # 'Blue Bell Knoll'.
     #
     def title(string)
       @in_brackets = false
-      strings = string.split('_')
-
-      words = strings.map.with_index do |s, index|
-        handle_string(s, index, strings.count)
-      end
-
-      join_up(words)
+      str = string.split('_')
+      join_up(str.map.with_index { |s, i| handle_string(s, i, str.count) })
     end
 
     alias album title
@@ -75,18 +70,18 @@ module Aur
       if string.match?(/^([a-z]-)+\w?/)
         string.initials
       elsif string.include?('--')
-        handle_long_dash(string, index, count)
+        handle_long_dash(string)
       elsif string.include?('-')
-        handle_short_dash(string)
+        handle_short_dash(string, index, count)
       else
         smart_capitalize(string.expand, index, count)
       end
     end
 
-    # A single dash denotes brackets opening or closing.
+    # A double dash denotes brackets opening or closing.
     #
-    def handle_short_dash(string)
-      words = string.split('-')
+    def handle_long_dash(string)
+      words = string.split('--')
       @in_brackets ? close_brackets(words) : open_brackets(words)
     end
 
@@ -97,7 +92,7 @@ module Aur
     def open_brackets(words)
       @in_brackets = true
       first = words.first.expand(:caps)
-      inner = words[1].expand(:caps)
+      inner = handle_string(words[1], -1, -1)
 
       return "#{first} (#{inner}" if words.size < 3
 
@@ -113,10 +108,10 @@ module Aur
       "#{words[0].expand(:caps)}) #{words[1].expand(:caps)}"
     end
 
-    # A long dash is a hyphen
+    # A short dash is a hyphen
     #
-    def handle_long_dash(string, index, count)
-      words = string.split('--')
+    def handle_short_dash(string, index, count)
+      words = string.split('-')
       words.map { |w| smart_capitalize(w.expand, index, count) }.join('-')
     end
 

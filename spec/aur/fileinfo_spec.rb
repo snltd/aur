@@ -10,8 +10,8 @@ class TestFileInfo < MiniTest::Test
   attr_reader :flac, :mp3
 
   def setup
-    @flac = Aur::FileInfo.new(RES_DIR.join('test_tone-100hz.flac'))
-    @mp3 = Aur::FileInfo.new(RES_DIR.join('test_tone-100hz.mp3'))
+    @flac = Aur::FileInfo.new(RES_DIR.join('test_tone--100hz.flac'))
+    @mp3 = Aur::FileInfo.new(RES_DIR.join('test_tone--100hz.mp3'))
   end
 
   def test_bitrate
@@ -79,12 +79,12 @@ class TestFileInfo < MiniTest::Test
 
   def test_prt_name
     assert_equal(
-      'test_tone-100hz.flac',
-      Aur::FileInfo.new(RES_DIR.join('test_tone-100hz.flac')).prt_name
+      'test_tone--100hz.flac',
+      Aur::FileInfo.new(RES_DIR.join('test_tone--100hz.flac')).prt_name
     )
     assert_equal(
       'test_tone...',
-      Aur::FileInfo.new(RES_DIR.join('test_tone-100hz.flac')).prt_name(12)
+      Aur::FileInfo.new(RES_DIR.join('test_tone--100hz.flac')).prt_name(12)
     )
   end
 

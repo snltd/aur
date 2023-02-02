@@ -10,18 +10,18 @@ class TestTag2name < MiniTest::Test
   attr_reader :flac, :mp3
 
   def setup
-    @flac = Aur::Command::Tag2name.new(RES_DIR.join('test_tone-100hz.flac'))
-    @mp3 = Aur::Command::Tag2name.new(RES_DIR.join('test_tone-100hz.mp3'))
+    @flac = Aur::Command::Tag2name.new(RES_DIR.join('test_tone--100hz.flac'))
+    @mp3 = Aur::Command::Tag2name.new(RES_DIR.join('test_tone--100hz.mp3'))
   end
 
   def test_run
     mv = Spy.on(FileUtils, :mv)
-    assert_output("test_tone-100hz.flac -> 06.test_tones.100hz.flac\n", '') do
+    assert_output("test_tone--100hz.flac -> 06.test_tones.100hz.flac\n", '') do
       flac.run
     end
 
     assert(mv.has_been_called?)
-    assert_equal([RES_DIR.join('test_tone-100hz.flac'),
+    assert_equal([RES_DIR.join('test_tone--100hz.flac'),
                   RES_DIR.join('06.test_tones.100hz.flac')],
                  mv.calls.first.args)
   end

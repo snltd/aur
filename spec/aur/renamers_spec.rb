@@ -42,8 +42,8 @@ class TestRenamers < MiniTest::Test
                  renumbered_file(4, Pathname.new('/a/02.somefile.flac')))
     assert_equal(Pathname.new('/a/04.band.song.mp3'),
                  renumbered_file(4, Pathname.new('/a/13.band.song.mp3')))
-    assert_equal(RES_DIR.join('19.test_tone-100hz.flac'),
-                 renumbered_file(19, RES_DIR.join('test_tone-100hz.flac')))
+    assert_equal(RES_DIR.join('19.test_tone--100hz.flac'),
+                 renumbered_file(19, RES_DIR.join('test_tone--100hz.flac')))
   end
 
   def test_rename_file_ok
@@ -85,14 +85,14 @@ class TestRenamers < MiniTest::Test
                            t_num: 5 })
 
     assert_equal('someone_and_the_somethings', artist_fname(input))
-    assert_equal('hey_whats_this-this_and_that', track_fname(input))
+    assert_equal('hey_whats_this--this_and_that', track_fname(input))
     assert_equal('12_songs_and_some_noise', album_fname(input))
   end
 end
 
 def flac_info
-  Aur::FileInfo.new(RES_DIR.join('test_tone-100hz.flac'))
-  #  Filename : ../resources/test_tone-100hz.flac
+  Aur::FileInfo.new(RES_DIR.join('test_tone--100hz.flac'))
+  #  Filename : ../resources/test_tone--100hz.flac
   #      Type : flac
   #   Bitrate : 16-bit/44100Hz
   #    Artist : Test Tones

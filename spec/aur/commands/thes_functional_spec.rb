@@ -11,7 +11,7 @@ class TestThesCommand < MiniTest::Test
 
   def test_flac_thes
     SUPPORTED_TYPES.each do |type|
-      with_test_file("test_tone-100hz.#{type}") do |f|
+      with_test_file("test_tone--100hz.#{type}") do |f|
         assert_tag(f, :artist, 'Test Tones')
 
         assert_output("      artist -> The Test Tones\n", '') do

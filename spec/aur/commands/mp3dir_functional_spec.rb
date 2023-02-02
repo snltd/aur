@@ -88,7 +88,7 @@ class TestMp3dir < MiniTest::Test
       FileUtils.mkdir_p(expected_dir)
       bonus = expected_dir.join('03.artist.rubbish_bonus_track.mp3')
 
-      FileUtils.cp(RES_DIR.join('test_tone-100hz.mp3'), bonus)
+      FileUtils.cp(RES_DIR.join('test_tone--100hz.mp3'), bonus)
 
       assert(source_dir.exist?)
       assert(expected_dir.exist?)

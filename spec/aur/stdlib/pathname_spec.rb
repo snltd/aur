@@ -14,10 +14,10 @@ class TestPathname < MiniTest::Test
   end
 
   def test_prefixed
-    assert_equal(RES_DIR.join('_test_tone-100hz.flac'),
-                 RES_DIR.join('test_tone-100hz.flac').prefixed)
-    assert_equal(RES_DIR.join('xxtest_tone-100hz.flac'),
-                 RES_DIR.join('test_tone-100hz.flac').prefixed('xx'))
+    assert_equal(RES_DIR.join('_test_tone--100hz.flac'),
+                 RES_DIR.join('test_tone--100hz.flac').prefixed)
+    assert_equal(RES_DIR.join('xxtest_tone--100hz.flac'),
+                 RES_DIR.join('test_tone--100hz.flac').prefixed('xx'))
   end
 
   def test_no_tnum

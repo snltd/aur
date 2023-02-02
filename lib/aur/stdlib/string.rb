@@ -12,20 +12,19 @@ class String
   #   - replace accented characters with basic Latin
   #   - make lowercase
   #   - remove anything that's not a letter, number, underscore or hyphen
-  #   - things in brackets have the brackets removed and a dash put in front
+  #   - things in brackets have the brackets removed and -- put in front
   #     and/or behind
   #   - turn all whitespace to a single underscore
   #   - turn '_-_' into a single hyphen
-  #   - turn a hyphenated word into word--word
+  #   - turn a hyphenated word into word-word, removing spaces
   #
   def to_safe
     I18n.transliterate(String.new(self).force_encoding('utf-8'))
         .strip
         .downcase
         .gsub('&', 'and')
-        .gsub(/(\S)-(\S)/, '\1--\2')
-        .gsub(/\s+\(/, '-')
-        .gsub(/\)\s+/, '-')
+        .gsub(/\s+\(/, '--')
+        .gsub(/\)\s+/, '--')
         .gsub(/\s+/, '_')
         .gsub(/[^\w-]/, '')
         .gsub(/_-_/, '-')
@@ -41,8 +40,7 @@ class String
   end
 
   # I separate initials with a dash. So y-m-c-a => Y.M.C.A. (including the
-  # trailing dot.) Because we also do brackets with a '-', this isn't going to
-  # be perfect, but I think it's near enough.
+  # trailing dot.)
   #
   def initials
     "#{tr('-', '.')}.".upcase
