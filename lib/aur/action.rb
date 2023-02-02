@@ -84,7 +84,7 @@ module Aur
       end
 
       warn "ERROR: cannot process '#{file}'.".bold
-      @errs.<< file.to_s
+      @errs << file.to_s
     rescue Aur::Exception::InvalidTagValue => e
       die "#{file}: #{e}"
     rescue Aur::Exception::InvalidTagName => e

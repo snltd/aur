@@ -25,12 +25,12 @@ Gem::Specification.new do |gem|
   gem.metadata['rubygems_mfa_required'] = 'true'
 
   gem.add_runtime_dependency 'colorize', '~> 0.8'
-  gem.add_runtime_dependency 'docopt', '~> 0.6.0'
-  gem.add_runtime_dependency 'flacinfo-rb', '~> 1.0.0'
-  gem.add_runtime_dependency 'i18n', '~> 1.8.0'
-  gem.add_runtime_dependency 'ruby-mp3info', '~> 0.8.0'
+  gem.add_runtime_dependency 'docopt', '~> 0.6'
+  gem.add_runtime_dependency 'flacinfo-rb', '~> 1.0'
+  gem.add_runtime_dependency 'i18n', '~> 1.12'
+  gem.add_runtime_dependency 'ruby-mp3info', '~> 0.8'
 
-  gem.add_development_dependency 'minitest', '~> 5.14'
+  gem.add_development_dependency 'minitest', '~> 5.17'
   gem.add_development_dependency 'rake', '~> 13.0'
   gem.add_development_dependency 'rubocop', '~> 1.0'
   gem.add_development_dependency 'rubocop-minitest', '~> 0.14'

@@ -123,7 +123,7 @@ module Aur
     # Join everything together, and close the brackets if need-be.
     #
     def join_up(words)
-      words.flatten.join(' ').tap { |str| str.<< ')' if @in_brackets }
+      words.flatten.join(' ').tap { |str| str << ')' if @in_brackets }
     end
   end
 end

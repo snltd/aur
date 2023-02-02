@@ -24,7 +24,7 @@ module Aur
 
       def lame_tag_opts(tags)
         lame_flag_map.each_pair.with_object([]) do |(flag, tag), aggr|
-          aggr.<< "#{flag} #{escaped(tags[tag])}" if tags.fetch(tag, false)
+          aggr << "#{flag} #{escaped(tags[tag])}" if tags.fetch(tag, false)
         end.join(' ')
       end
 
