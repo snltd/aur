@@ -16,7 +16,7 @@ module Aur
       def content_under(root, suffix)
         Pathname.glob("#{root}/**/").each_with_object([]) do |dir, aggr|
           fcount = dir.children.count { |d| d.extname == suffix }
-          aggr.<< [dir.relative_path_from(root), fcount] if fcount.positive?
+          aggr << [dir.relative_path_from(root), fcount] if fcount.positive?
         end.sort
       end
 

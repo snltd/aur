@@ -162,7 +162,7 @@ module Aur
         mp3.removetag1
         mp3.removetag2
 
-        original_tags.reject { |k, _v| tags.include?(k) }.each do |k, v|
+        original_tags.except(*tags).each do |k, v|
           mp3.tag2[k.upcase] = v
         end
       end

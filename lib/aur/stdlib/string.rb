@@ -53,7 +53,7 @@ class String
   def safe?
     return true if match?(/^[a-z0-9]$/)
 
-    match?(/^[a-z0-9][\w\-]*[a-z0-9]$/) && squeeze('_') == self
+    match?(/^[a-z0-9][\w-]*[a-z0-9]$/) && squeeze('_') == self
   end
 
   # Checks a string is 01-99
