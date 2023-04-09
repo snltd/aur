@@ -41,12 +41,10 @@ module Aur
     end
 
     def rename_file(file, dest)
-      if dest.exist? && dest.size.positive?
-        warn "#{dest} already exists"
-      else
-        rename_message(file, dest)
-        FileUtils.mv(file, dest)
-      end
+      return if dest.exist? && dest.size.positive?
+
+      rename_message(file, dest)
+      FileUtils.mv(file, dest)
     end
 
     def rename_message(file, dest)

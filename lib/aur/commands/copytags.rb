@@ -16,7 +16,7 @@ module Aur
       def run
         @partner = info.partner
         unless partner.exist?
-          puts "no partner at #{partner}"
+          warn "no partner at #{partner}"
           return
         end
 
@@ -30,7 +30,7 @@ module Aur
 
         return true if opts[:forcemod] && partner.mtime > file.mtime
 
-        tags.values.any?(&:nil?)
+        tags.values.any?(&:nil?) # So "tracks" files will always get retagged
       end
 
       def copy_tags

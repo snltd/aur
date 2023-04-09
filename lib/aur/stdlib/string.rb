@@ -18,17 +18,29 @@ class String
   #   - turn '_-_' into a single hyphen
   #   - turn a hyphenated word into word-word, removing spaces
   #
+  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/AbcSize
   def to_safe
     I18n.transliterate(String.new(self).force_encoding('utf-8'))
         .strip
         .downcase
+        .gsub(%r{ [-/+>] }, '--')
+        .gsub(/[_-]{3,}/, 'blank')
+        .gsub(': ', '--')
+        .tr('/', '-')
+        .gsub(/\.(\w)/, '-\1')
+        .gsub('+', 'plus')
+        .gsub('@', 'at')
         .gsub('&', 'and')
         .gsub(/\s+\(/, '--')
         .gsub(/\)\s+/, '--')
         .gsub(/\s+/, '_')
         .gsub(/[^\w-]/, '')
         .gsub(/_-_/, '-')
+        .gsub(/^[_-]+|[-_]+$/, '')
   end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
 
   # Expands words like "isnt" to "isn't".
   # @param style [Symbol] :caps forces capitalizition
