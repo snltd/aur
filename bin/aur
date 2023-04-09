@@ -63,7 +63,7 @@ docopt = <<~EOCMDS
     aur flac2mp3 <file>...
     aur mp3dir [-rf] <directory>...
     aur syncflac [-D]
-    aur wantflac
+    aur wantflac [-T]
     aur transcode <newtype> <file>...
     aur reencode <file>...
     aur tagconv [-N] <file>...
@@ -86,6 +86,7 @@ docopt = <<~EOCMDS
     -S, --artist        work on the track artist only
     -d, --delim STRING  machine-parseable output with given delimeter
     -t, --strict        compare actual to expected tags
+    -T, --tracks        single tracks only
     -f, --force         overwrite any existing files
     -m, --forcemod      modify MP3 tags if corresponding FLAC has a newer mtime
     -N, --novalidate    don't validate tags
