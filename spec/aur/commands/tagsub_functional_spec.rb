@@ -11,7 +11,7 @@ class TestTagsubCommand < MiniTest::Test
 
   def test_tagsub
     SUPPORTED_TYPES.each do |type|
-      with_test_file("test_tone-100hz.#{type}") do |f|
+      with_test_file("test_tone--100hz.#{type}") do |f|
         assert_tag(f, :artist, 'Test Tones')
 
         assert_output("      artist -> Test File\n", '') do
@@ -25,7 +25,7 @@ class TestTagsubCommand < MiniTest::Test
 
   def test_tagsub_backref
     SUPPORTED_TYPES.each do |type|
-      with_test_file("test_tone-100hz.#{type}") do |f|
+      with_test_file("test_tone--100hz.#{type}") do |f|
         assert_tag(f, :artist, 'Test Tones')
 
         assert_output("       album -> New Tone Test\n", '') do
@@ -39,7 +39,7 @@ class TestTagsubCommand < MiniTest::Test
 
   def test_tagsub_no_change
     SUPPORTED_TYPES.each do |type|
-      with_test_file("test_tone-100hz.#{type}") do |f|
+      with_test_file("test_tone--100hz.#{type}") do |f|
         assert_tag(f, :artist, 'Test Tones')
         assert_silent { tagsub_command(f, :artist, 'Junk', 'Nonsense') }
         assert_tag(f, :artist, 'Test Tones')
@@ -49,7 +49,7 @@ class TestTagsubCommand < MiniTest::Test
 
   def test_flac_tagsub_bad_tag
     assert_output('', "'badtag' tag not found.\n") do
-      tagsub_command(RES_DIR.join('test_tone-100hz.flac'), :badtag, 'find',
+      tagsub_command(RES_DIR.join('test_tone--100hz.flac'), :badtag, 'find',
                      'replace')
     end
   end

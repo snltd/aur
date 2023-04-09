@@ -11,7 +11,7 @@ class TestTagconvCommand < MiniTest::Test
   # include Aur::CommandTests
 
   def test_remove_v1_tags_from_file_with_both
-    with_test_file('test_tone-100hz.mp3') do |f|
+    with_test_file('test_tone--100hz.mp3') do |f|
       info = Aur::FileInfo.new(f)
 
       v1_tags = { 'title' => '100hz',

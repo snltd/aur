@@ -12,7 +12,7 @@ class TestName2tag < MiniTest::Test
   def test_flac_and_mp3
     SUPPORTED_TYPES.each do |_type|
       t1 = Aur::Command::Name2tag.new(
-        RES_DIR.join('test_tone-100hz.flac')
+        RES_DIR.join('test_tone--100hz.flac')
       )
 
       assert_equal(

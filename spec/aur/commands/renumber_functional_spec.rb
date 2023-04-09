@@ -12,12 +12,12 @@ class TestRenumberCommand < MiniTest::Test
 
   def test_renumber_up
     SUPPORTED_TYPES.each do |type|
-      with_test_file("test_tone-100hz.#{type}") do |f|
+      with_test_file("test_tone--100hz.#{type}") do |f|
         assert_tag(f, :t_num, '6')
-        outfile = "09.test_tone-100hz.#{type}"
+        outfile = "09.test_tone--100hz.#{type}"
 
         assert_output(
-          "       t_num -> 9\ntest_tone-100hz.#{type} -> #{outfile}\n",
+          "       t_num -> 9\ntest_tone--100hz.#{type} -> #{outfile}\n",
           ''
         ) do
           renumber_command(f, :up, '3')
@@ -30,12 +30,12 @@ class TestRenumberCommand < MiniTest::Test
 
   def test_flac_renumber_down
     SUPPORTED_TYPES.each do |type|
-      with_test_file("test_tone-100hz.#{type}") do |f|
+      with_test_file("test_tone--100hz.#{type}") do |f|
         assert_tag(f, :t_num, '6')
-        outfile = "02.test_tone-100hz.#{type}"
+        outfile = "02.test_tone--100hz.#{type}"
 
         assert_output(
-          "       t_num -> 2\ntest_tone-100hz.#{type} -> #{outfile}\n",
+          "       t_num -> 2\ntest_tone--100hz.#{type} -> #{outfile}\n",
           ''
         ) do
           renumber_command(f, :down, '4')
@@ -48,7 +48,7 @@ class TestRenumberCommand < MiniTest::Test
 
   def test_flac_renumber_down_too_far
     SUPPORTED_TYPES.each do |type|
-      with_test_file("test_tone-100hz.#{type}") do |f|
+      with_test_file("test_tone--100hz.#{type}") do |f|
         assert_tag(f, :t_num, '6')
 
         assert_output('',

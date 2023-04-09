@@ -10,7 +10,7 @@ require_relative '../../lib/aur/tagger'
 class TestTaggerFunctional < MiniTest::Test
   def test_tagging
     SUPPORTED_TYPES.each do |type|
-      with_test_file("test_tone-100hz.#{type}") do |f|
+      with_test_file("test_tone--100hz.#{type}") do |f|
         info = Aur::FileInfo.new(f)
         file = Aur::Tagger.new(info)
 

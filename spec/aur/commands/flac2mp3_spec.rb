@@ -11,19 +11,19 @@ class TestFlac2Mp3 < MiniTest::Test
   attr_reader :t
 
   def setup
-    @t = Aur::Command::Flac2mp3.new(RES_DIR.join('test_tone-100hz.flac'))
+    @t = Aur::Command::Flac2mp3.new(RES_DIR.join('test_tone--100hz.flac'))
   end
 
   def test_construct_command
     assert_equal(
-      "#{BIN[:flac]} -dsc \"#{RES_DIR.join('test_tone-100hz.flac')}\" " \
+      "#{BIN[:flac]} -dsc \"#{RES_DIR.join('test_tone--100hz.flac')}\" " \
       "| #{BIN[:lame]} " \
       '-h --vbr-new --preset 128 --id3v2-only --add-id3v2 --silent ' \
       '--tt "Song Title" --ta "Band" --tl "Album Title" --ty "1993" ' \
-      "--tn \"4\" --tg \"Noise\" - \"#{RES_DIR.join('test_tone-100hz.mp3')}\"",
+      "--tn \"4\" --tg \"Noise\" - \"#{RES_DIR.join('test_tone--100hz.mp3')}\"",
       t.construct_command(
-        RES_DIR.join('test_tone-100hz.flac'),
-        RES_DIR.join('test_tone-100hz.mp3'),
+        RES_DIR.join('test_tone--100hz.flac'),
+        RES_DIR.join('test_tone--100hz.mp3'),
         test_tags
       )
     )

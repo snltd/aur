@@ -13,7 +13,7 @@ class TestReencodeCommand < MiniTest::Test
   end
 
   def test_reencode_flac
-    with_test_file('test_tone-100hz.flac') do |f|
+    with_test_file('test_tone--100hz.flac') do |f|
       original_mtime = f.mtime
       original_tags = Aur::FileInfo.new(f).our_tags
 
@@ -30,7 +30,7 @@ class TestReencodeCommand < MiniTest::Test
   end
 
   def test_reencode_mp3
-    with_test_file('test_tone-100hz.mp3') do |f|
+    with_test_file('test_tone--100hz.mp3') do |f|
       original_mtime = f.mtime
       original_tags = Aur::FileInfo.new(f).our_tags
 

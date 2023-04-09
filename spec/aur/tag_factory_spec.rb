@@ -13,6 +13,11 @@ class TestName2Tag < MiniTest::Test
     @t = Aur::TagFactory.new
   end
 
+  def test_merp
+    assert_equal('The (I.N.I.T.I.A.L.S.) In Brackets',
+                 t.title('the--i-n-i-t-i-a-l-s--in_brackets'))
+  end
+
   def test_title_plain
     assert_equal('Blue Bell Knoll', t.title('blue_bell_knoll'))
   end
@@ -32,40 +37,36 @@ class TestName2Tag < MiniTest::Test
                  t.title('you_cant_hold_what_you_havent_got_in_your_hand'))
   end
 
-  def test_title_brackets_at_end
-    assert_equal('Suburbia (The Full Horror)',
-                 t.title('suburbia-the_full_horror'))
-    assert_equal('Om Mani Padme Hum 3 (Piano Version)',
-                 t.title('om_mani_padme_hum_3-piano_version'))
-    assert_equal('Drumming (Part III)', t.title('drumming-part_iii'))
-  end
-
   def test_title_inches
-    assert_equal('I Feel Love (12" Mix)', t.title('i_feel_love-12inch_mix'))
-    assert_equal('Fugitive (7" Mix)', t.title('fugitive-7inch_mix'))
+    assert_equal('I Feel Love (12" Mix)', t.title('i_feel_love--12inch_mix'))
+    assert_equal('Fugitive (7" Mix)', t.title('fugitive--7inch_mix'))
   end
 
-  def test_title_long_dash
-    assert_equal('When-Never', t.title('when--never'))
-    assert_equal('Who-What and Maybe-Not',
-                 t.title('who--what_and_maybe--not'))
-    assert_equal('Tick-Tock-Tick-Tock',
-                 t.title('tick--tock--tick--tock'))
+  def test_title_hyphen
+    assert_equal('When-Never', t.title('when-never'))
+    assert_equal('Who-What and Maybe-Not', t.title('who-what_and_maybe-not'))
+    assert_equal('Tick-Tock-Tick-Tock', t.title('tick-tock-tick-tock'))
   end
 
   def test_title_brackets_in_middle
     assert_equal('This Is (Almost) Too Easy',
-                 t.title('this_is-almost-too_easy'))
+                 t.title('this_is--almost--too_easy'))
     assert_equal('Can We Make It (Just a Little Bit) Harder',
-                 t.title('can_we_make_it-just_a_little_bit-harder'))
+                 t.title('can_we_make_it--just_a_little_bit--harder'))
     assert_equal('Title Ending In (Bracketed Words)',
-                 t.title('title_ending_in-bracketed_words'))
-    assert_equal('The (I.N.I.T.I.A.L.S.) In Brackets',
-                 t.title('the-i-n-i-t-i-a-l-s-in_brackets'))
+                 t.title('title_ending_in--bracketed_words'))
     assert_equal('Two (Lots) Of Brackets (Is Tricky)',
-                 t.title('two-lots-of_brackets-is_tricky'))
+                 t.title('two--lots--of_brackets--is_tricky'))
     assert_equal('Variations 3 (Canon on the Unison)',
-                 t.title('variations_3-canon_on_the_unison'))
+                 t.title('variations_3--canon_on_the_unison'))
+  end
+
+  def test_title_brackets_at_end
+    assert_equal('Suburbia (The Full Horror)',
+                 t.title('suburbia--the_full_horror'))
+    assert_equal('Om Mani Padme Hum 3 (Piano Version)',
+                 t.title('om_mani_padme_hum_3--piano_version'))
+    assert_equal('Drumming (Part III)', t.title('drumming--part_iii'))
   end
 
   def test_title_initials

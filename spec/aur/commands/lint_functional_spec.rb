@@ -32,13 +32,13 @@ class TestLintCommand < MiniTest::Test
 
   def test_good_flac_with_bad_name
     assert_output('', /Invalid file name$/) do
-      act(RES_DIR.join('test_tone-100hz.flac'))
+      act(RES_DIR.join('test_tone--100hz.flac'))
     end
   end
 
   def test_good_mp3_with_bad_name
     assert_output('', /Invalid file name$/) do
-      act(RES_DIR.join('test_tone-100hz.mp3'))
+      act(RES_DIR.join('test_tone--100hz.mp3'))
     end
   end
 
