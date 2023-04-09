@@ -23,7 +23,8 @@ LAME_FLAGS = '-h --vbr-new --preset 128 --id3v2-only --add-id3v2 --silent'
 #
 NO_CAPS = %w[a am an and are as as at by de featuring for from in is it into la
              le nor of off on onto or out per so than that the till to o'clock
-             au ne pas es se ce its oclock
+             au ne pas es se ce its oclock kd lang bloweyelashwish
+             lovesliescrushing case/lang/viers
              est dans isnt des te du un une et too via vs when with].freeze
 
 # These words should always be fully upper-cased.
@@ -37,12 +38,13 @@ ALL_CAPS = %w[ok dj lp ep l.a. bmr bbc scsi ii iii iv vi vii ix xi cd fm tko
               dvd tnt acd csi xr3 acac 4ad3dcd vip kfc uvtv nme gf bf abba bmx
               fc 3cp a&r r&b ihop lsd lcd lp2 mbv pcp urc uk nato afx mj ac/dc
               jxl tm usm klf m/a/r/r/s mc5 ps tv gtg bnoc nypd mtv od afx2
-              krk npl mc brkn01 brkn02 brkn03].freeze
+              xxx isan krk npl mc brkn01 brkn02 brkn03].freeze
 
 # These words should be ignored when examining case
 #
 IGNORE_CASE = %w[d'isan o'keefe mcgee mcintyre ça b's mccay mccoy lps eps mxbx
                  mccarthy d'or a: iiia iiib 5-6-7-8's v/vm mccartney mms
+                 mcculloch hearts!attack
                  mcalmont mccarthy x tatu d'arby mccombs mcdonalds us].freeze
 
 # The keys of this hash are expanded to the corresponding value when

@@ -61,9 +61,7 @@ class TestRenamers < MiniTest::Test
     with_test_file('01.test_artist.untagged_song.mp3') do |f|
       FileUtils.cp(RES_DIR.join('bad_name.mp3'), TMP_DIR)
 
-      assert_output('', "#{TMP_DIR}/bad_name.mp3 already exists\n") do
-        rename_file(f, TMP_DIR.join('bad_name.mp3'))
-      end
+      assert_silent { rename_file(f, TMP_DIR.join('bad_name.mp3')) }
     end
   end
 
@@ -87,6 +85,22 @@ class TestRenamers < MiniTest::Test
     assert_equal('someone_and_the_somethings', artist_fname(input))
     assert_equal('hey_whats_this--this_and_that', track_fname(input))
     assert_equal('12_songs_and_some_noise', album_fname(input))
+  end
+
+  def test_initials
+    input = TestTags.new(artist: 'R.E.M.',
+                         title: 'R.S.V.P.',
+                         album: 'The I.R.S. Years',
+                         t_num: 4)
+
+    assert_equal('r-e-m', artist_fname(input))
+    assert_equal('r-s-v-p', track_fname(input))
+    assert_equal('the_i-r-s_years', album_fname(input))
+  end
+
+  def test_slash
+    input = TestTags.new(title: 'Reception / Group Therapy')
+    assert_equal('reception--group_therapy', track_fname(input))
   end
 end
 
