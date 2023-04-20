@@ -27,6 +27,7 @@ class TestTagValidator < MiniTest::Test
     assert lax.artist('Broadcast')
     assert lax.artist('Simon and Garfunkel')
     assert lax.artist('Simon And Garfunkel')
+    refute lax.artist('Broadcast;Broadcast')
     refute lax.artist('Simon & Garfunkel')
     refute lax.artist('')
     refute lax.artist(nil)

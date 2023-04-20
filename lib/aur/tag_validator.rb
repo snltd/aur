@@ -65,7 +65,8 @@ module Aur
     def artist(string)
       return false if string.nil?
 
-      !string.empty? && !string.include?('&') && string.strip == string
+      !string.empty? && !string.include?('&') && !string.include?(';') &&
+        string.strip == string
     end
 
     alias title artist
