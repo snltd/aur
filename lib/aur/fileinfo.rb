@@ -4,6 +4,7 @@ require 'flacinfo'
 require 'mp3info'
 require_relative 'exception'
 require_relative 'constants'
+require_relative 'helpers'
 require_relative 'stdlib/pathname'
 
 module Aur
@@ -12,6 +13,8 @@ module Aur
   # abstracting each supported filetype to a common interface.
   #
   class FileInfo
+    include Aur::Helpers
+
     attr_reader :file, :info, :raw, :opts
 
     # We don't currently use opts. Here for consistency.
@@ -22,6 +25,10 @@ module Aur
       @info = @raw = read
       @opts = opts
       post_initialize if respond_to?(:post_initialize)
+    end
+
+    def time
+      format_time((info.streaminfo['total_samples'] / info.streaminfo['samplerate'].to_f).round(1))
     end
 
     def bitrate
@@ -182,6 +189,10 @@ module Aur
   module FileInfoMp3
     def read
       Mp3Info.open(file)
+    end
+
+    def time
+      format_time(info.length.round(1))
     end
 
     def bitrate
