@@ -72,6 +72,7 @@ module Aur
       def correct_tags?
         missing_tags?
         unwanted_tags?
+        # duplicate_tags?
       end
 
       def missing_tags?
@@ -86,6 +87,14 @@ module Aur
         return true if unwanted_tags.empty?
 
         raise Aur::Exception::LintUnwantedTags, unwanted_tags.join(', ')
+      end
+
+      def duplicate_tags?
+        tag_keys = info.rawtags.keys
+
+        return true if tag_keys.count == tag_keys.map(&:downcase).uniq.count
+
+        raise Aur::Exception::LintDuplicateTags
       end
 
       # Are tags (reasonably) correctly populated?

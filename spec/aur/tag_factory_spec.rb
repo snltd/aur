@@ -27,6 +27,10 @@ class TestName2Tag < MiniTest::Test
                  t.title('the_boy_with_the_arab_strap'))
   end
 
+  def test_title_caps
+    assert_equal('Enemies EP', t.title('enemies_ep'))
+  end
+
   def test_title_last_word_preposition
     assert_equal('I Want to Wake Up', t.title('i_want_to_wake_up'))
   end

@@ -33,23 +33,33 @@ module Aur
     def artist(artist)
       return false if artist.nil?
 
+      artist = sanitised(artist)
+
       artist == tag_factory.artist(info.f_artist) ||
         artist == tag_factory.artist("the_#{info.f_artist}")
     end
 
-    # We ignore certain punctuation in titles. We have no way of encoding
-    # things like commas and question marks in our filename schema.
-    #
     def title(title)
       return false if title.nil?
 
-      title.delete(',?!') == tag_factory.title(info.f_title)
+      sanitised(title) == tag_factory.title(info.f_title)
+    end
+
+    # We ignore certain punctuation in titles. We have no way of encoding
+    # things like commas and question marks in our filename schema. This is a
+    # best-guess thing. It can't possibly be perfect.
+    #
+    def sanitised(title)
+      title.delete(',') # ignore, commas
+           .sub(/[?!']$/, '') # ignore ? and ! and ' at the end of the title!
+           .gsub(/' /, ' ') # ignore ' at the endin' of a word
+           .sub('Feat. ', 'Feat ')
     end
 
     def album(album)
       return false if album.nil?
 
-      album == tag_factory.album(info.f_album)
+      sanitised(album) == tag_factory.album(info.f_album)
     end
 
     def t_num(num)

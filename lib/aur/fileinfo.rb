@@ -40,6 +40,10 @@ module Aur
              rate: info.streaminfo['samplerate'])
     end
 
+    def rawtags
+      info.tags
+    end
+
     def tags
       flatten_keys(info.tags)
     end

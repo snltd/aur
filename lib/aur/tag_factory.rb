@@ -48,18 +48,21 @@ module Aur
     # it if it's the first or last word in a title.
     #
     # rubocop:disable Lint/DuplicateBranch
+    # rubocop:disable Metrics/MethodLength
     def smart_capitalize(word, index, count)
-      if word.match?(/^(\w\.)+$/)
-        # initialisms
+      if word.match?(/^(\w\.)+$/) # initialisms
         word
       elsif NO_CAPS.include?(word.downcase) && index.between?(1, count - 2)
         word.downcase
+      elsif ALL_CAPS.include?(word.downcase)
+        word.upcase
       elsif word.match?(/^[A-Z0-9]+$/)
         word
       else
         word.capitalize
       end
     end
+    # rubocop:enable Metrics/MethodLength
     # rubocop:enable Lint/DuplicateBranch
 
     # When creating a title, every string (usually a word, but sometimes
