@@ -14,6 +14,11 @@ class TestFileInfo < MiniTest::Test
     @mp3 = Aur::FileInfo.new(RES_DIR.join('test_tone--100hz.mp3'))
   end
 
+  def test_time
+    assert_equal('0.5', flac.time)
+    assert_equal('0.6', mp3.time)
+  end
+
   def test_bitrate
     assert_equal('16-bit/44100Hz', flac.bitrate)
     assert_equal('64kbps', mp3.bitrate)

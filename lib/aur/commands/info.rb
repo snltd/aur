@@ -22,6 +22,7 @@ module Aur
         { Filename: file.basename.to_s,
           Type: file.extclass.upcase,
           Bitrate: info.bitrate,
+          Time: info.time,
           Artist: info.artist,
           Album: info.album,
           Title: info.title,

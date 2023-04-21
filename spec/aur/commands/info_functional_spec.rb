@@ -35,6 +35,7 @@ def bad_name_flac_info
   %( Filename : bad_name.flac
      Type : FLAC
   Bitrate : 16-bit/44100Hz
+     Time : 0.5
    Artist : The Null Set
     Album : Some Stuff By
     Title : Sammy Davis Jr. (Dancing)
@@ -49,6 +50,7 @@ def bad_name_mp3_info
   %( Filename : bad_name.mp3
      Type : MP3
   Bitrate : 199kbps (variable)
+     Time : 0.5
    Artist : The Null Set
     Album : Some Stuff By
     Title : Sammy Davis Jr. (Dancing)

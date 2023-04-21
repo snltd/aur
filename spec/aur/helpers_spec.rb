@@ -49,4 +49,11 @@ class Test < MiniTest::Test
      MP3_DIR.join('polvo.cor.crane_secret'),
      MP3_DIR.join('pram.meshes')].sort
   end
+
+  def test_format_time
+    assert_equal('0:45', format_time(45))
+    assert_equal('0.3', format_time(0.3))
+    assert_equal('1:13', format_time(73.5))
+    assert_equal('1:04:36', format_time(3876))
+  end
 end

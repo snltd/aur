@@ -19,5 +19,19 @@ module Aur
       (dirs + dirs.map { |d| Pathname.glob("#{d}/**/*/") }.flatten)
         .map(&:expand_path).sort.uniq
     end
+
+    def format_time(seconds)
+      return seconds.round(2).to_s if seconds < 1
+
+      h = seconds / 3600
+      m = seconds / 60 % 60
+      s = seconds % 60
+
+      if h < 1
+        format('%<mins>d:%02<secs>d', mins: m, secs: s)
+      else
+        format('%<hours>d:%02<mins>d:%02<secs>d', hours: h, mins: m, secs: s)
+      end
+    end
   end
 end
