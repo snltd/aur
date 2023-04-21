@@ -28,9 +28,9 @@ module Aur
       s = seconds % 60
 
       if h < 1
-        format('%d:%02d', m, s)
+        format('%<mins>d:%02<secs>d', mins: m, secs: s)
       else
-        format("%d:%02d:%02d", h, m, s)
+        format('%<hours>d:%02<mins>d:%02<secs>d', hours: h, mins: m, secs: s)
       end
     end
   end

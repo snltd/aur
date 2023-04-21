@@ -28,7 +28,10 @@ module Aur
     end
 
     def time
-      format_time((info.streaminfo['total_samples'] / info.streaminfo['samplerate'].to_f).round(1))
+      format_time(
+        (info.streaminfo['total_samples'] / info.streaminfo['samplerate'].to_f)
+        .round(1)
+      )
     end
 
     def bitrate

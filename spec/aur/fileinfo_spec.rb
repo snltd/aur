@@ -15,8 +15,8 @@ class TestFileInfo < MiniTest::Test
   end
 
   def test_time
-    assert_equal(0.5, flac.time)
-    assert_equal(0.6, mp3.time)
+    assert_equal('0.5', flac.time)
+    assert_equal('0.6', mp3.time)
   end
 
   def test_bitrate
