@@ -72,7 +72,7 @@ module Aur
       def correct_tags?
         missing_tags?
         unwanted_tags?
-        # duplicate_tags?
+        duplicate_tags?
       end
 
       def missing_tags?
