@@ -3,192 +3,66 @@
 
 require_relative '../../spec_helper'
 require_relative '../../../lib/aur/exception'
-require_relative '../../../lib/aur/commands/tagflat'
+require_relative '../../../lib/aur/commands/retag'
 
-# Tests for flattening tag key case
+# Only has functional tests. There's no logic worth testing.
 #
 class TestTagflat < MiniTest::Test
-  attr_reader :t
-
   def setup
-    @t = Aur::Command::Tagflat.new(RES_DIR.join('double_title.flac'))
+    @t = Aur::Command::Retag.new(RES_DIR.join('double_title.flac'))
   end
 
-  def test_other_case_lookup
-    assert_equal({ 'Key' => 'value' },
-                 @t.other_case_lookup('KEY', 'Key' => 'value'))
-    assert_empty(@t.other_case_lookup('my_key', 'Key' => 'value'))
-    assert_empty(@t.other_case_lookup('KEY', 'KEY' => 'value'))
-  end
+  def test_retag?
+    assert @t.retag?(
+      tag_names,
+      { 'block_size' => 168,
+        'offset' => 46,
+        'vendor_tag' => 'reference libFLAC 1.2.1 20070917',
+        'blank' => '  ',
+        'title' => '100hz',
+        'Album' => 'Test Tones',
+        'Artist' => 'Test Tones',
+        'TRACKNUMBER' => '6',
+        'DATE' => '2021',
+        'GENRE' => 'Noise',
+        'TITLE' => 'other' }
+    )
 
-  def test_flatten
-    raw = { 'block_size' => 168,
-            'offset' => 46,
-            'vendor_tag' => 'reference libFLAC 1.2.1 20070917',
-            'blank' => '  ',
-            'title' => 'Old Title',
-            'Album' => 'Test Album',
-            'Artist' => 'Test Artist',
-            'TRACKNUMBER' => '6',
-            'DATE' => '2021',
-            'GENRE' => 'Noise',
-            'TITLE' => 'New Title' }
+    assert @t.retag?(
+      tag_names,
+      { 'block_size' => 168,
+        'offset' => 46,
+        'vendor_tag' => 'reference libFLAC 1.2.1 20070917',
+        'blank' => '  ',
+        'album' => 'Test Tones',
+        'artist' => 'Test Tones',
+        'tracknumber' => '6',
+        'date' => '2021',
+        'genre' => 'Noise',
+        'title' => 'other' }
+    )
 
-    assert_equal(
-      { add: {
-          'ARTIST' => 'Test Artist',
-          'ALBUM' => 'Test Album',
-        },
-        destroy: {
-          'Artist' => 'Test Artist',
-          'Album' => 'Test Album',
-          'title' => 'Old Title'
-        }
-      }, @t.flatten(raw)
+    refute @t.retag?(
+      tag_names,
+      { 'block_size' => 168,
+        'offset' => 46,
+        'vendor_tag' => 'reference libFLAC 1.2.1 20070917',
+        'blank' => '  ',
+        'ALBUM' => 'Test Tones',
+        'ARTIST' => 'Test Tones',
+        'TRACKNUMBER' => '6',
+        'DATE' => '2021',
+        'GENRE' => 'Noise',
+        'TITLE' => 'other' }
     )
   end
 
-  #   def test_correctly_named?
-  #     %w[
-  #       01.artist.title.flac
-  #       01.artist.title.mp3
-  #       19.my_favourite_band.their_best_song.flac
-  #       03.123.456.flac
-  #       05.a_band.a_song-with_brackets.flac
-  #       07.some_singer.i-n-i-t-i-a-l-s.flac
-  #     ].each do |f|
-  #       assert(t.correctly_named?(TMP_DIR.join(f)), "#{f} should pass")
-  #     end
-  #
-  #     %w[
-  #       artist.title.flac
-  #       01.title.mp3
-  #       19.my_favourite_band.their_best_song!.flac
-  #       00.a_band.a_song-with_brackets.flac
-  #       02.Artist.Title.flac
-  #       03.someone_&_the_somethings.song.mp3
-  #       04.too__many.underscores.flac
-  #       1.artist.title.flac
-  #       03._artist.title.mp3
-  #       03.artist.title_.mp3
-  #       03.artist.title_(with_brackets).flac
-  #       07.the_somethings.i-n-i-t-i-a-l-s.flac
-  #     ].each do |f|
-  #       assert_raises(Aur::Exception::LintBadName, "#{f} should fail") do
-  #         t.correctly_named?(TMP_DIR.join(f))
-  #       end
-  #     end
-  #   end
-  #
-  #   def test_correct_tags?
-  #     assert t.correct_tags?
-  #
-  #     capture_io do # because the MP3 library stderrs a warning
-  #       err = assert_raises(Aur::Exception::LintMissingTags) do
-  #         Aur::Command::Lint.new(RES_DIR.join('missing_tags.mp3')).correct_tags?
-  #       end
-  #
-  #       assert_equal('tcon', err.message)
-  #     end
-  #
-  #     capture_io do
-  #       err = assert_raises(Aur::Exception::LintUnwantedTags) do
-  #         Aur::Command::Lint.new(RES_DIR.join('unstripped.mp3')).correct_tags?
-  #       end
-  #
-  #       assert_equal('tenc, tcom, txxx, apic', err.message)
-  #     end
-  #   end
-  #
-  #   def test_correct_tag_values?
-  #     assert t.correct_tag_values?
-  #   end
-  # end
-  #
-  # Tests for linting files in tracks/
-  #
-  # class TestLintTracks < MiniTest::Test
-  #   attr_reader :t
-  #
-  #   L_DIR = RES_DIR.join('lint', 'tracks')
-  #
-  #   def setup
-  #     @t = Aur::Command::Lint.new(L_DIR.join('album_file.flac'))
-  #   end
-  #
-  #   def test_correctly_named?
-  #     %w[
-  #       artist.title.flac
-  #       artist.title.mp3
-  #       my_favourite_band.their_best_song.flac
-  #       123.456.flac
-  #       a_band.a_song-with_brackets.flac
-  #       some_singer.i-n-i-t-i-a-l-s.flac
-  #     ].each do |f|
-  #       assert(t.correctly_named?(L_DIR.join(f)), "#{f} should pass")
-  #     end
-  #
-  #     %w[
-  #       01.artist.title.flac
-  #       01.artist.title.mp3
-  #       title.mp3
-  #       my_favourite_band.their_best_song!.flac
-  #       Artist.Title.flac
-  #       someone_&_the_somethings.song.mp3
-  #       too__many.underscores.flac
-  #       _artist.title.mp3
-  #       artist.title_.mp3
-  #       artist.title_(with_brackets).flac
-  #       the_somethings.i-n-i-t-i-a-l-s.flac
-  #     ].each do |f|
-  #       assert_raises(Aur::Exception::LintBadName, "#{f} should fail") do
-  #         t.correctly_named?(L_DIR.join(f))
-  #       end
-  #     end
-  #   end
-  #
-  #   def test_correct_tags?
-  #     assert t.correct_tags?
-  #
-  #     capture_io do # because the MP3 library stderrs a warning
-  #       assert_raises(Aur::Exception::LintMissingTags) do
-  #         Aur::Command::Lint.new(L_DIR.join('missing_tags.mp3')).correct_tags?
-  #       end
-  #     end
-  #   end
-  #
-  #   def test_correct_tag_values?
-  #     err = assert_raises(Aur::Exception::InvalidTagValue) do
-  #       t.correct_tag_values?
-  #     end
-  #
-  #     assert_equal('Album tag should not be set', err.message)
-  #   end
-  #
-  #   def test_validate_album_disc
-  #     assert t.validate_album_disc('Album (Disc 1)', 'disc_1')
-  #     assert t.validate_album_disc('(Disc 2 - Paris 1972-05-24)', 'disc_2')
-  #     assert t.validate_album_disc('An Album', 'band.an_album')
-  #     assert t.validate_album_disc('Black Sheep (Disc 1: Return of the Native)',
-  #                                  'disc_1-return_of_the_native')
-  #
-  #     err = assert_raises(Aur::Exception::InvalidTagValue) do
-  #       t.validate_album_disc('Album', 'disc_2')
-  #     end
-  #
-  #     assert_equal(err.message,
-  #                  'file in disc_ dir, but has no disc number in album tag')
-  #
-  #     err = assert_raises(Aur::Exception::InvalidTagValue) do
-  #       t.validate_album_disc('Album (Disc 1)', 'band.album')
-  #     end
-  #
-  #     assert_equal(err.message, 'album tag: disc 1 but not in disc_ dir')
-  #
-  #     err = assert_raises(Aur::Exception::InvalidTagValue) do
-  #       t.validate_album_disc('Album (Disc 1)', 'disc_2')
-  #     end
-  #
-  #     assert_equal(err.message, 'album tag: disc 1; directory disc 2')
-  #   end
+  def tag_names
+    { artist: 'ARTIST',
+      album: 'ALBUM',
+      title: 'TITLE',
+      t_num: 'TRACKNUMBER',
+      year: 'DATE',
+      genre: 'GENRE' }
+  end
 end

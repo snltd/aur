@@ -114,15 +114,20 @@ module Aur
     # @param tags [Array] of tags to remove
     #
     def untag!(tags)
-      tags.each do |name|
-        tag_name = info.tag_for(name.downcase.to_sym)
-
-        info.rawtags.each_key do |tag|
-          info.raw.comment_del(tag.to_s) if tag.downcase == tag_name.to_s.downcase
-        end
-      end
-
+      tags.each { |name| remove_tag(name) }
       info.raw.update!
+    rescue FlacInfoWriteError => e # There may not be a tag to delete
+      raise unless e.message == 'No changes to write'
+
+      nil
+    end
+
+    def remove_tag(name)
+      name = info.tag_name(name) if name.is_a?(Symbol)
+
+      info.rawtags.each_key do |tag|
+        info.raw.comment_del(tag.to_s) if tag.casecmp(name.to_s).zero?
+      end
     end
 
     # flacinfo-rb doesn't appear to provide a way to manipulate blocks, so
