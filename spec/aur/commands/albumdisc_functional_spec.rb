@@ -11,7 +11,7 @@ class TestAlbumdiscCommand < MiniTest::Test
 
   AT_DIR = RES_DIR.join('albumdisc')
 
-  def _test_albumdisc_single_album
+  def test_albumdisc_single_album
     with_test_file(AT_DIR.join('artist.album', '01.artist.song.flac')) do |f|
       assert_tag(f, :album, 'Album')
       assert_raises(SystemExit) do

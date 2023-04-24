@@ -42,7 +42,6 @@ class TestTaggerFunctional < MiniTest::Test
         file = Aur::Tagger.new(info, quiet: true)
 
         assert_equal(blank_tags[type.to_sym], info.our_tags)
-
         assert file.tag!(artist: 'The Singer', title: 'Their Song')
         assert file.tag!(album: 'Difficult Second Album',
                          t_num: 5,

@@ -40,8 +40,12 @@ module Aur
              rate: info.streaminfo['samplerate'])
     end
 
+    def rawtags
+      info.tags
+    end
+
     def tags
-      flatten_keys(info.tags)
+      flatten_keys(rawtags)
     end
 
     def filetype
@@ -204,8 +208,8 @@ module Aur
              extra: info.vbr ? ' (variable)' : '')
     end
 
-    def tags
-      flatten_keys(info.tag2)
+    def rawtags
+      info.tag2
     end
 
     def tag_map

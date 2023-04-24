@@ -103,8 +103,8 @@ module Aur
     #
     def tag!(tags)
       validate(tags).each_pair do |name, value|
+        untag!([name])
         tag_msg(name, value)
-        info.raw.comment_del(info.tag_name(name))
         info.raw.comment_add("#{info.tag_name(name)}=#{value}")
       end
 
@@ -114,12 +114,23 @@ module Aur
     # @param tags [Array] of tags to remove
     #
     def untag!(tags)
-      tags.each do |name|
-        info.raw.comment_del(name.to_s.upcase)
-        info.raw.comment_del(name.to_s)
-      end
-
+      tags.each { |name| remove_tag(name) }
       info.raw.update!
+    rescue FlacInfoWriteError => e # There may not be a tag to delete
+      raise unless e.message == 'No changes to write'
+
+      nil
+    end
+
+    # We can be given tags by their universal name (t_num etc), which is a
+    # Symbol, and is normal, or as a raw string, like strip does.
+    #
+    def remove_tag(name)
+      name = info.tag_name(name) if name.is_a?(Symbol)
+
+      info.rawtags.each_key do |tag|
+        info.raw.comment_del(tag.to_s) if tag.casecmp(name.to_s).zero?
+      end
     end
 
     # flacinfo-rb doesn't appear to provide a way to manipulate blocks, so

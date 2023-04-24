@@ -19,14 +19,15 @@ class TestTagValidator < MiniTest::Test
     )
   end
 
-  # lax linting uses the same methods for artist, album, and title, so there
-  # this test does them all.
+  # lax linting uses the same methods for artist, album, and title, so this
+  # test does them all.
   #
   def test_artist_album_title_lax
     assert lax.artist('!!!')
     assert lax.artist('Broadcast')
     assert lax.artist('Simon and Garfunkel')
     assert lax.artist('Simon And Garfunkel')
+    refute lax.artist('Broadcast;Broadcast')
     refute lax.artist('Simon & Garfunkel')
     refute lax.artist('')
     refute lax.artist(nil)

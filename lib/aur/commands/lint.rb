@@ -44,6 +44,8 @@ module Aur
         err(file, "Unwanted tags: #{e}")
       rescue Aur::Exception::InvalidTagValue => e
         err(file, "Invalid tag value: #{e}")
+      rescue Aur::Exception::LintDuplicateTags
+        err(file, 'Duplicate tags')
       end
       # rubocop:enable Metrics/MethodLength
 
@@ -72,6 +74,7 @@ module Aur
       def correct_tags?
         missing_tags?
         unwanted_tags?
+        duplicate_tags?
       end
 
       def missing_tags?
@@ -86,6 +89,14 @@ module Aur
         return true if unwanted_tags.empty?
 
         raise Aur::Exception::LintUnwantedTags, unwanted_tags.join(', ')
+      end
+
+      def duplicate_tags?
+        tag_keys = info.rawtags.keys
+
+        return true if tag_keys.count == tag_keys.map(&:downcase).uniq.count
+
+        raise Aur::Exception::LintDuplicateTags
       end
 
       # Are tags (reasonably) correctly populated?

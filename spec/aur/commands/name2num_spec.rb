@@ -17,7 +17,7 @@ class TestName2num < MiniTest::Test
     upd = Spy.on(t.info.raw, :update!)
 
     assert_output(/^\s+t_num -> 1\n/, '') { t.run }
-    assert_equal(%w[TRACKNUMBER], del.calls.map(&:args).flatten)
+    assert_empty del.calls
     assert_equal(['TRACKNUMBER=1'], add.calls.map(&:args).flatten)
     assert upd.has_been_called?
   end
