@@ -187,6 +187,10 @@ module Aur
           raise Aur::Exception::InvalidTagValue, 'Album tag should not be set'
         end
 
+        unless info.t_num == '1'
+          raise Aur::Exception::InvalidTagValue, 'Track number must be 1'
+        end
+
         tags = info.our_tags.except(:album)
         optional_tags.each { |t| tags.delete(t) if tags[t].nil? }
         validate_tags(tags)
@@ -195,7 +199,7 @@ module Aur
       # We won't complain whether we have a year tag or not
       #
       def unwanted_tags?
-        unwanted_tags = info.tags.keys - required_tags
+        unwanted_tags = info.tags.keys - required_tags - [:encoder]
         return true if unwanted_tags.empty? || unwanted_tags == [:tyer]
 
         raise Aur::Exception::LintUnwantedTags, unwanted_tags.join(', ')
@@ -209,7 +213,7 @@ module Aur
       end
 
       def optional_tags
-        %i[date talb tyer year t_num genre encoder]
+        %i[date talb tyer year genre]
       end
     end
   end
