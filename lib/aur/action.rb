@@ -97,7 +97,7 @@ module Aur
       die 'Argument must be a directory.'
     rescue StandardError => e
       warn "ERROR: Unhandled error on #{file}".red.bold
-      puts e.backtrace
+      puts e
       exit 2
     end
     # rubocop:enable Metrics/AbcSize
