@@ -122,6 +122,9 @@ module Aur
       nil
     end
 
+    # We can be given tags by their universal name (t_num etc), which is a
+    # Symbol, and is normal, or as a raw string, like strip does.
+    #
     def remove_tag(name)
       name = info.tag_name(name) if name.is_a?(Symbol)
 
