@@ -103,8 +103,8 @@ module Aur
     #
     def tag!(tags)
       validate(tags).each_pair do |name, value|
+        untag!([name])
         tag_msg(name, value)
-        info.raw.comment_del(info.tag_name(name))
         info.raw.comment_add("#{info.tag_name(name)}=#{value}")
       end
 
@@ -115,8 +115,11 @@ module Aur
     #
     def untag!(tags)
       tags.each do |name|
-        info.raw.comment_del(name.to_s.upcase)
-        info.raw.comment_del(name.to_s)
+        tag_name = info.tag_for(name.downcase.to_sym)
+
+        info.rawtags.each_key do |tag|
+          info.raw.comment_del(tag.to_s) if tag.downcase == tag_name.to_s.downcase
+        end
       end
 
       info.raw.update!

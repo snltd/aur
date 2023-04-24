@@ -44,6 +44,8 @@ module Aur
         err(file, "Unwanted tags: #{e}")
       rescue Aur::Exception::InvalidTagValue => e
         err(file, "Invalid tag value: #{e}")
+      rescue Aur::Exception::LintDuplicateTags
+        err(file, "Duplicate tags")
       end
       # rubocop:enable Metrics/MethodLength
 
