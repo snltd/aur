@@ -9,6 +9,8 @@ module Aur
     # Shows which things we have as MP3 but not as FLAC
     #
     class Wantflac < Syncflac
+      UNWANTED_DIRS = %w[language radio_sessions radio_shows spoken_word]
+
       def run
         if opts[:tracks]
           track_difference
@@ -31,7 +33,20 @@ module Aur
       end
 
       def difference(flacdirs, mp3dirs)
-        (mp3dirs - flacdirs).filter_map { |d| album_name(d.first) }.sort.uniq
+        filter(mp3dirs - flacdirs).filter_map { |d| album_name(d.first) }.sort.uniq
+      end
+
+      # Filter out things we can't possibly get FLACs for
+      #
+      def filter(dirs)
+        dirs.select { |d| filter_path(d) }
+      end
+
+      def filter_path(path)
+        bits = path.first.to_s.split('/')
+
+        !(UNWANTED_DIRS.include?(bits.first) ||
+          bits[0] == 'christmas' && bits[1] == 'spackers')
       end
 
       def album_name(path)
