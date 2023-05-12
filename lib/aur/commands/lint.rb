@@ -182,6 +182,7 @@ module Aur
     # We have different rules for things in a tracks/ directory.
     #
     module LintTracks
+      # rubocop:disable Metrics/AbcSize
       def correct_tag_values?
         unless info.our_tags[:album].nil?
           raise Aur::Exception::InvalidTagValue, 'Album tag should not be set'
@@ -204,6 +205,7 @@ module Aur
 
         raise Aur::Exception::LintUnwantedTags, unwanted_tags.join(', ')
       end
+      # rubocop:enable Metrics/AbcSize
 
       private
 
