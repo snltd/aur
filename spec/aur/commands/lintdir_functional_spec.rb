@@ -82,14 +82,14 @@ class TestLintdirCommand < MiniTest::Test
 
   def test_recursion
     expected = <<~EOOUT
-      #{MDIR}/afx.analogue_bubblebath\\s+Unwanted cover art
-      #{MDIR}/heavenly.atta_girl\\s+Different file types
-      #{MDIR}/polvo.cor.crane_secret\\s+Invalid directory name
-      #{MDIR}/pram.meshes\\s+Bad file\\(s\\)
-        #{MDIR}/pram.meshes/some_junk.txt
-        #{MDIR}/pram.meshes/some_more_junk.txt
-      #{MDIR}/seefeel.starethrough_ep\\s+Missing track 02
-      #{MDIR}/tegan_and_sara.the_con\\s+Missing file\\(s\\) \\(13\\/14\\)
+      #{MDIR}\/afx.analogue_bubblebath\\s+Unwanted cover art
+      #{MDIR}\/heavenly.atta_girl\\s+Different file types
+      #{MDIR}\/polvo.cor.crane_secret\\s+Invalid directory name
+      #{MDIR}\/pram.meshes\\s+Bad file\\(s\\)
+        #{MDIR}\/pram.meshes\/some_junk.txt
+        #{MDIR}\/pram.meshes\/some_more_junk.txt
+      #{MDIR}\/seefeel.starethrough_ep\\s+Missing track 02
+      #{MDIR}\/tegan_and_sara.the_con\\s+Missing file\\(s\\) \\(13\\/14\\)
     EOOUT
 
     assert_output('', Regexp.new(expected, Regexp::MULTILINE)) do
