@@ -7,7 +7,7 @@ require_relative '../../../lib/aur/commands/wantflac'
 
 # Test for wantflac methods
 #
-class TestLint < MiniTest::Test
+class TestWantflac < MiniTest::Test
   def setup
     @t = Aur::Command::Wantflac.new(Pathname.new(RES_DIR))
   end
@@ -44,7 +44,7 @@ class TestLint < MiniTest::Test
 
     assert_equal(
       [[Pathname.new('albums/abc/broadcast.tender_buttons'), 4],
-      [Pathname.new('eps/slint.untitled'), 4]],
+       [Pathname.new('eps/slint.untitled'), 4]],
       @t.filter(dirs)
     )
   end
