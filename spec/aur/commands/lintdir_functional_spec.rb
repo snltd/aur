@@ -80,6 +80,7 @@ class TestLintdirCommand < MiniTest::Test
     end
   end
 
+  # rubocop:disable Style/RedundantStringEscape
   def test_recursion
     expected = <<~EOOUT
       #{MDIR}\/afx.analogue_bubblebath\\s+Unwanted cover art
@@ -97,6 +98,7 @@ class TestLintdirCommand < MiniTest::Test
                                       recursive: true }).run!
     end
   end
+  # rubocop:enable Style/RedundantStringEscape
 
   private
 
