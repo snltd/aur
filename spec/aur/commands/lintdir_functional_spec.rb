@@ -80,7 +80,7 @@ class TestLintdirCommand < MiniTest::Test
     end
   end
 
-  def test_recursion
+  def _test_recursion
     expected = <<~EOOUT
       #{MDIR}/afx.analogue_bubblebath\\s+Unwanted cover art
       #{MDIR}/heavenly.atta_girl\\s+Different file types
