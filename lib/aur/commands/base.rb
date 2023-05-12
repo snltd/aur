@@ -28,7 +28,7 @@ module Aur
         @info = setup_info
         @tagger = setup_tagger
         @errs = 0
-        load_subclass if info.respond_to?(:filetype)
+        load_subclass if @info.respond_to?(:filetype)
       end
 
       # Separated out for the benefit of transcode, which does not need

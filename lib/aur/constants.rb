@@ -3,20 +3,17 @@
 require 'pathname'
 
 DATA_DIR = Pathname.new('/storage')
+BIN_DIR = Pathname.new('/opt/ooce/bin')
 
 SUPPORTED_TYPES = %w[flac mp3].freeze
 
-BIN = {
-  ffmpeg: Pathname.new('/opt/sysdef/ffmpeg/bin/ffmpeg'),
-  flac: Pathname.new('/opt/local/bin/flac'),
-  lame: Pathname.new('/opt/local/bin/lame'),
-  metaflac: Pathname.new('/opt/local/bin/metaflac'),
-  shnsplit: Pathname.new('/opt/local/bin/shnsplit')
-}.freeze
+BIN = %i[ffmpeg flac lame metaflac shnsplit].to_h do |f|
+  [f, BIN_DIR.join(f.to_s)]
+end
 
 # Preset for encoding MP3s
 #
-LAME_FLAGS = '-h --vbr-new --preset 128 --id3v2-only --add-id3v2 --silent'
+LAME_FLAGS = '-q2 --vbr-new --preset 128 --id3v2-only --add-id3v2 --silent'
 
 # These words are not (normally) capitalised when generating tags. 'featuring'
 # is there for artist names.

@@ -18,7 +18,7 @@ class TestFlac2Mp3 < MiniTest::Test
     assert_equal(
       "#{BIN[:flac]} -dsc \"#{RES_DIR.join('test_tone--100hz.flac')}\" " \
       "| #{BIN[:lame]} " \
-      '-h --vbr-new --preset 128 --id3v2-only --add-id3v2 --silent ' \
+      '-q2 --vbr-new --preset 128 --id3v2-only --add-id3v2 --silent ' \
       '--tt "Song Title" --ta "Band" --tl "Album Title" --ty "1993" ' \
       "--tn \"4\" --tg \"Noise\" - \"#{RES_DIR.join('test_tone--100hz.mp3')}\"",
       t.construct_command(

@@ -34,7 +34,26 @@ module Aur
         end
       end
 
+      # OmniOS's ffmpeg doesn't have MP3 support, and I'm tired of maintaining
+      # my own version. So, use LAME to reencode MP3s. I don't know if I've
+      # ever even used this.  The if hack is because we aren't using the
+      # automatic subclass loader
+      #
       def construct_cmd(file1, file2)
+        return lame_cmd(file1, file2) if file2.extname.casecmp('.mp3').zero?
+
+        ffmpeg_cmd(file1, file2)
+      end
+
+      # Trying to force id3v2 tags somehow loses all the tags. This preserves
+      # them.
+      #
+      def lame_cmd(file1, file2)
+        "#{BIN[:lame]} -q2 --vbr-new --preset 128 --silent #{escaped(file1)} " +
+          escaped(file2)
+      end
+
+      def ffmpeg_cmd(file1, file2)
         "#{BIN[:ffmpeg]} -hide_banner -loglevel error -i #{escaped(file1)} " +
           escaped(file2)
       end
@@ -51,7 +70,8 @@ module Aur
 
           Uses ffmpeg to re-encode a file. The resultant file overwrites the
           original. This can be used to fix "broken" FLACs which have ID3 tags
-          and otherwise cannot be understood by aur.
+          and otherwise cannot be understood by aur, or to lower the bitrate
+          of MP3s to 128kpbs (variable).
         EOHELP
       end
     end
