@@ -57,7 +57,7 @@ class TestLintCommand < MiniTest::Test
   end
 
   def test_unstripped_tracks
-    assert_output(nil, /Unwanted tags: composer, encoder, tempo$/) do
+    assert_output(nil, /Unwanted tags: composer, tempo$/) do
       act(T_DIR.join('artist.unstripped.flac'))
     end
   end

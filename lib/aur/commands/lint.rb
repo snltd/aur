@@ -182,9 +182,14 @@ module Aur
     # We have different rules for things in a tracks/ directory.
     #
     module LintTracks
+      # rubocop:disable Metrics/AbcSize
       def correct_tag_values?
         unless info.our_tags[:album].nil?
           raise Aur::Exception::InvalidTagValue, 'Album tag should not be set'
+        end
+
+        unless info.t_num == '1'
+          raise Aur::Exception::InvalidTagValue, 'Track number must be 1'
         end
 
         tags = info.our_tags.except(:album)
@@ -195,11 +200,12 @@ module Aur
       # We won't complain whether we have a year tag or not
       #
       def unwanted_tags?
-        unwanted_tags = info.tags.keys - required_tags
+        unwanted_tags = info.tags.keys - required_tags - [:encoder]
         return true if unwanted_tags.empty? || unwanted_tags == [:tyer]
 
         raise Aur::Exception::LintUnwantedTags, unwanted_tags.join(', ')
       end
+      # rubocop:enable Metrics/AbcSize
 
       private
 
@@ -209,7 +215,7 @@ module Aur
       end
 
       def optional_tags
-        %i[date talb tyer year t_num genre encoder]
+        %i[date talb tyer year genre]
       end
     end
   end
