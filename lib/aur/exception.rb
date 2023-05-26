@@ -33,6 +33,8 @@ module Aur
 
     class LintDirBadName < RuntimeError; end
 
+    class LintDirInconsistentTags < RuntimeError; end
+
     class LintDirMissingCoverArt < RuntimeError; end
 
     class LintDirMixedFiles < RuntimeError; end

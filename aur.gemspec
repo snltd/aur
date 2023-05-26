@@ -30,13 +30,5 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency 'i18n', '~> 1.12'
   gem.add_runtime_dependency 'ruby-mp3info', '~> 0.8'
 
-  gem.add_development_dependency 'minitest', '~> 5.17'
-  gem.add_development_dependency 'rake', '~> 13.0'
-  gem.add_development_dependency 'rubocop', '~> 1.0'
-  gem.add_development_dependency 'rubocop-minitest', '~> 0.14'
-  gem.add_development_dependency 'rubocop-performance', '~> 1.11'
-  gem.add_development_dependency 'rubocop-rake', '~> 0.6'
-  gem.add_development_dependency 'spy', '~> 1.0.0'
-
   gem.required_ruby_version = Gem::Requirement.new('>= 3.0.0')
 end

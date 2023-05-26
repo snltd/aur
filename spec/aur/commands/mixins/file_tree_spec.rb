@@ -16,7 +16,10 @@ class Test < MiniTest::Test
       [
         [Pathname.new('fall.eds_babe'), 4],
         [Pathname.new('slint.spiderland_remastered'), 6],
-        [Pathname.new('slint.spiderland_remastered/bonus_disc'), 14]
+        [Pathname.new('slint.spiderland_remastered/bonus_disc'), 14],
+        [Pathname.new('tester.different_album'), 3],
+        [Pathname.new('tester.different_genre'), 3],
+        [Pathname.new('tester.different_year'), 3]
       ],
       content_under(TEST_DIR, '.flac')
     )
@@ -28,7 +31,7 @@ class Test < MiniTest::Test
     result = files_under(TEST_DIR, '.flac')
 
     assert_instance_of(Hash, result)
-    assert_equal(24, result.size)
+    assert_equal(33, result.size)
     assert(result.all? { |k, v| k.is_a?(Pathname) && v.is_a?(String) })
     assert_equal(
       TEST_DIR.join('fall.eds_babe', '04.fall.free_ranger.flac'),
