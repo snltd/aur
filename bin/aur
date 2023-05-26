@@ -21,6 +21,7 @@ CMDS = %i[
   lintdir
   ls
   mp3dir
+  namecheck
   name2num
   name2tag
   num2name
@@ -76,6 +77,7 @@ docopt = <<~EOCMDS
     aur albumdisc <file>...
     aur thes <file>...
     aur dupes
+    aur namecheck
     aur help <command>
 
   Options:
