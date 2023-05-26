@@ -3,6 +3,7 @@
 require 'pathname'
 require_relative '../constants'
 require_relative '../exception'
+require_relative '../fileinfo'
 require_relative '../helpers'
 
 module Aur
@@ -15,7 +16,7 @@ module Aur
     # rubocop:disable Metrics/ClassLength
     class Lintdir
       def initialize(dir = nil, opts = {})
-        @dir = dir
+        @dir = dir.expand_path
         @opts = opts
       end
 
@@ -34,12 +35,19 @@ module Aur
       # rubocop:disable Metrics/AbcSize
       def lint(dir)
         files = dir.children.select(&:file?)
-        correctly_named?(dir)
         no_junk?(files)
+        return true if supported(files).empty?
+
+        correctly_named?(dir)
         all_same_filetype?(files)
         expected_files?(files)
         sequential_files?(files)
         cover_art?(files)
+        tags = all_tags(files)
+        all_same_album?(tags)
+        all_same_genre?(tags)
+        all_same_year?(tags)
+        all_same_artist?(tags) unless various_artists?(dir)
       rescue Aur::Exception::LintDirBadName
         err(dir, 'Invalid directory name')
       rescue Aur::Exception::LintDirBadFile => e
@@ -54,15 +62,17 @@ module Aur
         err(dir, 'Missing cover art')
       rescue Aur::Exception::LintDirUnwantedCoverArt
         err(dir, 'Unwanted cover art')
+      rescue Aur::Exception::LintDirInconsistentTags => e
+        err(dir, "Inconsistent #{e} tag")
       rescue StandardError => e
-        warn "Bombed in #{dir}"
-        pp e
+        warn "Unhandled exception #{e} in #{dir}"
       end
       # rubocop:enable Metrics/AbcSize
       # rubocop:enable Metrics/MethodLength
 
       def err(dir, msg)
-        warn(format('%-110<dir>s    %<msg>s', dir: dir, msg: msg))
+        msglen = msg.length + 6
+        warn(format("%-#{TW - msglen}<dir>s    %<msg>s", dir: dir, msg: msg))
       end
 
       # A "proper" album directory should be of the form
@@ -119,6 +129,32 @@ module Aur
         true
       end
 
+      # Everything should have the same album tag
+      #
+      def all_same_album?(tags)
+        all_same_tag?(tags, :album)
+      end
+
+      # Everything should have the same year tag
+      #
+      def all_same_year?(tags)
+        all_same_tag?(tags, :year)
+      end
+
+      # And probably of the same genre. (Who cares, really, about the genre
+      # tag anyway?)
+      #
+      def all_same_genre?(tags)
+        all_same_tag?(tags, :genre)
+      end
+
+      # Hmmm. Problems with "featuring" and collaborations. This will need
+      # some thought. Let's see how it plays in everyday usage.
+      #
+      def all_same_artist?(tags)
+        all_same_tag?(tags, :artist)
+      end
+
       # Ignoring cover art, everything should be either an MP3 or a FLAC.
       #
       def all_same_filetype?(files)
@@ -163,6 +199,14 @@ module Aur
         file.basename.to_s.split('.').first.to_i
       end
 
+      def various_artists?(dir)
+        dirname = dir.basename.to_s
+
+        dirname = dir.parent.basename.to_s if dirname.match?(/disc_[0-9]+/)
+
+        dirname.start_with?('various.') || dirname.include?('--')
+      end
+
       # Filter a file list for supported audio types with the correct suffix.
       # @param files [Array[Pathname]]
       # @return [Array[Pathname]] input, filtered to supported audio types
@@ -184,12 +228,30 @@ module Aur
             - the directory name is correctly formatted
             - all audio files are of the same type
             - audio files are numbered sequentially
+            - tags which should be the same, are
             - the correct number of audio files are present
             - no non-audio files exist (except cover art)
 
           The contents of files are not examined. For that, use the 'lint'
           command. Nothing on-disk is changed.
         EOHELP
+      end
+
+      private
+
+      # Get the relevant tags for all files.
+      #
+      def all_tags(files)
+        supported(files).map { |f| Aur::FileInfo.new(f).our_tags }
+      end
+
+      # @return [True] if all values of 'tag' in 'tags' are the same
+      # @raise [LintDirInconsistentTags] if not
+      #
+      def all_same_tag?(tags, tag)
+        return true if tags.map { |t| t[tag] }.uniq.size == 1
+
+        raise Aur::Exception::LintDirInconsistentTags, tag
       end
     end
     # rubocop:enable Metrics/ClassLength

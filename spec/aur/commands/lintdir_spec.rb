@@ -150,5 +150,11 @@ class TestLintdir < MiniTest::Test
     refute t.cover_in([Pathname.new('/a/picture.jpg'),
                        Pathname.new('/a/01.a.b.flac')])
   end
+
+  def test_various_artists?
+    assert t.various_artists?(Pathname.new('/a/b/various.compilation'))
+    assert t.various_artists?(Pathname.new('/a/b/these--them.split_single'))
+    refute t.various_artists?(Pathname.new('/a/b/singer.record'))
+  end
 end
 # rubocop:enable Metrics/ClassLength

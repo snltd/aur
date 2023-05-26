@@ -74,6 +74,20 @@ class TestLintdirCommand < MiniTest::Test
     end
   end
 
+  def test_all_same_tags
+    assert_output('', /Inconsistent album tag\n/) do
+      act(FDIR.join('tester.different_album'))
+    end
+
+    assert_output('', /Inconsistent genre tag\n/) do
+      act(FDIR.join('tester.different_genre'))
+    end
+
+    assert_output('', /Inconsistent year tag\n/) do
+      act(FDIR.join('tester.different_year'))
+    end
+  end
+
   # For reasons I cannot yet explain, this test and the next one pass
   # everywhere except in GitHub Actions
   #
