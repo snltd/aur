@@ -16,7 +16,7 @@ module Aur
     # rubocop:disable Metrics/ClassLength
     class Lintdir
       def initialize(dir = nil, opts = {})
-        @dir = dir.expand_path
+        @dir = dir&.expand_path
         @opts = opts
       end
 
