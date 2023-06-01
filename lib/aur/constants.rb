@@ -44,6 +44,10 @@ IGNORE_CASE = %w[d'isan o'keefe mcgee mcintyre ça b's mccay mccoy lps eps mxbx
                  mcculloch hearts!attack mclusky
                  mcalmont mccarthy x tatu d'arby mccombs mcdonalds us].freeze
 
+# These special cases can contain ampersands
+#
+ALLOWABLE_AMPERSANDS = ['The A&R EP', 'The R&B of Membership', '7 & 7'].freeze
+
 # The keys of this hash are expanded to the corresponding value when
 # generating tags. Some of these contractions are, of course, real words, but
 # you're more likely to see can't than cant and won't than wont. Lets and its

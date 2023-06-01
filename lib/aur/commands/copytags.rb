@@ -30,7 +30,13 @@ module Aur
 
         return true if opts[:forcemod] && partner.mtime > file.mtime
 
-        tags.values.any?(&:nil?) # So "tracks" files will always get retagged
+        tags_of_interest = tags
+
+        if file.expand_path.lastdir == 'tracks'
+          tags_of_interest.delete(:album)
+        end
+
+        tags_of_interest.values.any?(&:nil?)
       end
 
       def copy_tags

@@ -24,9 +24,12 @@ class TestTagValidator < MiniTest::Test
   #
   def test_artist_album_title_lax
     assert lax.artist('!!!')
+    assert lax.album('The A&R EP')
     assert lax.artist('Broadcast')
     assert lax.artist('Simon and Garfunkel')
     assert lax.artist('Simon And Garfunkel')
+    refute lax.artist('Broadcast ')
+    refute lax.artist('Simon and  Garfunkel')
     refute lax.artist('Broadcast;Broadcast')
     refute lax.artist('Simon & Garfunkel')
     refute lax.artist('')
