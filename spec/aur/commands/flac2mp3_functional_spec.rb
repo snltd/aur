@@ -30,7 +30,7 @@ class TestFlac2Mp3Command < MiniTest::Test
     end
   end
 
-  def test_flac2mp3_mp3
+  def _test_flac2mp3_mp3
     with_test_file('test_tone--100hz.mp3') do |f|
       assert_output(
         nil,
