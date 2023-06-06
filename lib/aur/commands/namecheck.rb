@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
-require_relative '../stdlib/pathname'
 require_relative '../constants'
+require_relative '../fileinfo'
 require_relative 'mixins/file_tree'
+require 'set'
 
 module Aur
   module Command
@@ -13,69 +14,80 @@ module Aur
     # Look at all the "The"s, and see if we also have the name without the
     # "The". This is an error.
     #
-    #
-    #
     class Namecheck
       include Aur::Mixin::FileTree
 
-      def initialize(_root, opts = {})
-        dir = Pathname.new(opts[:'<directory>'].first).expand_path
+      def initialize(dir = nil, opts = {})
+        @dir = dir&.expand_path
+        @opts = opts
+        @files = files(@dir)
+      end
 
+      def files(dir)
         if dir.to_s.include?('/flac')
-          @files = files_under(dir, '.flac')
+          suffix = '.flac'
         elsif dir.to_s.include?('/mp3')
-          @files = files_under(dir, '.flac')
+          suffix = '.mp3'
         else
           abort 'what is filetype?'
         end
+
+        files_under(dir, suffix).keys
       end
 
       def run
-        puts 'possible misnames'
-        p @files
-        #output(find_dupes(all_flacs))
+        unique_artists = unique_list_of_artists(@files)
+        check_thes(unique_artists)
       end
 
-      #def output(dupes)
-        #return '  none' if dupes.empty?
-#
-        #dupes.each do |track, matches|
-          #puts track
-          #puts(matches.map { |match| "  #{match}" })
-          #puts
-        #end
-      #end
+      def unique_list_of_artists(files)
+        ret = {}
 
-      def find_dupes(files)
-        needles = files.select { |k, _| k.lastdir == 'tracks' }
-        haystack = files.reject { |k, _v| k.dirname.basename.to_s == 'tracks' }
+        files.each do |f|
+          info = Aur::FileInfo.new(f)
 
-        procs = needles.transform_values do |name|
-          haystack.select { |_k, v| v == name }.keys
+          ret[info.artist] = if ret.key?(info.artist)
+                               ret[info.artist] << (f.dirname)
+                             else
+                               [f.dirname]
+                             end
         end
 
-        procs.reject { |_k, v| v.empty? }
+        ret
       end
 
-      def all_flacs
-        files_under(@fdir, '.flac')
+      def check_thes(artists)
+        thes = artists.select { |k, _v| k.start_with?('The ') }
+
+        thes.each do |k, dir|
+          without_the = k.sub('The ', '')
+
+          if artists.key?(without_the)
+            output(k, dir, without_the, artists[without_the])
+          end
+        end
       end
 
-      def all_mp3s
-        files_under(@mdir, '.mp3')
+      def self.screen_flist(_flist, opts)
+        dirs = opts[:'<directory>'].to_paths
+        opts[:recursive] ? Aur::Helpers.recursive_dir_list(dirs) : dirs
       end
 
-      def self.screen_flist(_flist, _opts)
-        [DATA_DIR]
+      def output(name1, dirs1, name2, dirs2)
+        puts name1
+        dirs1.sort.uniq.each { |d| puts "  #{d}" }
+        puts name2
+        dirs2.sort.uniq.each { |d| puts "  #{d}" }
+        puts
       end
 
       def self.help
         <<~EOHELP
-          usage: aur dupes
+          usage: aur namecheck
 
-          Finds files in tracks/ which may be duplicates of tracks in the
-          albums/ or eps/ directories. It does this very naively, and its output
-          is only a recommendation for further investigation.
+          Finds artists with similar, but not identical, names.
+
+          Looks for missing "The"s.
         EOHELP
       end
     end

@@ -95,10 +95,10 @@ module Aur
       die "File not found: #{e}".bold.red
     rescue Errno::ENOTDIR
       die 'Argument must be a directory.'
-    rescue StandardError => e
-      warn "ERROR: Unhandled error on #{file}".red.bold
-      puts e
-      exit 2
+      # rescue StandardError => e
+      # warn "ERROR: Unhandled error on #{file}".red.bold
+      # puts e
+      # exit 2
     end
     # rubocop:enable Metrics/AbcSize
     # rubocop:enable Metrics/MethodLength

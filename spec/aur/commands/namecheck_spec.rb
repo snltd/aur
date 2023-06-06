@@ -4,32 +4,55 @@
 require_relative '../../spec_helper'
 require_relative '../../../lib/aur/commands/namecheck'
 
-# Run a namecheck test
+# Test namecheck methods
 #
 class TestNamecheck < MiniTest::Test
-  TEST_DIR = RES_DIR.join('dupes')
-  F_DIR = TEST_DIR.join('flac')
-  T_DIR = F_DIR.join('tracks')
+  def setup
+    @t = Aur::Command::Namecheck.new(RES_DIR.join('namecheck', 'flac', 'thes'))
+  end
 
-  def test_find_dupes
-    t = Aur::Command::Dupes.new(TEST_DIR)
-    result = t.find_dupes(t.all_flacs)
-
-    assert_equal(2, result.count)
-
-    f_res = result[T_DIR.join('fall.free_ranger.flac')]
-    assert_equal(
-      [
-        Pathname.new(
-          F_DIR.join('eps', 'fall.eds_babe', '04.fall.free_ranger.flac')
-        ),
-        Pathname.new(
-          F_DIR.join('eps', 'various.compilation', '11.fall.free_ranger.flac')
-        )
-      ],
-      f_res
+  def test_files
+    assert(
+      @t.files(RES_DIR.join('namecheck', 'flac')).all? do |f|
+        f.extname == '.flac'
+      end
     )
 
-    assert_equal(1, result[T_DIR.join('slint.don_aman.flac')].size)
+    assert(
+      @t.files(RES_DIR.join('namecheck', 'mp3')).all? do |f|
+        f.extname == '.mp3'
+      end
+    )
+
+    assert_empty(@t.files(RES_DIR.join('namecheck', 'mp3', 'thes')))
+  end
+
+  def test_unique_list_of_artists
+    out = @t.unique_list_of_artists(@t.instance_variable_get(:@files))
+    assert_equal(['The Artist', 'Artist', 'Singer'], out.keys)
+    assert(out.values.all? { |v| v.all?(Pathname) })
+  end
+
+  def test_thes
+    assert_empty(@t.check_thes(
+                   { 'Artist' => [Pathname.new('/a/a')],
+                     'Band' => [Pathname.new('/a/b')],
+                     'Chanteuse' => [Pathname.new('/a/c')] }
+                 ))
+
+    opt = Spy.on(@t, :output)
+
+    @t.check_thes(
+      { 'Artist' => [Pathname.new('/a/a')],
+        'Band' => [Pathname.new('/a/b')],
+        'Chanteuse' => [Pathname.new('/a/c')],
+        'The Band' => [Pathname.new('/a/d')] }
+    )
+
+    assert_equal(1, opt.calls.size)
+    assert_equal(
+      ['The Band', [Pathname.new('/a/d')], 'Band', [Pathname.new('/a/b')]],
+      opt.calls.first.args
+    )
   end
 end
