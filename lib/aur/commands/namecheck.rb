@@ -17,33 +17,28 @@ module Aur
     class Namecheck
       include Aur::Mixin::FileTree
 
-      def initialize(dir = nil, opts = {})
-        @dir = dir&.expand_path
-        @opts = opts
-        @files = files(@dir)
+      def initialize(dir = nil, _opts = {})
+        @files = files(dir&.expand_path)
+      end
+
+      def run
+        check_thes(unique_list_of_artists(@files))
       end
 
       def files(dir)
-        if dir.to_s.include?('/flac')
-          suffix = '.flac'
-        elsif dir.to_s.include?('/mp3')
-          suffix = '.mp3'
-        else
-          abort 'what is filetype?'
-        end
+        suffix = if dir.to_s.include?('/flac')
+                   '.flac'
+                 elsif dir.to_s.include?('/mp3')
+                   '.mp3'
+                 else
+                   abort 'what is filetype?'
+                 end
 
         files_under(dir, suffix).keys
       end
 
-      def run
-        unique_artists = unique_list_of_artists(@files)
-        check_thes(unique_artists)
-      end
-
       def unique_list_of_artists(files)
-        ret = {}
-
-        files.each do |f|
+        files.each_with_object({}) do |f, ret|
           info = Aur::FileInfo.new(f)
 
           ret[info.artist] = if ret.key?(info.artist)
@@ -52,19 +47,12 @@ module Aur
                                [f.dirname]
                              end
         end
-
-        ret
       end
 
       def check_thes(artists)
-        thes = artists.select { |k, _v| k.start_with?('The ') }
-
-        thes.each do |k, dir|
-          without_the = k.sub('The ', '')
-
-          if artists.key?(without_the)
-            output(k, dir, without_the, artists[without_the])
-          end
+        artists.select { |k, _v| k.start_with?('The ') }.each do |k, dir|
+          no_the = k.sub('The ', '')
+          output(k, dir, no_the, artists[no_the]) if artists.key?(no_the)
         end
       end
 
