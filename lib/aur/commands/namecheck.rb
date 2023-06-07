@@ -2,17 +2,14 @@
 
 require_relative '../constants'
 require_relative '../fileinfo'
+require_relative '../stdlib/string'
 require_relative 'mixins/file_tree'
 require 'set'
 
 module Aur
   module Command
     #
-    # Finds artists with similar, but not identical, names. I'm not certain
-    # exactly how I want to define this
-    #
-    # Look at all the "The"s, and see if we also have the name without the
-    # "The". This is an error.
+    # Finds artists with similar, but not identical, names.
     #
     class Namecheck
       include Aur::Mixin::FileTree
@@ -22,7 +19,9 @@ module Aur
       end
 
       def run
-        check_thes(unique_list_of_artists(@files))
+        artist_list = unique_list_of_artists(@files)
+        check_thes(artist_list)
+        check_compacted(artist_list)
       end
 
       def files(dir)
@@ -56,6 +55,21 @@ module Aur
         end
       end
 
+      def check_compacted(artists)
+        seen = {}
+
+        artists.each do |k, dir|
+          cname = k.compacted
+
+          if seen.key?(cname)
+            output(k, dir, seen[cname][:prev_name], seen[cname][:dirs])
+            seen[cname][:dirs] += dir.map(&:to_s)
+          else
+            seen[cname] = { dirs: dir.map(&:to_s), prev_name: k }
+          end
+        end
+      end
+
       def self.screen_flist(_flist, opts)
         dirs = opts[:'<directory>'].to_paths
         opts[:recursive] ? Aur::Helpers.recursive_dir_list(dirs) : dirs
@@ -75,7 +89,8 @@ module Aur
 
           Finds artists with similar, but not identical, names.
 
-          Looks for missing "The"s.
+          Looks for missing "The"s, and removes all punctuation and
+          capitalisation from names before looking for duplicates.
         EOHELP
       end
     end

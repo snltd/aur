@@ -112,4 +112,10 @@ class StringTest < MiniTest::Test
     assert_equal('Kill-a-Man', 'kill-a-man'.titlecase)
     assert_equal('Master=Dik', 'Master=dik'.titlecase)
   end
+
+  def test_compacted
+    assert_equal('theb52s', 'The B52s'.compacted)
+    assert_equal('theb52s', "The B52's".compacted)
+    assert_equal('theb52s', "The B-52's".compacted)
+  end
 end

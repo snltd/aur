@@ -7,7 +7,6 @@ require_relative '../../../lib/aur/commands/lintdir'
 
 # Test for lintdir
 #
-# rubocop:disable Metrics/ClassLength
 class TestLintdir < MiniTest::Test
   attr_reader :t
 
@@ -157,4 +156,3 @@ class TestLintdir < MiniTest::Test
     refute t.various_artists?(Pathname.new('/a/b/singer.record'))
   end
 end
-# rubocop:enable Metrics/ClassLength
