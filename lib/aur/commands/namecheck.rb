@@ -71,8 +71,7 @@ module Aur
       end
 
       def self.screen_flist(_flist, opts)
-        dirs = opts[:'<directory>'].to_paths
-        opts[:recursive] ? Aur::Helpers.recursive_dir_list(dirs) : dirs
+        opts[:'<directory>'].to_paths
       end
 
       def output(name1, dirs1, name2, dirs2)
