@@ -95,6 +95,10 @@ class String
   end
   # rubocop:enable Metrics/CyclomaticComplexity
 
+  def compacted
+    downcase.gsub(/[^0-9a-z]/, '')
+  end
+
   private
 
   def titlecase_ignorecase?(selfword)
