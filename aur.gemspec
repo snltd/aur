@@ -26,6 +26,7 @@ Gem::Specification.new do |gem|
 
   gem.add_runtime_dependency 'colorize', '~> 0.8'
   gem.add_runtime_dependency 'docopt', '~> 0.6'
+  gem.add_runtime_dependency 'fastimage', '~> 2.2'
   gem.add_runtime_dependency 'flacinfo-rb', '~> 1.0'
   gem.add_runtime_dependency 'i18n', '~> 1.12'
   gem.add_runtime_dependency 'ruby-mp3info', '~> 0.8'

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'fastimage'
 require 'pathname'
 require_relative '../constants'
 require_relative '../exception'
@@ -43,6 +44,7 @@ module Aur
         expected_files?(files)
         sequential_files?(files)
         cover_art?(files)
+        cover_art_looks_ok?(arty(files))
         tags = all_tags(files)
         all_same_album?(tags)
         all_same_genre?(tags)
@@ -58,12 +60,16 @@ module Aur
         err(dir, "Missing file(s) (#{e})")
       rescue Aur::Exception::LintDirUnsequencedFile => e
         err(dir, "Missing track #{e}")
-      rescue Aur::Exception::LintDirMissingCoverArt
+      rescue Aur::Exception::LintDirCoverArtMissing
         err(dir, 'Missing cover art')
-      rescue Aur::Exception::LintDirUnwantedCoverArt
+      rescue Aur::Exception::LintDirCoverArtUnwanted
         err(dir, 'Unwanted cover art')
       rescue Aur::Exception::LintDirInconsistentTags => e
         err(dir, "Inconsistent #{e} tag")
+      rescue Aur::Exception::LintDirCoverArtTooBig,
+             Aur::Exception::LintDirCoverArtTooSmall,
+             Aur::Exception::LintDirCoverArtNotSquare => e
+        err(dir, "Unsuitable image size: #{e}")
       rescue StandardError => e
         warn "Unhandled exception #{e} in #{dir}"
       end
@@ -175,13 +181,39 @@ module Aur
       def cover_art?(files)
         case files.first.extname
         when '.flac'
-          raise Aur::Exception::LintDirMissingCoverArt unless cover_in(files)
+          raise Aur::Exception::LintDirCoverArtMissing unless cover_in(files)
         when '.mp3'
-          raise Aur::Exception::LintDirUnwantedCoverArt if cover_in(files)
+          raise Aur::Exception::LintDirCoverArtUnwanted if cover_in(files)
         end
 
         true
       end
+
+      def square_enough?(x_dim, y_dim)
+        (1 - (x_dim / y_dim.to_f)).abs < ARTWORK_RATIO
+      end
+
+      # rubocop:disable Metrics/MethodLength
+      def cover_art_looks_ok?(files)
+        raise Aur::Exception::LintDirCoverArtUnwanted if files.size > 1
+
+        files.each do |f|
+          x, y = FastImage.size(f)
+
+          unless square_enough?(x, y)
+            raise Aur::Exception::LintDirCoverArtNotSquare, "#{x} x #{y}"
+          end
+
+          if x > ARTWORK_MAX
+            raise Aur::Exception::LintDirCoverArtTooBig, "#{x} x #{y}"
+          end
+
+          if x < ARTWORK_MIN
+            raise Aur::Exception::LintDirCoverArtTooSmall, "#{x} x #{y}"
+          end
+        end
+      end
+      # rubocop:enable Metrics/MethodLength
 
       # @param [Array[Pathname]] returns the highest track number in the given
       #   files, derived from their names
@@ -197,6 +229,12 @@ module Aur
 
       def filenum(file)
         file.basename.to_s.split('.').first.to_i
+      end
+
+      def arty(files)
+        ok_names = %w[front.jpg front.png].freeze
+
+        files.select { |f| ok_names.include?(f.basename.to_s) }
       end
 
       def various_artists?(dir)

@@ -11,6 +11,7 @@ class TestLintdir < MiniTest::Test
   attr_reader :t
 
   LINT_DIR = RES_DIR.join('lintdir')
+  ART_DIR = RES_DIR.join('lintdir-artwork')
 
   def setup
     @t = Aur::Command::Lintdir.new
@@ -133,12 +134,12 @@ class TestLintdir < MiniTest::Test
                          Pathname.new('/a/front.jpg'),
                          Pathname.new('/a/02.a.b.flac')])
 
-    assert_raises(Aur::Exception::LintDirMissingCoverArt) do
+    assert_raises(Aur::Exception::LintDirCoverArtMissing) do
       t.cover_art?([Pathname.new('/a/02.a.b.flac'),
                     Pathname.new('/a/01.a.b.flac')])
     end
 
-    assert_raises(Aur::Exception::LintDirUnwantedCoverArt) do
+    assert_raises(Aur::Exception::LintDirCoverArtUnwanted) do
       t.cover_art?([Pathname.new('/a/01.a.b.mp3'),
                     Pathname.new('/a/front.jpg'),
                     Pathname.new('/a/02.a.b.mp3')])
@@ -160,5 +161,40 @@ class TestLintdir < MiniTest::Test
     assert t.various_artists?(Pathname.new('/a/b/various.compilation'))
     assert t.various_artists?(Pathname.new('/a/b/these--them.split_single'))
     refute t.various_artists?(Pathname.new('/a/b/singer.record'))
+  end
+
+  def test_arty
+    assert_empty(t.arty([Pathname.new('/a/a.flac'), Pathname.new('/a/b.flac')]))
+    assert_equal(
+      [Pathname.new('/a/front.png')],
+      t.arty([Pathname.new('/a/a.flac'), Pathname.new('/a/front.png')])
+    )
+    assert_equal(
+      [Pathname.new('/a/front.jpg')],
+      t.arty([Pathname.new('/a/a.flac'), Pathname.new('/a/front.jpg')])
+    )
+  end
+
+  def test_square_enough?
+    assert t.square_enough?(300, 300)
+    assert t.square_enough?(300, 301)
+    assert t.square_enough?(300, 299)
+    refute t.square_enough?(300, 310)
+  end
+
+  def test_cover_art_looks_ok?
+    assert t.cover_art_looks_ok?([ART_DIR.join('just_right', 'front.jpg')])
+
+    assert_raises(Aur::Exception::LintDirCoverArtTooBig) do
+      assert t.cover_art_looks_ok?([ART_DIR.join('too_big', 'front.jpg')])
+    end
+
+    assert_raises(Aur::Exception::LintDirCoverArtTooSmall) do
+      assert t.cover_art_looks_ok?([ART_DIR.join('too_small', 'front.png')])
+    end
+
+    assert_raises(Aur::Exception::LintDirCoverArtNotSquare) do
+      assert t.cover_art_looks_ok?([ART_DIR.join('not_square', 'front.jpg')])
+    end
   end
 end
