@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'fastimage'
 require 'pathname'
+require_relative 'mixins/cover_art'
 require_relative '../constants'
 require_relative '../exception'
 require_relative '../fileinfo'
@@ -16,6 +16,8 @@ module Aur
     #
     # rubocop:disable Metrics/ClassLength
     class Lintdir
+      include Aur::Mixin::CoverArt
+
       def initialize(dir = nil, opts = {})
         @dir = dir&.expand_path
         @opts = opts
@@ -189,32 +191,6 @@ module Aur
         true
       end
 
-      def square_enough?(x_dim, y_dim)
-        (1 - (x_dim / y_dim.to_f)).abs < ARTWORK_RATIO
-      end
-
-      # rubocop:disable Metrics/MethodLength
-      def cover_art_looks_ok?(files)
-        raise Aur::Exception::LintDirCoverArtUnwanted if files.size > 1
-
-        files.each do |f|
-          x, y = FastImage.size(f)
-
-          unless square_enough?(x, y)
-            raise Aur::Exception::LintDirCoverArtNotSquare, "#{x} x #{y}"
-          end
-
-          if x > ARTWORK_MAX
-            raise Aur::Exception::LintDirCoverArtTooBig, "#{x} x #{y}"
-          end
-
-          if x < ARTWORK_MIN
-            raise Aur::Exception::LintDirCoverArtTooSmall, "#{x} x #{y}"
-          end
-        end
-      end
-      # rubocop:enable Metrics/MethodLength
-
       # @param [Array[Pathname]] returns the highest track number in the given
       #   files, derived from their names
       # @return [Int]
@@ -229,12 +205,6 @@ module Aur
 
       def filenum(file)
         file.basename.to_s.split('.').first.to_i
-      end
-
-      def arty(files)
-        ok_names = %w[front.jpg front.png].freeze
-
-        files.select { |f| ok_names.include?(f.basename.to_s) }
       end
 
       def various_artists?(dir)
@@ -269,6 +239,7 @@ module Aur
             - tags which should be the same, are
             - the correct number of audio files are present
             - no non-audio files exist (except cover art)
+            - any artwork is of suitable dimensions
 
           The contents of files are not examined. For that, use the 'lint'
           command. Nothing on-disk is changed.

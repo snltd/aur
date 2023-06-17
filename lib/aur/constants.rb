@@ -7,7 +7,7 @@ BIN_DIR = Pathname.new('/opt/ooce/bin')
 
 SUPPORTED_TYPES = %w[flac mp3].freeze
 
-BIN = %i[ffmpeg flac lame metaflac shnsplit].to_h do |f|
+BIN = %i[ffmpeg flac lame metaflac shnsplit convert].to_h do |f|
   [f, BIN_DIR.join(f.to_s)]
 end
 
@@ -111,3 +111,4 @@ REQ_TAGS = {
 ARTWORK_MIN = 300
 ARTWORK_MAX = 800
 ARTWORK_RATIO = 0.02 # a measure of squareness
+ARTWORK_DEF = 400 # default size
