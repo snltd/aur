@@ -19,7 +19,7 @@ class TestBase < MiniTest::Test
     assert_instance_of(Aur::FileInfo, obj.info)
   end
 
-  def test_initialize_png
-    assert_raises(NameError) { Aur::Base.new(RES_DIR.join('front.png')) }
+  def test_initialize_jpg
+    assert_raises(NameError) { Aur::Base.new(RES_DIR.join('front.jpg')) }
   end
 end

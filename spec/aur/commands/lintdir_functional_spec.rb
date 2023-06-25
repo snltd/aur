@@ -10,6 +10,7 @@ require_relative '../../../lib/aur/action'
 class TestLintdirCommand < MiniTest::Test
   FDIR = RES_DIR.join('lintdir', 'flac')
   MDIR = RES_DIR.join('lintdir', 'mp3')
+  ADIR = RES_DIR.join('lintdir-artwork')
 
   def test_directory_which_is_good
     assert_silent { act(MDIR.join('broadcast.pendulum')) }
@@ -86,6 +87,12 @@ class TestLintdirCommand < MiniTest::Test
     assert_output('', /Inconsistent year tag\n/) do
       act(FDIR.join('tester.different_year'))
     end
+  end
+
+  def test_jpg_artwork
+    assert_silent { act(ADIR.join('tester.jpg_artwork')) }
+
+    assert_output('', /Bad file/) { act(ADIR.join('tester.png_artwork')) }
   end
 
   # For reasons I cannot yet explain, this test and the next one pass

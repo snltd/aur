@@ -96,7 +96,7 @@ module Aur
       #
       def no_junk?(files)
         uns = files - supported(files)
-        uns.reject! { |f| f.basename.to_s.match?(/^front.(png|jpg)$/) }
+        uns.reject! { |f| f.basename.to_s == 'front.jpg' }
 
         return true if uns.empty? || uns.all?(&:directory?)
 
@@ -163,11 +163,11 @@ module Aur
         raise Aur::Exception::LintDirMixedFiles
       end
 
-      # Do we have a front.jpg or front.png?
+      # Do we have a front.jpg?
       #
       def cover_in(files)
         fnames = files.map { |f| f.basename.to_s }
-        fnames.include?('front.jpg') || fnames.include?('front.png')
+        fnames.include?('front.jpg')
       end
 
       # I want cover art for FLACs, but not MP3s.

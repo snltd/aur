@@ -6,7 +6,7 @@ module Aur
   #
   module Helpers
     def escaped(word)
-      "\"#{word.to_s.gsub(/"/, '\"')}\""
+      "\"#{word.to_s.gsub('"', '\"')}\""
     end
 
     # Blows up an array of directories to an array of those directories and

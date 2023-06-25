@@ -36,8 +36,14 @@ class TestLintdir < MiniTest::Test
                        Pathname.new('/a/01.a.b.flac')])
 
     assert t.no_junk?([Pathname.new('/a/04.a.b.flac'),
-                       Pathname.new('/a/front.png'),
+                       Pathname.new('/a/front.jpg'),
                        Pathname.new('/a/01.a.b.flac')])
+
+    assert_raises(Aur::Exception::LintDirBadFile) do
+      t.no_junk?([Pathname.new('/a/04.a.b.flac'),
+                  Pathname.new('/a/front.png'),
+                  Pathname.new('/a/01.a.b.flac')])
+    end
 
     assert_raises(Aur::Exception::LintDirBadFile) do
       t.no_junk?([Pathname.new('/a/04.a.b.flac'),
@@ -77,7 +83,7 @@ class TestLintdir < MiniTest::Test
                                  Pathname.new('/a/01.a.b.flac')])
 
     assert t.all_same_filetype?([Pathname.new('/a/04.a.b.flac'),
-                                 Pathname.new('/a/front.png'),
+                                 Pathname.new('/a/front.jpg'),
                                  Pathname.new('/a/01.a.b.flac')])
 
     assert_raises(Aur::Exception::LintDirMixedFiles) do
@@ -94,7 +100,7 @@ class TestLintdir < MiniTest::Test
 
     assert_equal(11, t.highest_number([Pathname.new('/a/04.a.b.flac'),
                                        Pathname.new('/a/01.a.b.flac'),
-                                       Pathname.new('/a/front.png'),
+                                       Pathname.new('/a/front.jpg'),
                                        Pathname.new('/a/03.a.b.flac'),
                                        Pathname.new('/a/11.a.b.flac')]))
 
