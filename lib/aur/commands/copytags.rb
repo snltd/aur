@@ -15,12 +15,7 @@ module Aur
 
       def run
         @partner = info.partner
-        unless partner.exist?
-          warn "no partner at #{partner}"
-          return
-        end
-
-        copy_tags if needs_retagging?(info.our_tags)
+        copy_tags if @partner.exist? && needs_retagging?(info.our_tags)
       rescue Encoding::CompatibilityError
         puts "Bad encoding on #{file}"
       end
