@@ -52,7 +52,7 @@ module Aur
     def sanitised(title)
       title.delete(',') # ignore, commas
            .sub(/[?!']$/, '') # ignore ? and ! and ' at the end of the title!
-           .gsub(/' /, ' ') # ignore ' at the endin' of a word
+           .gsub("' ", ' ') # ignore ' at the endin' of a word
            .sub('Feat. ', 'Feat ')
     end
 

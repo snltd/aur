@@ -36,7 +36,7 @@ class String
         .gsub(/\)\s+/, '--')
         .gsub(/\s+/, '_')
         .gsub(/[^\w-]/, '')
-        .gsub(/_-_/, '-')
+        .gsub('_-_', '-')
         .gsub(/^[_-]+|[-_]+$/, '')
   end
   # rubocop:enable Metrics/AbcSize
