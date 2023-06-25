@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'pathname'
+require_relative 'mixins/cover_art'
 require_relative '../constants'
 require_relative '../exception'
 require_relative '../fileinfo'
@@ -15,6 +16,8 @@ module Aur
     #
     # rubocop:disable Metrics/ClassLength
     class Lintdir
+      include Aur::Mixin::CoverArt
+
       def initialize(dir = nil, opts = {})
         @dir = dir&.expand_path
         @opts = opts
@@ -43,6 +46,7 @@ module Aur
         expected_files?(files)
         sequential_files?(files)
         cover_art?(files)
+        cover_art_looks_ok?(arty(files))
         tags = all_tags(files)
         all_same_album?(tags)
         all_same_genre?(tags)
@@ -58,12 +62,16 @@ module Aur
         err(dir, "Missing file(s) (#{e})")
       rescue Aur::Exception::LintDirUnsequencedFile => e
         err(dir, "Missing track #{e}")
-      rescue Aur::Exception::LintDirMissingCoverArt
+      rescue Aur::Exception::LintDirCoverArtMissing
         err(dir, 'Missing cover art')
-      rescue Aur::Exception::LintDirUnwantedCoverArt
+      rescue Aur::Exception::LintDirCoverArtUnwanted
         err(dir, 'Unwanted cover art')
       rescue Aur::Exception::LintDirInconsistentTags => e
         err(dir, "Inconsistent #{e} tag")
+      rescue Aur::Exception::LintDirCoverArtTooBig,
+             Aur::Exception::LintDirCoverArtTooSmall,
+             Aur::Exception::LintDirCoverArtNotSquare => e
+        err(dir, "Unsuitable image size: #{e}")
       rescue StandardError => e
         warn "Unhandled exception #{e} in #{dir}"
       end
@@ -175,9 +183,9 @@ module Aur
       def cover_art?(files)
         case files.first.extname
         when '.flac'
-          raise Aur::Exception::LintDirMissingCoverArt unless cover_in(files)
+          raise Aur::Exception::LintDirCoverArtMissing unless cover_in(files)
         when '.mp3'
-          raise Aur::Exception::LintDirUnwantedCoverArt if cover_in(files)
+          raise Aur::Exception::LintDirCoverArtUnwanted if cover_in(files)
         end
 
         true
@@ -231,6 +239,7 @@ module Aur
             - tags which should be the same, are
             - the correct number of audio files are present
             - no non-audio files exist (except cover art)
+            - any artwork is of suitable dimensions
 
           The contents of files are not examined. For that, use the 'lint'
           command. Nothing on-disk is changed.

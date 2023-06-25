@@ -37,13 +37,19 @@ module Aur
 
     class LintDirInconsistentTags < RuntimeError; end
 
-    class LintDirMissingCoverArt < RuntimeError; end
+    class LintDirCoverArtMissing < RuntimeError; end
+
+    class LintDirCoverArtNotSquare < RuntimeError; end
+
+    class LintDirCoverArtTooBig < RuntimeError; end
+
+    class LintDirCoverArtTooSmall < RuntimeError; end
+
+    class LintDirCoverArtUnwanted < RuntimeError; end
 
     class LintDirMixedFiles < RuntimeError; end
 
     class LintDirUnsequencedFile < RuntimeError; end
-
-    class LintDirUnwantedCoverArt < RuntimeError; end
 
     class MissingBinary < RuntimeError; end
 

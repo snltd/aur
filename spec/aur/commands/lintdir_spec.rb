@@ -133,12 +133,12 @@ class TestLintdir < MiniTest::Test
                          Pathname.new('/a/front.jpg'),
                          Pathname.new('/a/02.a.b.flac')])
 
-    assert_raises(Aur::Exception::LintDirMissingCoverArt) do
+    assert_raises(Aur::Exception::LintDirCoverArtMissing) do
       t.cover_art?([Pathname.new('/a/02.a.b.flac'),
                     Pathname.new('/a/01.a.b.flac')])
     end
 
-    assert_raises(Aur::Exception::LintDirUnwantedCoverArt) do
+    assert_raises(Aur::Exception::LintDirCoverArtUnwanted) do
       t.cover_art?([Pathname.new('/a/01.a.b.mp3'),
                     Pathname.new('/a/front.jpg'),
                     Pathname.new('/a/02.a.b.mp3')])
