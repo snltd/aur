@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'pathname'
-require_relative 'mixins/cover_art'
 require_relative '../exception'
 
 module Aur
@@ -21,20 +20,11 @@ module Aur
       end
 
       def run
-        rename
-        resize
-      end
-
-      def rename
         candidates(dir).sort.each do |f|
           new = new_name(f)
           puts "renaming #{f} -> #{new.basename}"
           f.rename(new) unless opts[:noop]
         end
-      end
-
-      def resize
-        cover_art_looks_ok?
       end
 
       def new_name(old_name)
