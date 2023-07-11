@@ -37,9 +37,6 @@ class TestArtfixCommand < Minitest::Test
 
       refute dir.join('albums/windy_and_carl.portal/Front.jpg').exist?
       assert dir.join('albums/windy_and_carl.portal/front.jpg').exist?
-
-      refute dir.join('eps/water_world.dead/front cover.Png').exist?
-      assert dir.join('eps/water_world.dead/front.png').exist?
     end
   end
 
@@ -53,7 +50,6 @@ class TestArtfixCommand < Minitest::Test
     <<~EOOUT
       renaming #{dir}/albums/jesus_lizard.liar/cover.jpg -> front.jpg
       renaming #{dir}/albums/windy_and_carl.portal/Front.JPG -> front.jpg
-      renaming #{dir}/eps/water_world.dead/front cover.Png -> front.png
     EOOUT
   end
 end

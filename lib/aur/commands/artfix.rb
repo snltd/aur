@@ -11,8 +11,8 @@ module Aur
     class Artfix
       attr_reader :dir, :opts
 
-      SUFFIXES = %w[.jpg .jpeg .png].freeze
-      OK_NAMES = %w[front.jpg front.png].freeze
+      SUFFIXES = %w[.jpg .jpeg].freeze
+      OK_NAME = 'front.jpg'
 
       def initialize(dir = nil, opts = {})
         @dir = dir
@@ -20,6 +20,10 @@ module Aur
       end
 
       def run
+        rename
+      end
+
+      def rename
         candidates(dir).sort.each do |f|
           new = new_name(f)
           puts "renaming #{f} -> #{new.basename}"
@@ -28,27 +32,22 @@ module Aur
       end
 
       def new_name(old_name)
-        dir = old_name.dirname
+        return old_name.dirname.join('front.jpg') if right_filetype?(old_name)
 
-        case old_name.extname.downcase
-        when '.jpg', '.jpeg'
-          dir.join('front.jpg')
-        when '.png'
-          dir.join('front.png')
-        else
-          raise Aur::Exception::UnsupportedFiletype
-        end
+        raise Aur::Exception::UnsupportedFiletype
       end
 
       # @param dir [String,Pathname]
-      # @return [Array[Pathname]] all JPEGs or PNGs under @dir not called
-      # front.jpg or front.png
+      # @return [Pathname] the first JPEG file in @dir not called front.jpg
       #
       def candidates(dir)
         Pathname.glob("#{dir}/**/*").select do |f|
-          SUFFIXES.include?(f.extname.downcase) && f.file? &&
-            !OK_NAMES.include?(f.basename.to_s)
+          right_filetype?(f) && f.file? && f.basename.to_s != OK_NAME
         end
+      end
+
+      def right_filetype?(file)
+        SUFFIXES.include?(file.extname.downcase)
       end
 
       def self.screen_flist(_flist, opts)
