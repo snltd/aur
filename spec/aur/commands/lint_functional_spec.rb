@@ -77,6 +77,16 @@ class TestLintCommand < MiniTest::Test
     assert_output(nil, /#{file}\s+Invalid tag value: artist/) { act(file) }
   end
 
+  B_DIR = RES_DIR.join('lint-bitrate', 'mp3', 'eps', 'tester.test_ep')
+
+  def test_bitrate
+    assert_output(nil, /High MP3 bitrate/) do
+      act(B_DIR.join('01.tester.song.mp3'))
+    end
+
+    assert_silent { act(B_DIR.join('02.tester.no_flac.mp3')) }
+  end
+
   private
 
   def act(*files)

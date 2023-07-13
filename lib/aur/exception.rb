@@ -25,6 +25,8 @@ module Aur
 
     class LintDuplicateTags < RuntimeError; end
 
+    class LintHighBitrateMp3 < RuntimeError; end
+
     class LintMissingTags < RuntimeError; end
 
     class LintUnwantedTags < RuntimeError; end

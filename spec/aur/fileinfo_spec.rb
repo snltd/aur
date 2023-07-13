@@ -113,4 +113,16 @@ class TestFileInfo < MiniTest::Test
     assert_equal('flac', flac.filetype)
     assert_equal('mp3', mp3.filetype)
   end
+
+  def test_raw_bitrate?
+    assert_equal(44_100, flac.raw_bitrate)
+    assert_equal(64, mp3.raw_bitrate)
+  end
+
+  def test_is_it_this_or_that
+    assert flac.flac?
+    assert mp3.mp3?
+    refute flac.mp3?
+    refute mp3.flac?
+  end
 end
