@@ -21,6 +21,7 @@ module Aur
         extend Aur::Command::LintTracks if in_tracks?
         @info = Aur::FileInfo.new(file)
         @opts = opts
+        extend Aur::Command::LintMp3 if @info.mp3?
         @validator = Aur::TagValidator.new(info, opts)
       end
 
@@ -36,6 +37,7 @@ module Aur
         correctly_named?(file)
         correct_tags?
         correct_tag_values?
+        reasonable_bitrate? if respond_to?(:reasonable_bitrate?)
       rescue Aur::Exception::LintBadName
         err(file, 'Invalid file name')
       rescue Aur::Exception::LintMissingTags => e
@@ -44,8 +46,10 @@ module Aur
         err(file, "Unwanted tags: #{e}")
       rescue Aur::Exception::InvalidTagValue => e
         err(file, "Invalid tag value: #{e}")
-      rescue Aur::Exception::LintDuplicateTags
-        err(file, 'Duplicate tags')
+      rescue Aur::Exception::LintDuplicateTags => e
+        err(file, "Duplicate tags: #{e}")
+      rescue Aur::Exception::LintHighBitrateMp3 => e
+        err(file, "High MP3 bitrate: #{e}")
       end
       # rubocop:enable Metrics/MethodLength
 
@@ -178,6 +182,29 @@ module Aur
       end
     end
     # rubocop:enable Metrics/ClassLength
+
+    # Extra MP3 things
+    #
+    module LintMp3
+      #
+      # If there's a corresponding FLAC to this MP3, check the MP3 isn't over
+      # 128kbps. If there is, any bitrate is fine.
+      #
+      def reasonable_bitrate?
+        return true unless @info.partner.exist?
+        return true if @info.raw_bitrate <= MP3_BITRATE
+
+        # Give VBRs an allowance. When we encode at 128 VBR it can show in the
+        # 140s.
+        #
+        if @info.raw_bitrate <= 1.2 * MP3_BITRATE &&
+           @info.bitrate.include?('variable')
+          return true
+        end
+
+        raise Aur::Exception::LintHighBitrateMp3, @info.raw_bitrate
+      end
+    end
 
     # We have different rules for things in a tracks/ directory.
     #

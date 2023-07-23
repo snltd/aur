@@ -40,6 +40,10 @@ module Aur
              rate: info.streaminfo['samplerate'])
     end
 
+    def raw_bitrate
+      info.streaminfo['samplerate']
+    end
+
     def rawtags
       info.tags
     end
@@ -103,6 +107,14 @@ module Aur
     #
     def incorrect_tags?
       tags.keys.map(&:to_sym).sort != required_tags.sort
+    end
+
+    def mp3?
+      false
+    end
+
+    def flac?
+      true
     end
 
     private
@@ -194,6 +206,14 @@ module Aur
   # Methods specific to MP3s. We are all about id3v2. v1 is nowhere.
   #
   module FileInfoMp3
+    def mp3?
+      true
+    end
+
+    def flac?
+      false
+    end
+
     def read
       Mp3Info.open(file)
     end
@@ -206,6 +226,10 @@ module Aur
       format('%<rate>skbps%<extra>s',
              rate: info.bitrate,
              extra: info.vbr ? ' (variable)' : '')
+    end
+
+    def raw_bitrate
+      info.bitrate.to_i
     end
 
     def rawtags

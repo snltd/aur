@@ -11,9 +11,14 @@ BIN = %i[ffmpeg flac lame metaflac shnsplit convert].to_h do |f|
   [f, BIN_DIR.join(f.to_s)]
 end
 
+# We convert FLACs to this MP3 bitrate, and flag up MP3s which are higher
+#
+MP3_BITRATE = 128
+
 # Preset for encoding MP3s
 #
-LAME_FLAGS = '-q2 --vbr-new --preset 128 --id3v2-only --add-id3v2 --silent'
+LAME_FLAGS = "-q2 --vbr-new --preset #{MP3_BITRATE} --id3v2-only " \
+             '--add-id3v2 --silent'.freeze
 
 # These words are not (normally) capitalised when generating tags. 'featuring'
 # is there for artist names.
