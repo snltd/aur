@@ -10,12 +10,13 @@ module Aur
     #
     module CoverArt
       def arty(files)
-        ok_names = %w[front.jpg front.png].freeze
-
-        files.select { |f| ok_names.include?(f.basename.to_s) }
+        files.find { |f| f.basename.to_s == 'front.jpg' }
       end
 
+      # rubocop:disable Metrics/CyclomaticComplexity
       def cover_art_looks_ok?(file)
+        return unless file&.exist?
+
         x, y = FastImage.size(file)
 
         raise Aur::Exception::ArtfixNilSize if x.nil? || y.nil?
@@ -24,10 +25,13 @@ module Aur
 
         raise Aur::Exception::LintDirCoverArtTooBig if x > ARTWORK_DEF
 
-        return unless x < ARTWORK_MIN
+        if x < ARTWORK_MIN
+          raise Aur::Exception::LintDirCoverArtTooSmall, "#{x} x #{y}"
+        end
 
-        raise Aur::Exception::LintDirCoverArtTooSmall, "#{x} x #{y}"
+        true
       end
+      # rubocop:enable Metrics/CyclomaticComplexity
     end
   end
 end
