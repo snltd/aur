@@ -111,9 +111,8 @@ REQ_TAGS = {
   mp3: %i[talb tcon tit2 tpe1 trck tyer]
 }.freeze
 
-# Permissible dimensions of cover art. Files also have to be (nearly) square
+# Permissible dimensions of cover art. And dimensions must be square.
 #
-ARTWORK_MIN = 300
-ARTWORK_MAX = 800
-ARTWORK_RATIO = 0.02 # a measure of squareness
-ARTWORK_DEF = 400 # default size
+ARTWORK_DEF = 750 # default size
+ARTWORK_MIN = 700 # but we will tolerate this
+ARTWORK_DIR = Pathname.new(Dir.home).join('artfix')
