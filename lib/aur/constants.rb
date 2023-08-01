@@ -40,6 +40,7 @@ ALL_CAPS = %w[ok dj lp ep l.a. bmr bbc scsi ii iii iv vi vii ix xi cd fm tko
               dvd tnt acd csi xr3 acac 4ad3dcd vip kfc uvtv nme gf bf abba bmx
               fc 3cp a&r r&b ihop lsd lcd lp2 mbv pcp urc uk nato afx mj ac/dc
               jxl tm usm klf m/a/r/r/s mc5 ps tv gtg bnoc nypd mtv od afx2
+              kmfdm dc km
               ep lp pcm dva xxx isan krk npl mc brkn01 brkn02 brkn03].freeze
 
 # These words should be ignored when examining case
@@ -113,6 +114,6 @@ REQ_TAGS = {
 
 # Permissible dimensions of cover art. And dimensions must be square.
 #
-ARTWORK_DEF = 750 # default size
-ARTWORK_MIN = 700 # but we will tolerate this
-ARTWORK_DIR = Pathname.new(Dir.home).join('artfix')
+ARTWORK_DEF = 700 # default size
+ARTWORK_MIN = 375 # but we will tolerate this
+ARTWORK_DIR = Pathname.new(Dir.home).join('work', 'artfix')
