@@ -48,7 +48,8 @@ module Aur
         return unless cover_file.exist?
 
         cover_art_looks_ok?(cover_file)
-      rescue Aur::Exception::LintDirCoverArtNotSquare
+      rescue Aur::Exception::LintDirCoverArtNotSquare,
+             Aur::Exception::LintDirCoverArtTooSmall
         link_artwork(cover_file)
       rescue Aur::Exception::LintDirCoverArtTooBig
         resize_artwork(cover_file)
@@ -59,11 +60,11 @@ module Aur
 
         puts "linking #{file} to #{linkdir}"
         mk_work_dir(linkdir)
-        FileUtils.link(file, linkdir.join(mk_link_target(file)))
+        FileUtils.symlink(file.realpath, linkdir.join(mk_link_target(file)))
       end
 
       def mk_link_target(file)
-        file.to_s[1..].tr('/', '-')
+        @dir.realpath.join(file).to_s[1..].tr('/', '-')
       end
 
       def resize_artwork(file)
