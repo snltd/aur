@@ -7,7 +7,7 @@ require_relative '../../../lib/aur/commands/wantflac'
 
 # Test for wantflac methods
 #
-class TestWantflac < MiniTest::Test
+class TestWantflac < Minitest::Test
   def setup
     @t = Aur::Command::Wantflac.new(Pathname.new(RES_DIR))
   end

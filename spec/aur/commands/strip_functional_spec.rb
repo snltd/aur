@@ -7,7 +7,7 @@ require_relative '../../../lib/aur/fileinfo'
 
 # Run 'aur strip' commands against things, and verify the results
 #
-class TestStripCommand < MiniTest::Test
+class TestStripCommand < Minitest::Test
   include Aur::CommandTests
 
   def test_flac

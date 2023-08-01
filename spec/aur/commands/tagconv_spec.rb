@@ -6,7 +6,7 @@ require_relative '../../../lib/aur/commands/tagconv'
 
 # Done with functional spec
 #
-class TestTagconv < MiniTest::Test
+class TestTagconv < Minitest::Test
   attr_reader :t
 
   def setup

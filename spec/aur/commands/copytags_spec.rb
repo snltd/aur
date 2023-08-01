@@ -5,4 +5,4 @@ require_relative '../../spec_helper'
 
 # Done with functional spec
 #
-class TestCopytags < MiniTest::Test; end
+class TestCopytags < Minitest::Test; end

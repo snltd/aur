@@ -6,7 +6,7 @@ require_relative '../../../lib/aur/action'
 
 # Run 'aur mp3dir' commands against real directories, and verify the results.
 #
-class TestMp3dir < MiniTest::Test
+class TestMp3dir < Minitest::Test
   def setup
     skip unless BIN[:flac].exist? && BIN[:lame].exist?
   end

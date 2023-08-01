@@ -7,7 +7,7 @@ require_relative '../../lib/aur/fileinfo'
 
 # Ensure files are tagged correctly
 #
-class TestTagger < MiniTest::Test
+class TestTagger < Minitest::Test
   attr_reader :t_mp3
 
   def setup

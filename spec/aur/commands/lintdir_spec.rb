@@ -7,7 +7,7 @@ require_relative '../../../lib/aur/commands/lintdir'
 
 # Test for lintdir
 #
-class TestLintdir < MiniTest::Test
+class TestLintdir < Minitest::Test
   attr_reader :t
 
   LINT_DIR = RES_DIR.join('lintdir')

@@ -7,7 +7,7 @@ require_relative '../../../lib/aur/constants'
 
 # Run 'aur verify' commands against things, and verify the output
 #
-class TestVerifyCmd < MiniTest::Test
+class TestVerifyCmd < Minitest::Test
   attr_reader :dir
 
   include Aur::CommandTests

@@ -6,7 +6,7 @@ require_relative '../../../lib/aur/commands/retitle'
 
 # Tests the internals of the retitle command
 #
-class TestRetitle < MiniTest::Test
+class TestRetitle < Minitest::Test
   attr_reader :t
 
   def setup

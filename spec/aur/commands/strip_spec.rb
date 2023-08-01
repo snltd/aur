@@ -6,7 +6,7 @@ require_relative '../../../lib/aur/commands/strip'
 
 # Test internals of strip command
 #
-class TestStrip < MiniTest::Test
+class TestStrip < Minitest::Test
   def test_real_tags
     t = Aur::Command::Strip.new(RES_DIR.join('test_tone--100hz.flac'))
 

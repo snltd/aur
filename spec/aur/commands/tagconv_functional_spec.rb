@@ -7,7 +7,7 @@ require_relative '../../../lib/aur/fileinfo'
 
 # Run 'aur tagconv' commands against things, and verify the results
 #
-class TestTagconvCommand < MiniTest::Test
+class TestTagconvCommand < Minitest::Test
   # include Aur::CommandTests
 
   def test_remove_v1_tags_from_file_with_both

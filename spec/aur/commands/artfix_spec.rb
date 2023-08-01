@@ -6,7 +6,7 @@ require_relative '../../../lib/aur/commands/artfix'
 
 # Unit tests for Artfix class
 #
-class TestArtfix < MiniTest::Test
+class TestArtfix < Minitest::Test
   attr_reader :t
 
   def setup

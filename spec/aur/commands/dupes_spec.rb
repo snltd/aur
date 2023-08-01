@@ -6,7 +6,7 @@ require_relative '../../../lib/aur/commands/dupes'
 
 # Run a dupe test
 #
-class TestDupes < MiniTest::Test
+class TestDupes < Minitest::Test
   TEST_DIR = RES_DIR.join('dupes')
   F_DIR = TEST_DIR.join('flac')
   T_DIR = F_DIR.join('tracks')

@@ -6,7 +6,7 @@ require_relative '../../../lib/aur/commands/syncflac'
 
 # Tests for syncflac class
 #
-class TestSyncflac < MiniTest::Test
+class TestSyncflac < Minitest::Test
   def test_difference
     t = Aur::Command::Syncflac.new(RES_DIR.join('syncflac'))
 

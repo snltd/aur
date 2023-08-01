@@ -7,7 +7,7 @@ require_relative '../../lib/aur/fileinfo'
 
 # Renaming tests
 #
-class TestRenamers < MiniTest::Test
+class TestRenamers < Minitest::Test
   include Aur::Renamers
 
   def test_track_fnum

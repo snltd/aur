@@ -6,7 +6,7 @@ require_relative '../../../lib/aur/action'
 
 # Run 'aur thes' commands against things, and verify the results
 #
-class TestThesCommand < MiniTest::Test
+class TestThesCommand < Minitest::Test
   include Aur::CommandTests
 
   def test_flac_thes

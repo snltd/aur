@@ -7,7 +7,7 @@ require_relative '../../../lib/aur/constants'
 
 # Tests for String extensions
 #
-class StringTest < MiniTest::Test
+class StringTest < Minitest::Test
   def test_to_safe
     assert_equal('', ''.to_safe)
     assert_equal('basic', 'basic'.to_safe)

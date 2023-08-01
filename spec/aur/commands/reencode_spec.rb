@@ -7,7 +7,7 @@ require_relative '../../../lib/aur/stdlib/pathname'
 
 # Test for reencode internals
 #
-class TestReencode < MiniTest::Test
+class TestReencode < Minitest::Test
   def test_construct_cmd
     t = Aur::Command::Reencode.new(RES_DIR.join('test_tone--100hz.flac'))
 

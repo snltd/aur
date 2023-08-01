@@ -6,7 +6,7 @@ require_relative '../../../lib/aur/action'
 
 # Run 'aur info' commands against things, and verify the output
 #
-class TestInfoCommand < MiniTest::Test
+class TestInfoCommand < Minitest::Test
   attr_reader :dir
 
   include Aur::CommandTests

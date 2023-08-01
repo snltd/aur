@@ -6,7 +6,7 @@ require_relative '../../../lib/aur/action'
 
 # Run 'aur artfix' commands against a mock filesystem, and verify the results.
 #
-class TestArtfixCommand < MiniTest::Test
+class TestArtfixCommand < Minitest::Test
   def test_directory_nothing_to_do
     assert_silent do
       act(RES_DIR.join('lintdir', 'flac'), RES_DIR.join('lintdir', 'mp3'))

@@ -6,7 +6,7 @@ require_relative '../../../lib/aur/action'
 
 # Run 'aur albumdisc' commands against things, and verify the results
 #
-class TestAlbumdiscCommand < MiniTest::Test
+class TestAlbumdiscCommand < Minitest::Test
   include Aur::CommandTests
 
   AT_DIR = RES_DIR.join('albumdisc')

@@ -7,7 +7,7 @@ require_relative '../../../lib/aur/commands/retag'
 
 # Only has functional tests. There's no logic worth testing.
 #
-class TestTagflat < MiniTest::Test
+class TestTagflat < Minitest::Test
   def setup
     @t = Aur::Command::Retag.new(RES_DIR.join('double_title.flac'))
   end

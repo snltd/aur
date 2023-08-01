@@ -7,7 +7,7 @@ require_relative '../../lib/aur/tagger'
 
 # Run tagger against real files and observe real changes
 #
-class TestTaggerFunctional < MiniTest::Test
+class TestTaggerFunctional < Minitest::Test
   def test_tagging
     SUPPORTED_TYPES.each do |type|
       with_test_file("test_tone--100hz.#{type}") do |f|

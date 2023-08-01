@@ -6,7 +6,7 @@ require_relative '../../../lib/aur/action'
 
 # Run 'aur itag' commands against things, and verify the results
 #
-class TestITagCommand < MiniTest::Test
+class TestITagCommand < Minitest::Test
   include Aur::CommandTests
 
   def test_flac_inumber

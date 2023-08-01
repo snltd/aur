@@ -6,7 +6,7 @@ require_relative '../../../lib/aur/action'
 
 # Run 'aur set...' commands against things, and verify the results
 #
-class TestSetCommand < MiniTest::Test
+class TestSetCommand < Minitest::Test
   include Aur::CommandTests
 
   def test_flac_set

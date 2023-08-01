@@ -6,7 +6,7 @@ require_relative '../../../lib/aur/commands/albumdisc'
 
 # Tests for Albumdisc
 #
-class TestAlbumdisc < MiniTest::Test
+class TestAlbumdisc < Minitest::Test
   attr_reader :t
 
   def setup
