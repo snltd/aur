@@ -32,6 +32,7 @@ class TestTagValidator < MiniTest::Test
     refute lax.artist('Simon and  Garfunkel')
     refute lax.artist('Broadcast;Broadcast')
     refute lax.artist('Simon & Garfunkel')
+    refute lax.title('Cybele’s Reverie')
     refute lax.artist('')
     refute lax.artist(nil)
   end

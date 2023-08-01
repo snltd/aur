@@ -75,8 +75,12 @@ module Aur
     def artist(string)
       return false if string.nil?
 
-      !string.empty? && !contains_ampersand?(string) && !string.include?(';') &&
-        string.strip == string && !string.match(/\s\s/)
+      !string.empty? &&
+        !contains_ampersand?(string) &&
+        !string.include?(';') &&
+        string.strip == string &&
+        !string.match(/\s\s/) &&
+        !contains_forbidden?(string)
     end
 
     alias title artist
@@ -86,6 +90,12 @@ module Aur
       return false if num.nil?
 
       num.to_i.to_s == num && num.to_i.positive?
+    end
+
+    # Any odd chars we don't want
+    #
+    def contains_forbidden?(string)
+      string.include?('’')
     end
 
     def contains_ampersand?(string)
