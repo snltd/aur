@@ -8,7 +8,7 @@ require_relative '../../../../lib/aur/commands/mixins/cover_art'
 
 # Test for cover art mixin
 #
-class TestCoverArtMixin < MiniTest::Test
+class TestCoverArtMixin < Minitest::Test
   include Aur::Mixin::CoverArt
 
   ART_DIR = RES_DIR.join('lintdir-artwork')

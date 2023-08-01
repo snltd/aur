@@ -7,7 +7,7 @@ require_relative '../../../lib/aur/commands/namecheck'
 
 # Test namecheck against a real filesystem
 #
-class TestNamecheckCmd < MiniTest::Test
+class TestNamecheckCmd < Minitest::Test
   THES_DIR = RES_DIR.join('namecheck', 'flac', 'thes')
   SIMILAR_DIR = RES_DIR.join('namecheck', 'mp3', 'similar')
 

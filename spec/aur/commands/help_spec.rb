@@ -6,7 +6,7 @@ require_relative '../../spec_helper'
 
 # Test that every command gives some reasonable looking help.
 #
-class TestHelp < MiniTest::Test
+class TestHelp < Minitest::Test
   def test_help
     commands_to_test.each do |cmd|
       require cmd

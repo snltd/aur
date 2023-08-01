@@ -7,7 +7,7 @@ require_relative '../../../lib/aur/constants'
 
 # Tests for flac2mp3 command
 #
-class TestFlac2Mp3 < MiniTest::Test
+class TestFlac2Mp3 < Minitest::Test
   attr_reader :t
 
   def setup

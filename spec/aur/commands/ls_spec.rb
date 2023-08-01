@@ -6,7 +6,7 @@ require_relative '../../../lib/aur/commands/ls'
 
 # Tests the internals of the 'aur ls' command
 #
-class TestLs < MiniTest::Test
+class TestLs < Minitest::Test
   attr_reader :t
 
   def setup

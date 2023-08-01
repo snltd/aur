@@ -6,7 +6,7 @@ require_relative '../../../lib/aur/commands/info'
 
 # Test info command
 #
-class TestInfo < MiniTest::Test
+class TestInfo < Minitest::Test
   attr_reader :flac
 
   def setup

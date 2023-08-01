@@ -6,7 +6,7 @@ require_relative '../../../lib/aur/action'
 
 # Run 'aur tag2name' commands against things, and verify the results
 #
-class TestName2TagCommand < MiniTest::Test
+class TestName2TagCommand < Minitest::Test
   include Aur::CommandTests
 
   def test_name2tag

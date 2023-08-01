@@ -7,7 +7,7 @@ require_relative '../../../lib/aur/fileinfo'
 
 # Run 'aur renumber' commands against things, and verify the results
 #
-class TestRenumberCommand < MiniTest::Test
+class TestRenumberCommand < Minitest::Test
   include Aur::CommandTests
 
   def test_renumber_up

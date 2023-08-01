@@ -7,7 +7,7 @@ require_relative '../../../lib/aur/commands/lint'
 
 # Tests for linting album and EP files
 #
-class TestLint < MiniTest::Test
+class TestLint < Minitest::Test
   attr_reader :t
 
   def setup
@@ -73,7 +73,7 @@ end
 
 # Tests for linting files in tracks/
 #
-class TestLintTracks < MiniTest::Test
+class TestLintTracks < Minitest::Test
   attr_reader :t
 
   L_DIR = RES_DIR.join('lint', 'tracks')

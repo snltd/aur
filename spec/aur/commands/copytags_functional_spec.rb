@@ -7,7 +7,7 @@ require_relative '../../../lib/aur/fileinfo'
 
 # Run 'aur copytags' commands against things, and verify the results
 #
-class TestCopytagsCommand < MiniTest::Test
+class TestCopytagsCommand < Minitest::Test
   def test_remove_v1_tags_from_file_with_both
     with_test_file('copytags') do |dir|
       flac = dir.join('flac', '01.artist.song.flac')

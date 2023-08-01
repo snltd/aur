@@ -6,7 +6,7 @@ require_relative '../../../lib/aur/action'
 
 # Run 'aur lint' commands against known entities
 #
-class TestLintCommand < MiniTest::Test
+class TestLintCommand < Minitest::Test
   def test_good_flac
     assert_silent do
       act(RES_DIR.join('null_set.some_stuff_by', '03.null_set.high_beam.flac'))

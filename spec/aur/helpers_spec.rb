@@ -6,7 +6,7 @@ require_relative '../../lib/aur/helpers'
 
 # Tests
 #
-class Test < MiniTest::Test
+class Test < Minitest::Test
   include Aur::Helpers
 
   FLAC_DIR = RES_DIR.join('lintdir', 'flac')

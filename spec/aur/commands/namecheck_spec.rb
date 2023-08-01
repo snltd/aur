@@ -6,7 +6,7 @@ require_relative '../../../lib/aur/commands/namecheck'
 
 # Test namecheck methods
 #
-class TestNamecheck < MiniTest::Test
+class TestNamecheck < Minitest::Test
   def setup
     @t = Aur::Command::Namecheck.new(RES_DIR.join('namecheck', 'flac', 'thes'))
   end

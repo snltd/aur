@@ -6,7 +6,7 @@ require_relative '../../../lib/aur/action'
 
 # Run 'aur mp3dir' commands against real directories, and verify the results.
 #
-class TestMp3dir < MiniTest::Test
+class TestMp3dir < Minitest::Test
   #
   # This might look a bit i_suck_and_my_tests_are_order_dependent, but I swear
   # it's fine. It saves me having to carry around a stack of different

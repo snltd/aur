@@ -7,7 +7,7 @@ require_relative '../../../lib/aur/commands/inumber'
 
 # Tests for interactive numbering
 #
-class TestInumber < MiniTest::Test
+class TestInumber < Minitest::Test
   attr_reader :t
 
   def setup

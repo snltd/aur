@@ -6,7 +6,7 @@ require_relative '../../lib/aur/action'
 
 # test the command controller
 #
-class CommandTest < MiniTest::Test
+class CommandTest < Minitest::Test
   attr_reader :obj
 
   def setup

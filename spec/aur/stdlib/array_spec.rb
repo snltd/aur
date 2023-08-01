@@ -6,7 +6,7 @@ require_relative '../../../lib/aur/stdlib/array'
 
 # Tests for extensions to Array class
 #
-class TestArray < MiniTest::Test
+class TestArray < Minitest::Test
   def test_to_paths
     assert_equal([Pathname.new('/etc/passwd'), Pathname.new('/etc/hosts')],
                  %w[/etc/passwd /etc/hosts].to_paths)

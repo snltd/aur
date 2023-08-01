@@ -6,7 +6,7 @@ require_relative '../../../lib/aur/commands/mp3dir'
 
 # Tests for mp3dir class
 #
-class TestMp3dir < MiniTest::Test
+class TestMp3dir < Minitest::Test
   def test_mp3_target_dir
     skip unless BIN[:flac].exist?
 

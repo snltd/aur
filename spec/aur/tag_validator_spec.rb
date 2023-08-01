@@ -6,7 +6,7 @@ require_relative '../../lib/aur/tag_validator'
 
 # Ensure tags are validated correctly
 #
-class TestTagValidator < MiniTest::Test
+class TestTagValidator < Minitest::Test
   attr_reader :lax, :strict
 
   def setup

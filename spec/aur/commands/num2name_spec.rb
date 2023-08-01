@@ -6,7 +6,7 @@ require_relative '../../../lib/aur/commands/num2name'
 
 # Tests for num2name command
 #
-class TestNum2name < MiniTest::Test
+class TestNum2name < Minitest::Test
   attr_reader :flac, :mp3
 
   def setup

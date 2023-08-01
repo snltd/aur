@@ -6,7 +6,7 @@ require_relative '../../lib/aur/fileinfo'
 
 # Test FileInfo class
 #
-class TestFileInfo < MiniTest::Test
+class TestFileInfo < Minitest::Test
   attr_reader :flac, :mp3
 
   def setup

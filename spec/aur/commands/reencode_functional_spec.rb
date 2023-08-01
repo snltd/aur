@@ -7,7 +7,7 @@ require_relative '../../../lib/aur/fileinfo'
 
 # Run 'aur reencode' commands against a real file, and verify the results
 #
-class TestReencodeCommand < MiniTest::Test
+class TestReencodeCommand < Minitest::Test
   def setup
     skip unless BIN[:ffmpeg].exist?
   end

@@ -6,7 +6,7 @@ require_relative '../../../lib/aur/commands/tag2name'
 
 # Tests for tag2name command
 #
-class TestTag2name < MiniTest::Test
+class TestTag2name < Minitest::Test
   attr_reader :flac, :mp3
 
   def setup

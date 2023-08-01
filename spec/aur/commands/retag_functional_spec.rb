@@ -7,7 +7,7 @@ require_relative '../../../lib/aur/fileinfo'
 
 # Run 'aur retag' commands against things, and verify the results
 #
-class TestRetagCommand < MiniTest::Test
+class TestRetagCommand < Minitest::Test
   include Aur::CommandTests
 
   def test_flac

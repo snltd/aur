@@ -6,7 +6,7 @@ require_relative '../../../lib/aur/commands/name2num'
 
 # Test for name2num command
 #
-class TestName2num < MiniTest::Test
+class TestName2num < Minitest::Test
   def test_flac
     t = Aur::Command::Name2num.new(
       RES_DIR.join('01.test_artist.untagged_song.flac')

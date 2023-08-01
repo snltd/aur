@@ -6,7 +6,7 @@ require_relative '../../../../lib/aur/commands/mixins/file_tree'
 
 # Tests for FileTree mixin
 #
-class Test < MiniTest::Test
+class Test < Minitest::Test
   include Aur::Mixin::FileTree
 
   TEST_DIR = RES_DIR.join('lintdir', 'flac')
