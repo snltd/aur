@@ -89,7 +89,7 @@ class TestLintdirCommand < Minitest::Test
     end
   end
 
-  def test_jpg_artwork
+  def test_artwork
     assert_silent { act(ADIR.join('tester.jpg_artwork')) }
 
     assert_output('', /Bad file/) { act(ADIR.join('tester.png_artwork')) }

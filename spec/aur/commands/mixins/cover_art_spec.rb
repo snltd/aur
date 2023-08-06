@@ -21,7 +21,7 @@ class TestCoverArtMixin < Minitest::Test
     end
 
     assert_raises(Aur::Exception::LintDirCoverArtTooSmall) do
-      assert cover_art_looks_ok?(ART_DIR.join('too_small', 'front.png'))
+      assert cover_art_looks_ok?(ART_DIR.join('too_small', 'front.jpg'))
     end
 
     assert_raises(Aur::Exception::LintDirCoverArtNotSquare) do

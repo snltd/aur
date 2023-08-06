@@ -24,11 +24,9 @@ module Aur
 
         raise Aur::Exception::LintDirCoverArtNotSquare, dims if x != y
 
-        raise Aur::Exception::LintDirCoverArtTooBig, dims  if x > ARTWORK_DEF
+        raise Aur::Exception::LintDirCoverArtTooBig, dims if x > ARTWORK_DEF
 
-        if x < ARTWORK_MIN
-          raise Aur::Exception::LintDirCoverArtTooSmall, dims
-        end
+        raise Aur::Exception::LintDirCoverArtTooSmall, dims if x < ARTWORK_MIN
 
         true
       end

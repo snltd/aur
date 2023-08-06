@@ -21,7 +21,11 @@ class TestArtfixCommand < Minitest::Test
       assert tdir.join('cover.jpg').exist?
       refute tdir.join('front.jpg').exist?
 
-      assert_output("renaming #{tdir}/cover.jpg -> front.jpg\n", nil) do
+      assert_output(
+        "renaming #{tdir}/cover.jpg -> front.jpg\n" \
+        "resizing #{tdir}/front.jpg\n",
+        nil
+      ) do
         act(tdir)
       end
 
@@ -52,8 +56,8 @@ class TestArtfixCommand < Minitest::Test
       refute tdir.join('Front.JPG').exist?
 
       x, y = FastImage.size(tdir.join('front.jpg'))
-      assert_equal(750, x)
-      assert_equal(750, y)
+      assert_equal(700, x)
+      assert_equal(700, y)
     end
   end
 
