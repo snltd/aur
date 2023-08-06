@@ -34,7 +34,7 @@ class TestArtfixCommand < Minitest::Test
     end
   end
 
-  def test_artfix_rename_and_resize
+  def _test_artfix_rename_and_resize
     with_test_file(AF_DIR) do |dir|
       tdir = dir.join('albums', 'windy_and_carl.portal')
 

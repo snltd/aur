@@ -3,7 +3,13 @@
 require 'pathname'
 
 DATA_DIR = Pathname.new('/storage')
-BIN_DIR = Pathname.new('/opt/ooce/bin')
+BIN_DIRS = Pathname.new('/opt/ooce/bin')
+
+BIN_DIR = if BIN_DIRS.exist?
+            BIN_DIRS
+          else
+            Pathname.new('/usr/bin')
+          end
 
 SUPPORTED_TYPES = %w[flac mp3].freeze
 
