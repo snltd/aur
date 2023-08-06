@@ -19,8 +19,6 @@ class TestVerifyCmd < Minitest::Test
   end
 
   def test_flac_verify
-    skip unless BIN[:flac].exist?
-
     assert_output(/^bad_name.flac\s+OK$/, '') do
       Aur::Action.new(:verify, [RES_DIR.join('bad_name.flac')]).run!
     end

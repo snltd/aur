@@ -9,8 +9,6 @@ require_relative '../../../lib/aur/fileinfo'
 #
 class TestReencodeCommand < Minitest::Test
   def test_transcode_flac_to_wav_and_back
-    skip unless BIN[:ffmpeg].exist?
-
     with_test_file('test_tone--100hz.flac') do |f|
       wav = TMP_DIR.join('test_tone--100hz.wav')
       original_tags = Aur::FileInfo.new(f).our_tags
@@ -39,8 +37,6 @@ class TestReencodeCommand < Minitest::Test
   end
 
   def test_transcode_bad_flac
-    skip unless BIN[:ffmpeg].exist?
-
     SUPPORTED_TYPES.each do |type|
       with_test_file(RES_DIR.join("not_really_a.#{type}")) do |f|
         assert_output("#{f} -> #{TMP_DIR.join('not_really_a.wav')}\n",

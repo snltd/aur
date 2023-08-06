@@ -95,7 +95,7 @@ module Aur
     # Any odd chars we don't want
     #
     def contains_forbidden?(string)
-      string.include?('’')
+      string.dup.force_encoding('UTF-8').include?("\u2019")
     end
 
     def contains_ampersand?(string)

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'fastimage'
+require_relative '../../constants'
 
 module Aur
   module Mixin
@@ -9,36 +10,27 @@ module Aur
     #
     module CoverArt
       def arty(files)
-        ok_names = %w[front.jpg front.png].freeze
-
-        files.select { |f| ok_names.include?(f.basename.to_s) }
+        files.find { |f| f.basename.to_s == 'front.jpg' }
       end
 
-      def square_enough?(x_dim, y_dim)
-        (1 - (x_dim / y_dim.to_f)).abs < ARTWORK_RATIO
+      # rubocop:disable Metrics/CyclomaticComplexity
+      def cover_art_looks_ok?(file)
+        return unless file&.exist?
+
+        x, y = FastImage.size(file)
+        dims = "#{x} x #{y}"
+
+        raise Aur::Exception::ArtfixNilSize if x.nil? || y.nil?
+
+        raise Aur::Exception::LintDirCoverArtNotSquare, dims if x != y
+
+        raise Aur::Exception::LintDirCoverArtTooBig, dims if x > ARTWORK_DEF
+
+        raise Aur::Exception::LintDirCoverArtTooSmall, dims if x < ARTWORK_MIN
+
+        true
       end
-
-      # rubocop:disable Metrics/MethodLength
-      def cover_art_looks_ok?(files)
-        raise Aur::Exception::LintDirCoverArtUnwanted if files.size > 1
-
-        files.each do |f|
-          x, y = FastImage.size(f)
-
-          unless square_enough?(x, y)
-            raise Aur::Exception::LintDirCoverArtNotSquare, "#{x} x #{y}"
-          end
-
-          if x > ARTWORK_MAX
-            raise Aur::Exception::LintDirCoverArtTooBig, "#{x} x #{y}"
-          end
-
-          if x < ARTWORK_MIN
-            raise Aur::Exception::LintDirCoverArtTooSmall, "#{x} x #{y}"
-          end
-        end
-      end
-      # rubocop:enable Metrics/MethodLength
+      # rubocop:enable Metrics/CyclomaticComplexity
     end
   end
 end

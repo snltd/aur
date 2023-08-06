@@ -5,6 +5,8 @@ module Aur
   # Nothing fancy here. Just named exceptions to make things clearer.
   #
   class Exception
+    class ArtfixNilSize < RuntimeError; end
+
     class Collector < RuntimeError; end
 
     class FailedOperation < RuntimeError; end

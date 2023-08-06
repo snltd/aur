@@ -12,6 +12,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+    - name: Install dependencies
+      uses: awalsh128/cache-apt-pkgs-action@latest
+      with:
+        packages: imagemagick flac lame shntool ffmpeg
+        version: 1.0
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
