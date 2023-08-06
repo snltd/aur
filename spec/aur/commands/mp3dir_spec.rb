@@ -8,8 +8,6 @@ require_relative '../../../lib/aur/commands/mp3dir'
 #
 class TestMp3dir < Minitest::Test
   def test_mp3_target_dir
-    skip unless BIN[:flac].exist?
-
     t = Aur::Command::Mp3dir.new(Pathname.new('/storage/flac/eps'))
 
     assert_equal(
@@ -24,8 +22,6 @@ class TestMp3dir < Minitest::Test
   end
 
   def test_run_against_mp3_dirs
-    skip unless BIN[:lame].exist?
-
     assert_raises(Aur::Exception::InvalidInput) do
       Aur::Command::Mp3dir.new(RES_DIR)
     end

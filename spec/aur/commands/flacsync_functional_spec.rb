@@ -13,9 +13,6 @@ class TestMp3dir < Minitest::Test
   # half-populated directories.
   #
   def test_mp3dir
-    skip unless BIN[:flac].exist?
-    skip unless BIN[:lame].exist?
-
     with_test_file('mp3dir') do |dir|
       source_dir = dir.join('flac', 'artist.first_album')
       expected_dir = dir.join('mp3', 'artist.first_album')
@@ -79,9 +76,6 @@ class TestMp3dir < Minitest::Test
   end
 
   def test_mp3dir_tidy_up
-    skip unless BIN[:flac].exist?
-    skip unless BIN[:lame].exist?
-
     with_test_file('mp3dir') do |dir|
       source_dir = dir.join('flac', 'artist.first_album')
       expected_dir = dir.join('mp3', 'artist.first_album')
