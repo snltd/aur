@@ -4,21 +4,21 @@
 require_relative '../../spec_helper'
 require_relative '../../../lib/aur/action'
 
-# Run 'aur info' commands against things, and verify the output
+# Run 'aur tags' commands against things, and verify the output
 #
 class TestTagsCommand < Minitest::Test
   attr_reader :dir
 
   include Aur::CommandTests
 
-  def test_flac_info
-    assert_output(bad_name_flac_info, '') do
+  def test_flac_tags
+    assert_output(bad_name_flac_tags, '') do
       Aur::Action.new(action, [RES_DIR.join('bad_name.flac')]).run!
     end
   end
 
-  def test_mp3_info
-    assert_output(bad_name_mp3_info, '') do
+  def test_mp3_tags
+    assert_output(bad_name_mp3_tags, '') do
       Aur::Action.new(action, [RES_DIR.join('bad_name.mp3')]).run!
     end
   end
@@ -28,7 +28,7 @@ class TestTagsCommand < Minitest::Test
   end
 end
 
-def bad_name_flac_info
+def bad_name_flac_tags
   %(         ALBUM : Some Stuff By
         ARTIST : The Null Set
     block_size : 171
@@ -41,7 +41,7 @@ def bad_name_flac_info
 )
 end
 
-def bad_name_mp3_info
+def bad_name_mp3_tags
   %(   TALB : Some Stuff By
    TCON : Electronic
    TIT2 : Sammy Davis Jr. (Dancing)
