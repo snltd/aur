@@ -43,6 +43,7 @@ module Aur
         no_junk?(files)
         return true if supported(files).empty?
 
+        decent_compression?(supported(files))
         correctly_named?(dir)
         all_same_filetype?(files)
         expected_files?(files)
@@ -56,6 +57,10 @@ module Aur
         all_same_artist?(tags) unless various_artists?(dir)
       rescue Aur::Exception::LintDirBadName => e
         err(e, dir, 'Invalid directory name')
+      rescue Aur::Exception::LintDirUndercompressed => e
+        err(dir, "Files may be undercompressed (#{e})")
+      rescue Aur::Exception::LintDirBadName
+        err(dir, 'Invalid directory name')
       rescue Aur::Exception::LintDirBadFile => e
         err(e, dir, "Bad file(s)\n  #{e}")
       rescue Aur::Exception::LintDirMixedFiles => e
@@ -242,6 +247,17 @@ module Aur
       def self.screen_flist(_flist, opts)
         dirs = opts[:'<directory>'].to_paths
         opts[:recursive] ? Aur::Helpers.recursive_dir_list(dirs) : dirs
+      end
+
+      def decent_compression?(files)
+        return unless files.first.extname == '.flac'
+
+        runtime = files.sum { |f| Aur::FileInfo.new(f).raw_time }
+        space = files.sum(&:size)
+        ratio = (space / runtime).floor
+        return true if ratio < SPACE_RATIO
+
+        raise Aur::Exception::LintDirUndercompressed, ratio
       end
 
       def self.help

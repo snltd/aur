@@ -51,6 +51,8 @@ module Aur
 
     class LintDirCoverArtUnwanted < RuntimeError; end
 
+    class LintDirUndercompressed < RuntimeError; end
+
     class LintDirMixedFiles < RuntimeError; end
 
     class LintDirUnsequencedFile < RuntimeError; end

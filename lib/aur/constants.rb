@@ -26,7 +26,7 @@ MP3_BITRATE = 128
 LAME_FLAGS = "-q2 --vbr-new --preset #{MP3_BITRATE} --id3v2-only " \
              '--add-id3v2 --silent'.freeze
 
-# FFMPEG flags for dithering hi-res files to CD quality.
+# Preset for dithering "hi-res" files to CD quality. Which is plenty.
 #
 CDQ_FFMPEG_FLAGS = '-af aresample=out_sample_fmt=s16:out_sample_rate=44100'
 
@@ -131,3 +131,8 @@ ARTWORK_DIR = Pathname.new(Dir.home).join('work', 'artfix')
 # Site-specific stuff, where you can ignore errors.
 #
 CONF_FILE = Pathname.new(Dir.home).join('.aur.yml')
+
+# Ratio of disk space to runtime of an album. Any more than this and re might
+# re-encode
+#
+SPACE_RATIO = 140000
