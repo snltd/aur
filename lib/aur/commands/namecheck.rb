@@ -90,6 +90,8 @@ module Aur
 
           Looks for missing "The"s, and removes all punctuation and
           capitalisation from names before looking for duplicates.
+
+          Is recursive.
         EOHELP
       end
     end
