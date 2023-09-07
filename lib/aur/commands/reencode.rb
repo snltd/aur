@@ -55,7 +55,7 @@ module Aur
 
       def ffmpeg_cmd(file1, file2)
         "#{BIN[:ffmpeg]} -hide_banner -loglevel error -i #{escaped(file1)} " +
-          escaped(file2)
+          "-compression_level 8 #{escaped(file2)}"
       end
 
       def check_dependencies
