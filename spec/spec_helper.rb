@@ -61,3 +61,5 @@ def assert_tag(file, key, value)
   info = Aur::FileInfo.new(file)
   assert_equal(value.to_s, info.our_tags[key].to_s)
 end
+
+CONF = {}.freeze

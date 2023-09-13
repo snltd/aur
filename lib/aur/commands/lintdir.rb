@@ -6,6 +6,7 @@ require_relative '../constants'
 require_relative '../exception'
 require_relative '../fileinfo'
 require_relative '../helpers'
+require_relative '../carer'
 
 module Aur
   module Command
@@ -21,6 +22,7 @@ module Aur
       def initialize(dir = nil, opts = {})
         @dir = dir&.expand_path
         @opts = opts
+        @carer = Aur::Carer.new(CONF)
       end
 
       def run
@@ -52,33 +54,35 @@ module Aur
         all_same_genre?(tags)
         all_same_year?(tags)
         all_same_artist?(tags) unless various_artists?(dir)
-      rescue Aur::Exception::LintDirBadName
-        err(dir, 'Invalid directory name')
+      rescue Aur::Exception::LintDirBadName => e
+        err(e, dir, 'Invalid directory name')
       rescue Aur::Exception::LintDirBadFile => e
-        err(dir, "Bad file(s)\n  #{e}")
-      rescue Aur::Exception::LintDirMixedFiles
-        err(dir, 'Different file types')
+        err(e, dir, "Bad file(s)\n  #{e}")
+      rescue Aur::Exception::LintDirMixedFiles => e
+        err(e, dir, 'Different file types')
       rescue Aur::Exception::LintDirBadFileCount => e
-        err(dir, "Missing file(s) (#{e})")
+        err(e, dir, "Missing file(s) (#{e})")
       rescue Aur::Exception::LintDirUnsequencedFile => e
-        err(dir, "Missing track #{e}")
-      rescue Aur::Exception::LintDirCoverArtMissing
-        err(dir, 'Missing cover art')
-      rescue Aur::Exception::LintDirCoverArtUnwanted
-        err(dir, 'Unwanted cover art')
+        err(e, dir, "Missing track #{e}")
+      rescue Aur::Exception::LintDirCoverArtMissing => e
+        err(e, dir, 'Missing cover art')
+      rescue Aur::Exception::LintDirCoverArtUnwanted => e
+        err(e, dir, 'Unwanted cover art')
       rescue Aur::Exception::LintDirInconsistentTags => e
-        err(dir, "Inconsistent #{e} tag")
+        err(e, dir, "Inconsistent #{e} tag")
       rescue Aur::Exception::LintDirCoverArtTooBig,
              Aur::Exception::LintDirCoverArtTooSmall,
              Aur::Exception::LintDirCoverArtNotSquare => e
-        err(dir, "Unsuitable image size: #{e}")
+        err(e, dir, "Unsuitable image size: #{e}")
       rescue StandardError => e
         warn "Unhandled exception #{e} in #{dir}"
       end
       # rubocop:enable Metrics/AbcSize
       # rubocop:enable Metrics/MethodLength
 
-      def err(dir, msg)
+      def err(exception, dir, msg)
+        return if @carer.do_we?(exception, dir)
+
         msglen = msg.length + 6
         warn(format("%-#{TW - msglen}<dir>s    %<msg>s", dir: dir, msg: msg))
       end
@@ -161,6 +165,16 @@ module Aur
       #
       def all_same_artist?(tags)
         all_same_tag?(tags, :artist)
+      rescue Aur::Exception::LintDirInconsistentTags
+        all_artists = tags.map { |t| t[:artist] }.uniq.sort_by(&:length)
+
+        base = all_artists.shift
+
+        return true if all_artists.all? do |a|
+          a.match?(%r{#{base} (feat\.|and|with|/) })
+        end
+
+        raise
       end
 
       # Ignoring cover art, everything should be either an MP3 or a FLAC.

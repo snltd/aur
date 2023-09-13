@@ -1,27 +1,10 @@
 # frozen_string_literal: true
 
-YES_I_KNOW = {
-  LintDirBadFileCount: [
-      '/storage/flac/albums/pqrs/stone_roses.second_coming'
-  ]
-}
-
 module Aur
   #
   # Nothing fancy here. Just named exceptions to make things clearer.
   #
   class Exception
-    #
-    # We may already know about this error
-    #
-    class Base < RuntimeError
-      def initialize(err)
-        puts err
-        puts "MERP MERP ON THE CAT BURP"
-        super(err)
-      end
-    end
-
     class ArtfixNilSize < RuntimeError; end
 
     class Collector < RuntimeError; end
@@ -52,7 +35,7 @@ module Aur
 
     class LintDirBadFile < RuntimeError; end
 
-    class LintDirBadFileCount < Base; end
+    class LintDirBadFileCount < RuntimeError; end
 
     class LintDirBadName < RuntimeError; end
 
