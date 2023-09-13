@@ -3,8 +3,10 @@
 
 require 'docopt'
 require 'pathname'
+require 'yaml'
 require 'io/console'
 require_relative '../lib/aur/action'
+require_relative '../lib/aur/constants'
 
 CMDS = %i[
   albumdisc
@@ -125,6 +127,10 @@ begin
   opts = sanitize_keys(Docopt.docopt(docopt))
 rescue Docopt::Exit => e
   abort e.message
+end
+
+if CONF_FILE.exist?
+  CONF = YAML.safe_load(File.read(CONF_FILE), symbolize_names: true)
 end
 
 CMDS.each do |cmd|

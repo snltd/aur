@@ -123,3 +123,7 @@ REQ_TAGS = {
 ARTWORK_DEF = 700 # default size
 ARTWORK_MIN = 375 # but we will tolerate this
 ARTWORK_DIR = Pathname.new(Dir.home).join('work', 'artfix')
+
+# Site-specific stuff, where you can ignore errors.
+#
+CONF_FILE = Pathname.new(Dir.home).join('.aur.yml')

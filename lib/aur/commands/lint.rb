@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'pathname'
+require_relative '../carer'
 require_relative '../fileinfo'
 require_relative '../constants'
 require_relative '../exception'
@@ -23,6 +24,7 @@ module Aur
         @opts = opts
         extend Aur::Command::LintMp3 if @info.mp3?
         @validator = Aur::TagValidator.new(info, opts)
+        @carer = Aur::Carer.new(CONF)
       end
 
       def run
@@ -38,22 +40,24 @@ module Aur
         correct_tags?
         correct_tag_values?
         reasonable_bitrate? if respond_to?(:reasonable_bitrate?)
-      rescue Aur::Exception::LintBadName
-        err(file, 'Invalid file name')
+      rescue Aur::Exception::LintBadName => e
+        err(e, file, 'Invalid file name')
       rescue Aur::Exception::LintMissingTags => e
-        err(file, "Missing tags: #{e}")
+        err(e, file, "Missing tags: #{e}")
       rescue Aur::Exception::LintUnwantedTags => e
-        err(file, "Unwanted tags: #{e}")
+        err(e, file, "Unwanted tags: #{e}")
       rescue Aur::Exception::InvalidTagValue => e
-        err(file, "Invalid tag value: #{e}")
+        err(e, file, "Invalid tag value: #{e}")
       rescue Aur::Exception::LintDuplicateTags => e
-        err(file, "Duplicate tags: #{e}")
+        err(e, file, "Duplicate tags: #{e}")
       rescue Aur::Exception::LintHighBitrateMp3 => e
-        err(file, "High MP3 bitrate: #{e}")
+        err(e, file, "High MP3 bitrate: #{e}")
       end
       # rubocop:enable Metrics/MethodLength
 
-      def err(file, msg)
+      def err(exception, file, msg)
+        return if @carer.do_we?(exception, file)
+
         if opts[:summary]
           raise Aur::Exception::Collector, "#{file.dirname}: #{msg}"
         end
@@ -169,7 +173,8 @@ module Aur
         return if validator.send(tag, value)
 
         msg = opts[:summary] ? tag : "#{tag}: #{value}"
-        err(file, "Invalid tag value: #{msg}")
+        err(Aur::Exception::InvalidTagValue.new,
+            file, "Invalid tag value: #{msg}")
       end
 
       def required_tags
