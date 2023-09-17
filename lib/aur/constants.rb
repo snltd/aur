@@ -135,4 +135,4 @@ CONF_FILE = Pathname.new(Dir.home).join('.aur.yml')
 # Ratio of disk space to runtime of an album. Any more than this and re might
 # re-encode
 #
-SPACE_RATIO = 140000
+SPACE_RATIO = 140_000
