@@ -7,6 +7,10 @@ require_relative '../../../lib/aur/action'
 # Run 'aur lint' commands against known entities
 #
 class TestLintCommand < Minitest::Test
+  L_DIR = RES_DIR.join('lint')
+  T_DIR = L_DIR.join('tracks')
+  B_DIR = RES_DIR.join('lint-bitrate', 'mp3', 'eps', 'tester.test_ep')
+
   def test_good_flac
     assert_silent do
       act(RES_DIR.join('null_set.some_stuff_by', '03.null_set.high_beam.flac'))
@@ -20,7 +24,7 @@ class TestLintCommand < Minitest::Test
   end
 
   def test_missing_tags_and_wrong_album
-    file = RES_DIR.join('lint', '03.test_artist.missing_tags.flac')
+    file = L_DIR.join('03.test_artist.missing_tags.flac')
 
     out, err = capture_io { act(file) }
     assert_empty(out)
@@ -42,12 +46,16 @@ class TestLintCommand < Minitest::Test
     end
   end
 
-  T_DIR = RES_DIR.join('lint', 'tracks')
-
   def test_good_flac_tracks
     assert_silent { act(T_DIR.join('good.tracks_file.flac')) }
     assert_silent { act(T_DIR.join('tester.no_year_is_ok_here.flac')) }
     assert_silent { act(T_DIR.join('tester.no_year_is_ok_here.mp3')) }
+  end
+
+  def test_bom
+    assert_output(nil, /Tag has byte order char: title$/) do
+      act(L_DIR.join('04.test.has_bom_leader.flac'))
+    end
   end
 
   def test_has_album_tag_tracks
@@ -76,8 +84,6 @@ class TestLintCommand < Minitest::Test
     file = T_DIR.join('test_artist.missing_tags.flac')
     assert_output(nil, /#{file}\s+Invalid tag value: artist/) { act(file) }
   end
-
-  B_DIR = RES_DIR.join('lint-bitrate', 'mp3', 'eps', 'tester.test_ep')
 
   def test_bitrate
     assert_output(nil, /High MP3 bitrate/) do

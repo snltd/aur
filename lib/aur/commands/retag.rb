@@ -36,11 +36,17 @@ module Aur
       end
     end
 
-    # Fallback for MP3s
+    # MP3s do something different: they turn a tag into ASCII.
     #
     module RetagMp3
       def run
-        warn 'Not implemented for MP3s'
+        info.our_tags.each do |tag, val|
+          next if val.nil?
+
+          if val.bytes[0..2] == [239, 187, 191]
+            tagger.tag!(tag => val.bytes[3..].pack('c*'))
+          end
+        end
       end
     end
   end

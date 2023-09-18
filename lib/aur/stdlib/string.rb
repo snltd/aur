@@ -99,6 +99,11 @@ class String
     downcase.gsub(/[^0-9a-z]/, '')
   end
 
+  # Does the string begin with a byte-order marker?
+  def bom?
+    bytes[0..2] == [239, 187, 191]
+  end
+
   private
 
   def titlecase_ignorecase?(selfword)
