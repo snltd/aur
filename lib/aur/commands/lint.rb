@@ -39,6 +39,7 @@ module Aur
         correctly_named?(file)
         correct_tags?
         correct_tag_values?
+        no_byte_order?
         reasonable_bitrate? if respond_to?(:reasonable_bitrate?)
       rescue Aur::Exception::LintBadName => e
         err(e, file, 'Invalid file name')
@@ -52,6 +53,8 @@ module Aur
         err(e, file, "Duplicate tags: #{e}")
       rescue Aur::Exception::LintHighBitrateMp3 => e
         err(e, file, "High MP3 bitrate: #{e}")
+      rescue Aur::Exception::LintHasByteOrder => e
+        err(e, file, "Tag has byte order char: #{e}")
       end
       # rubocop:enable Metrics/MethodLength
 
@@ -74,6 +77,12 @@ module Aur
         return true if name_checks_out?(chunks)
 
         raise Aur::Exception::LintBadName
+      end
+
+      def no_byte_order?
+        info.our_tags.compact.each do |tag, val|
+          raise Aur::Exception::LintHasByteOrder, tag if val.bom?
+        end
       end
 
       # Do we have the tags we expect to have? For now, at least, we're not

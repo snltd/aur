@@ -118,4 +118,9 @@ class StringTest < Minitest::Test
     assert_equal('theb52s', "The B52's".compacted)
     assert_equal('theb52s', "The B-52's".compacted)
   end
+
+  def test_bom?
+    refute 'This is a string without a BOM'.bom?
+    assert "\xef\xbb\xbfThis Has a BOM".bom?
+  end
 end
