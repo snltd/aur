@@ -58,9 +58,7 @@ module Aur
       rescue Aur::Exception::LintDirBadName => e
         err(e, dir, 'Invalid directory name')
       rescue Aur::Exception::LintDirUndercompressed => e
-        err(dir, "Files may be undercompressed (#{e})")
-      rescue Aur::Exception::LintDirBadName
-        err(dir, 'Invalid directory name')
+        err(e, dir, "Files may be undercompressed (#{e})")
       rescue Aur::Exception::LintDirBadFile => e
         err(e, dir, "Bad file(s)\n  #{e}")
       rescue Aur::Exception::LintDirMixedFiles => e
