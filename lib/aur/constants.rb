@@ -26,6 +26,10 @@ MP3_BITRATE = 128
 LAME_FLAGS = "-q2 --vbr-new --preset #{MP3_BITRATE} --id3v2-only " \
              '--add-id3v2 --silent'.freeze
 
+# FFMPEG flags for dithering hi-res files to CD quality.
+#
+CDQ_FFMPEG_FLAGS = '-af aresample=out_sample_fmt=s16:out_sample_rate=44100'
+
 # These words are not (normally) capitalised when generating tags. 'featuring'
 # is there for artist names.
 #

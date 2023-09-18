@@ -3,7 +3,6 @@
 
 require_relative '../../spec_helper'
 require_relative '../../../lib/aur/commands/reencode'
-require_relative '../../../lib/aur/stdlib/pathname'
 
 # Test for reencode internals
 #
@@ -14,6 +13,7 @@ class TestReencode < Minitest::Test
     assert_equal(
       "#{BIN[:ffmpeg]} -hide_banner -loglevel error -i " \
       "\"#{RES_DIR}/test_tone--100hz.flac\" " \
+      '-compression_level 8 ' \
       "\"#{RES_DIR}/_test_tone--100hz.flac\"",
       t.construct_cmd(RES_DIR.join('test_tone--100hz.flac'),
                       RES_DIR.join('test_tone--100hz.flac').prefixed)

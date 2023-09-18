@@ -3,6 +3,7 @@
 require_relative 'base'
 require_relative '../renamers'
 require_relative '../constants'
+require_relative 'mixins/reencoders'
 
 module Aur
   module Command
@@ -12,6 +13,7 @@ module Aur
     #
     class Reencode < Base
       include Aur::Renamers
+      include Aur::Reencoders
 
       # Overridden so we can reencode files which flacinfo-rb can't parse,
       # which is kind of the point of this command.
@@ -21,17 +23,7 @@ module Aur
       def setup_info; end
 
       def run
-        intermediate_file = file.prefixed
-
-        cmd = construct_cmd(file, intermediate_file)
-        puts "#{file} -> #{file} [re-encoded]"
-
-        if system(cmd)
-          FileUtils.mv(intermediate_file, file)
-        else
-          FileUtils.rm(intermediate_file)
-          raise Aur::Exception::FailedOperation, "reencode #{file}"
-        end
+        operate_and_overwrite(file)
       end
 
       # OmniOS's ffmpeg doesn't have MP3 support, and I'm tired of maintaining
@@ -54,14 +46,8 @@ module Aur
       end
 
       def ffmpeg_cmd(file1, file2)
-        "#{BIN[:ffmpeg]} -hide_banner -loglevel error -i #{escaped(file1)} " +
+        "#{BIN[:ffmpeg]} -hide_banner -loglevel error -i #{escaped(file1)} " \
           "-compression_level 8 #{escaped(file2)}"
-      end
-
-      def check_dependencies
-        return if BIN[:ffmpeg].exist?
-
-        raise(Aur::Exception::MissingBinary, BIN[:ffmpeg])
       end
 
       def self.help
