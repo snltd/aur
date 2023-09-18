@@ -43,7 +43,6 @@ module Aur
         no_junk?(files)
         return true if supported(files).empty?
 
-        decent_compression?(supported(files))
         correctly_named?(dir)
         all_same_filetype?(files)
         expected_files?(files)
@@ -55,6 +54,7 @@ module Aur
         all_same_genre?(tags)
         all_same_year?(tags)
         all_same_artist?(tags) unless various_artists?(dir)
+        decent_compression?(supported(files))
       rescue Aur::Exception::LintDirBadName => e
         err(e, dir, 'Invalid directory name')
       rescue Aur::Exception::LintDirUndercompressed => e
