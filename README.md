@@ -5,18 +5,18 @@ I have a pretty large collection of digital music (and even bigger physical
 one) and I like to keep it organized. *Really* organized.
 
 This program helps with that, pulling together a dozen or so smaller scripts
-written over the last twenty-ish years in various language, adding tests and a
-uniform interface.
+written over the last twenty-ish years in various languages, adding tests and
+a uniform interface.
 
 Rules and assumptions are:
 
 * FLACs are in `/storage/flac`; MP3s are in `/storage/mp3`. Every FLAC exists
   as an MP3, but not vice-versa.
 * Albums are under `albums/abc` etc; EPs and singles under `eps/`; loose
-  tracks under `tracks`. Stuff to be processed and filed is under `new/`.
+  tracks under `tracks/`. Stuff to be processed and filed is under `new/`.
 * Audio files are named `nn.artist.title.suffix`. nn is a zero-padded
   two-digit number. If the artist is "The" something, `the_` is removed from
-  the start of the filename.
+  the filename.
 * Tags must be populated for artist, title, album, track number, genre and
   year. Any other tags are removed.
 * FLAC albums have artwork stored as `front.jpg`, and no bigger than 700x700
