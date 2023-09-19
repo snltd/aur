@@ -45,6 +45,10 @@ module Aur
       info.streaminfo['samplerate']
     end
 
+    def bit_depth
+      info.streaminfo['bits_per_sample'].to_i
+    end
+
     def rawtags
       info.tags
     end
