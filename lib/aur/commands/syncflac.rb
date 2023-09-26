@@ -10,47 +10,16 @@ module Aur
     # Makes sure we have MP3s of all our FLACs
     #
     class Syncflac
-      attr_reader :fdir, :mdir, :opts
-
       include Aur::Mixin::FileTree
 
-      def initialize(root, opts = {})
-        @opts = opts
-        @fdir = root.join('flac')
-        @mdir = root.join('mp3')
+      def initialize(root, _opts = {})
+        @root = root
       end
 
       def run
-        if opts[:deep]
-          deep_difference(flacs)
-        else
-          difference(flacs, mp3s).each { |dir| action(dir) }
-        end
-      end
+        dirs = dirs_under(@root.join('flac'), CONF.fetch(:syncflac_omit, []))
 
-      def flacs
-        content_under(fdir, '.flac')
-      end
-
-      def mp3s
-        content_under(mdir, '.mp3')
-      end
-
-      def action(dir)
-        Aur::Command::Mp3dir.new(dir).run
-      end
-
-      # @return [Array[Pathname]] fully qualified paths of FLAC directories
-      #   which need mp3ing.
-      #
-      def difference(flacdirs, mp3dirs)
-        (flacdirs - mp3dirs).map { |d| fdir.join(d.first) }.reject do |d|
-          d.to_s.end_with?('/new') || d.to_s.include?('/new/')
-        end
-      end
-
-      def deep_difference(flacdirs)
-        flacdirs.each { |d, _count| action(fdir.join(d)) }
+        dirs.each { |d, _count| Aur::Command::Mp3dir.new(d).run }
       end
 
       def self.screen_flist(_flist, _opts)

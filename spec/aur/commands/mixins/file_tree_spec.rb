@@ -38,4 +38,14 @@ class Test < Minitest::Test
       result.key('fall.free_ranger.flac')
     )
   end
+
+  def test_dirs_under
+    all = dirs_under(TEST_DIR)
+    assert all.all?(&:directory?)
+    assert_includes(all, TEST_DIR.join('fall.eds_babe'))
+
+    selected = dirs_under(TEST_DIR, ['fall.eds_babe'])
+    assert selected.all?(&:directory?)
+    refute_includes(selected, TEST_DIR.join('fall.eds_babe'))
+  end
 end
