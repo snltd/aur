@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'constants'
+require_relative 'words'
 require_relative 'stdlib/string'
 
 module Aur
@@ -9,7 +10,10 @@ module Aur
   # bracketing and all of that is just my personal preference.
   #
   class TagFactory
-    #
+    def initialize(conf = CONF)
+      @words = Aur::Words.new(conf)
+    end
+
     # Turn a filename-safe string, like 'blue_bell_knoll' into a tag like
     # 'Blue Bell Knoll'.
     #
@@ -44,7 +48,7 @@ module Aur
 
     private
 
-    # Don't capitalize a word if it's in the NO_CAPS list, but *do* capitalize
+    # Don't capitalize a word if it's in the no_caps list, but *do* capitalize
     # it if it's the first or last word in a title.
     #
     # rubocop:disable Lint/DuplicateBranch
@@ -52,9 +56,10 @@ module Aur
     def smart_capitalize(word, index, count)
       if word.match?(/^(\w\.)+$/) # initialisms
         word
-      elsif NO_CAPS.include?(word.downcase) && index.between?(1, count - 2)
+      elsif @words.no_caps.include?(word.downcase) && index.between?(1,
+                                                                     count - 2)
         word.downcase
-      elsif ALL_CAPS.include?(word.downcase)
+      elsif @words.all_caps.include?(word.downcase)
         word.upcase
       elsif word.match?(/^[A-Z0-9]+$/)
         word
@@ -126,7 +131,4 @@ module Aur
   end
 end
 
-PRESETS = {
-  artist: { abba: 'ABBA',
-            add_n_to_x: 'Add N to (X)' }
-}.freeze
+PRESETS = { artist: { add_n_to_x: 'Add N to (X)' } }.freeze
