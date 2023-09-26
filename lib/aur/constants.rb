@@ -82,13 +82,13 @@ TAGGING = {
     es
     est
     et
+    feat
     featuring
     for
     from
     in
     into
     is
-    isnt
     it
     its
     la
@@ -136,10 +136,6 @@ TAGGING = {
     ft: 'featuring',
     hes: "he's",
     havent: "haven't",
-    ii: 'II',
-    iii: 'III',
-    iv: 'IV',
-    ix: 'IX',
     ive: "I've",
     im: "I'm",
     isnt: "isn't",
@@ -149,17 +145,11 @@ TAGGING = {
     shes: "she's",
     thats: "that's",
     theres: "there's",
-    v: 'V',
-    vi: 'VI',
-    vii: 'VII',
     wasnt: "wasn't",
     weve: "we've",
     whos: "who's",
     wont: "won't",
     wouldnt: "wouldn't",
-    x: 'X',
-    xi: 'XI',
-    xii: 'XII',
     youll: "you'll",
     youre: "you're",
     youve: "you've"

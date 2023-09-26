@@ -30,8 +30,8 @@ module Aur
     # there.
     #
     def artist(string)
-      PRESETS[:artist].fetch(string.to_sym,
-                             title(string).gsub('and the ', 'and The '))
+      @words.expand.fetch(string.to_sym, title(string)
+        .gsub('and the ', 'and The '))
     end
 
     # Strip leading zeroes
@@ -130,5 +130,3 @@ module Aur
     end
   end
 end
-
-PRESETS = { artist: { add_n_to_x: 'Add N to (X)' } }.freeze

@@ -87,5 +87,7 @@ tagging:
     - ii
     - lp
     - ok
+  expand:
+    add_n_to_x: "Add N to (X)"
 ), symbolize_names: true
 ).freeze
