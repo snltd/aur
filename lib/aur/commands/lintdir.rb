@@ -84,7 +84,7 @@ module Aur
       # rubocop:enable Metrics/MethodLength
 
       def err(exception, dir, msg)
-        return if @carer.do_we?(exception, dir)
+        return if @carer.ignore?(exception, dir)
 
         msglen = msg.length + 6
         warn(format("%-#{TW - msglen}<dir>s    %<msg>s", dir: dir, msg: msg))

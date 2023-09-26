@@ -59,7 +59,7 @@ module Aur
       # rubocop:enable Metrics/MethodLength
 
       def err(exception, file, msg)
-        return if @carer.do_we?(exception, file)
+        return if @carer.ignore?(exception, file)
 
         if opts[:summary]
           raise Aur::Exception::Collector, "#{file.dirname}: #{msg}"
