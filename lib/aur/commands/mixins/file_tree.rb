@@ -8,7 +8,7 @@ module Aur
     # Methods to help deal with files in our expected hierarchy
     #
     module FileTree
-      # @param dir [Pathname] top-level directory
+      # @param root [Pathname] top-level directory
       # @param suffix [String] filetype suffix with leading dot
       # @return [Array[Array[Pathname, Int]]] arrays pairing relative path of
       #   a content directory with the number of audio files inside it
@@ -27,6 +27,16 @@ module Aur
                 .select(&:file?)
                 .select { |f| f.extname == suffix }
                 .to_h { |f| [f, f.no_tnum] }
+      end
+
+      # @param root [Pathname] top level directory
+      # @param omit_list [Array[String]] list of directories, relative to
+      #   @root, that you wish to be omitted from the @return
+      # @return [Array[Pathname]] of directories under the given root
+      #
+      def dirs_under(root, omit_list = [])
+        all = Pathname.glob("#{root}/**/*").select(&:directory?)
+        all - omit_list.map { |d| root.join(d) }
       end
     end
   end
