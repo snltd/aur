@@ -5,7 +5,6 @@ require_relative '../constants'
 
 module Aur
   module Command
-
     #
     # Shows which things we have as MP3 but not as FLAC
     #
@@ -15,7 +14,7 @@ module Aur
 
         extend Aur::Command::WantflacTracks if opts[:tracks]
 
-        #difference(flacs, mp3s).each { |dir| action(dir) }
+        # difference(flacs, mp3s).each { |dir| action(dir) }
         puts difference
       end
 
@@ -26,7 +25,7 @@ module Aur
       def difference
         (string_map(mp3s) - string_map(flacs)).reject do |d|
           @conf.fetch(:dirs, []).include?(d) ||
-          @conf.fetch(:top_level, []).any? { |tl| d.start_with?(tl) }
+            @conf.fetch(:top_level, []).any? { |tl| d.start_with?(tl) }
         end
       end
 
