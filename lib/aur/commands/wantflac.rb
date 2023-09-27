@@ -1,65 +1,44 @@
 # frozen_string_literal: true
 
-require_relative 'syncflac'
 require_relative '../constants'
+require_relative 'mixins/file_tree'
 
 module Aur
   module Command
     #
     # Shows which things we have as MP3 but not as FLAC
     #
-    class Wantflac < Syncflac
-      UNWANTED_DIRS = %w[language radio_sessions radio_shows spoken_word].freeze
+    class Wantflac
+      include Aur::Mixin::FileTree
+
+      def initialize(root, opts = {})
+        @root = root
+        @opts = opts
+      end
 
       def run
-        if opts[:tracks]
-          track_difference
-        else
-          difference(flacs, mp3s).each { |dir| action(dir) }
+        @conf = CONF.fetch(:wantflac_ignore, {})
+
+        extend Aur::Command::WantflacTracks if @opts[:tracks]
+
+        puts difference
+      end
+
+      def difference
+        ignores = @conf.fetch(:top_level, [])
+
+        (string_map(mp3s) - string_map(flacs) - @conf.fetch(:dirs,
+                                                            [])).reject do |d|
+          ignores.any? { |tl| d.start_with?(tl) }
         end
       end
 
-      def action(dir)
-        puts dir
+      def flacs
+        content_under(@root.join('flac'), '.flac')
       end
 
-      def track_difference
-        flacs = flac_track_filenames
-
-        puts mdir.join('tracks').children.each_with_object([]) { |f, aggr|
-          bn = f.basename.to_s
-          aggr << bn unless flacs.key?(bn.sub(/mp3$/, 'flac'))
-        }.sort
-      end
-
-      def difference(flacdirs, mp3dirs)
-        filter(mp3dirs - flacdirs).filter_map do |d|
-          album_name(d.first)
-        end.sort.uniq
-      end
-
-      # Filter out things we can't possibly get FLACs for
-      #
-      def filter(dirs)
-        dirs.select { |d| filter_path(d) }
-      end
-
-      def filter_path(path)
-        bits = path.first.to_s.split('/')
-
-        !(UNWANTED_DIRS.include?(bits.first) ||
-          (bits[0] == 'christmas' && bits[1] == 'spackers'))
-      end
-
-      def album_name(path)
-        path = path.to_s
-
-        if path.start_with?('new/') || path.include?('/new/') ||
-           !path.include?('.')
-          return nil
-        end
-
-        path.match(%r{/([^/]+\.[^/]+)})[1]
+      def mp3s
+        content_under(@root.join('mp3'), '.mp3')
       end
 
       def self.screen_flist(_flist, _opts)
@@ -70,15 +49,37 @@ module Aur
         <<~EOHELP
           usage: aur wantflac
 
-          Lists MP3 albums and EPs which we do not have as FLACs. With the -t
+          Lists MP3 albums and EPs which we do not have as FLACs. With the -T
           flag, lists tracks.
         EOHELP
       end
 
       private
 
-      def flac_track_filenames
-        fdir.join('tracks').children.to_h { |f| [f.basename.to_s, true] }
+      def string_map(dirs)
+        dirs.map { |d| d.first.to_s }
+      end
+
+      def ignore(type)
+        @conf.fetch(type, []).map { |f| "#{f}.flac" }
+      end
+    end
+
+    # Handles loose tracks
+    #
+    module WantflacTracks
+      def difference
+        (mp3_list - flac_list - ignore(:tracks)).sort
+      end
+
+      def mp3_list
+        @root.join('mp3', 'tracks').children.map do |f|
+          f.basename.to_s.sub(/mp3$/, 'flac')
+        end
+      end
+
+      def flac_list
+        @root.join('flac', 'tracks').children.map { |f| f.basename.to_s }
       end
     end
   end

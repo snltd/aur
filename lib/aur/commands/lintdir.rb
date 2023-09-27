@@ -255,6 +255,8 @@ module Aur
         ratio = (space / runtime).floor
         return true if ratio < SPACE_RATIO
 
+        return true if Aur::FileInfo.new(files.first).bit_depth == 24
+
         raise Aur::Exception::LintDirUndercompressed, ratio
       end
 

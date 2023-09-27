@@ -16,8 +16,9 @@ module Aur
       @ok = conf.fetch(:yes_i_know, {})
     end
 
-    def ignore?(exception, path)
+    def ignore?(exception, path, qualify: true)
       exc_key = lookup_key(exception)
+      path = path.realpath if qualify
 
       return false unless ok.key?(exc_key)
 

@@ -141,9 +141,13 @@ CMDS.each do |cmd|
     require_relative '../lib/aur/commands/help'
     Aur::Command::Help.new(opts[:'<command>'])
   else
-    cmd = Aur::Action.new(cmd, opts[:'<file>'], opts)
-    cmd.run!
-    errors(cmd.errs) unless cmd&.no_error_report
+    begin
+      cmd = Aur::Action.new(cmd, opts[:'<file>'], opts)
+      cmd.run!
+      errors(cmd.errs) unless cmd&.no_error_report
+    rescue Interrupt
+      exit 100
+    end
   end
 
   exit

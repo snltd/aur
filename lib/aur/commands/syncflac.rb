@@ -12,7 +12,7 @@ module Aur
     class Syncflac
       include Aur::Mixin::FileTree
 
-      def initialize(root, _opts = {})
+      def initialize(root, _opts)
         @root = root
       end
 
