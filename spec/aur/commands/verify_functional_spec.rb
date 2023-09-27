@@ -19,14 +19,8 @@ class TestVerifyCmd < Minitest::Test
   end
 
   def test_flac_verify
-    assert_output(/^bad_name.flac\s+OK$/, '') do
+    assert_output(/bad_name.flac\s+OK$/, '') do
       Aur::Action.new(:verify, [RES_DIR.join('bad_name.flac')]).run!
-    end
-  end
-
-  def test_mp3_verify
-    assert_output('', "MP3 files cannot be verified.\n") do
-      Aur::Action.new(:verify, [RES_DIR.join('bad_name.mp3')]).run!
     end
   end
 

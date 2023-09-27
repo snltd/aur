@@ -10,6 +10,18 @@ module Aur
     # what we call 'linting'.
     #
     class Verify < Base
+      include Aur::Renamers
+
+      def equipped?
+        abort "No #{binary} binary." unless BIN[binary].exist?
+      end
+
+      def report(valid)
+        puts format('%<name>-70s  %<status>s',
+                    name: info.file,
+                    status: valid ? 'OK' : 'INVALID')
+      end
+
       def self.help
         <<~EOUSAGE
           usage: aur verify <file>...
@@ -23,24 +35,28 @@ module Aur
     # Verify FLACs.
     #
     module VerifyFlac
-      include Aur::Renamers
+      def binary
+        :flac
+      end
 
       def run
-        abort 'No flac binary.' unless BIN[:flac].exist?
-
         res = system("#{BIN[:flac]} --test --totally-silent #{escaped(file)}")
-
-        puts format('%<name>-60s  %<status>s',
-                    name: info.prt_name,
-                    status: res ? 'OK' : 'INVALID')
+        report(res)
       end
     end
 
     # We can't verify MP3s, but we can at least say so.
     #
     module VerifyMp3
+      def binary
+        :mp3val
+      end
+
       def run
-        warn 'MP3 files cannot be verified.'
+        abort 'No mp3val binary.' unless BIN[:mp3val].exist?
+
+        res = `#{BIN[:mp3val]} #{escaped(file)}`
+        report(!res.include?('WARNING'))
       end
     end
   end

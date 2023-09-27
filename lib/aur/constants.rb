@@ -13,7 +13,7 @@ BIN_DIR = if BIN_DIRS.exist?
 
 SUPPORTED_TYPES = %w[flac mp3].freeze
 
-BIN = %i[ffmpeg flac lame metaflac shnsplit convert].to_h do |f|
+BIN = %i[ffmpeg flac lame metaflac shnsplit convert mp3val].to_h do |f|
   [f, BIN_DIR.join(f.to_s)]
 end
 
