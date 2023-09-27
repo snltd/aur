@@ -36,7 +36,8 @@ class CarerTest < Minitest::Test
       Aur::Exception::InvalidTagValue.new,
       Pathname.new(
         '/storage/flac/eps/annie.the_a_and_r_ep/04.annie.invisible.flac'
-      )
+      ),
+      qualify: false
     )
   end
 
