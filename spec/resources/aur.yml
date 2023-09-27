@@ -3,3 +3,5 @@
 yes_i_know:
   LintDirBadFileCount:
     - albums/pqrs/stone_roses.second_coming
+  InvalidTagValue:
+    - eps/annie.the_a_and_r_ep/

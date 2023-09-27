@@ -4,6 +4,7 @@ require 'colorize'
 require 'pathname'
 require 'minitest/autorun'
 require 'spy/integration'
+require 'yaml'
 require_relative 'common_command_tests'
 require_relative '../lib/aur/fileinfo'
 
@@ -62,4 +63,31 @@ def assert_tag(file, key, value)
   assert_equal(value.to_s, info.our_tags[key].to_s)
 end
 
-CONF = {}.freeze
+CONF = YAML.safe_load(
+  %(
+tagging:
+  no_caps:
+    - a
+    - and
+    - featuring
+    - for
+    - in
+    - is
+    - it
+    - of
+    - 'on'
+    - or
+    - that
+    - the
+    - to
+    - with
+  all_caps:
+    - abba
+    - ep
+    - ii
+    - lp
+    - ok
+  expand:
+    add_n_to_x: "Add N to (X)"
+), symbolize_names: true
+).freeze

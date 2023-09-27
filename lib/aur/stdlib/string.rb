@@ -2,12 +2,15 @@
 
 require 'i18n'
 require_relative '../constants'
+require_relative '../words'
 
 I18n.available_locales = %i[en]
 
 # Extensions to stdlib String
 #
 class String
+  WORDS = Aur::Words.new(CONF)
+
   # The rules for making a filename-safe string are to:
   #   - replace accented characters with basic Latin
   #   - make lowercase
@@ -17,7 +20,7 @@ class String
   #   - turn all whitespace to a single underscore
   #   - turn '_-_' into a single hyphen
   #   - turn a hyphenated word into word-word, removing spaces
-  #
+
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/AbcSize
   def to_safe
@@ -46,7 +49,7 @@ class String
   # @param style [Symbol] :caps forces capitalizition
   #
   def expand(style = nil)
-    word = EXPAND.fetch(to_sym, self)
+    word = WORDS.expand.fetch(to_sym, self)
     word = word.capitalize if style == :caps
     word
   end
@@ -107,16 +110,16 @@ class String
   private
 
   def titlecase_ignorecase?(selfword)
-    IGNORE_CASE.include?(selfword.downcase)
+    WORDS.ignore_case.include?(selfword.downcase)
   end
 
   def titlecase_downcase?(word, run_together, previous_word)
-    NO_CAPS.include?(word) && (run_together ||
+    WORDS.no_caps.include?(word) && (run_together ||
                                !previous_word.match(%r{[:\-/)?!]$}))
   end
 
   def titlecase_upcase?(selfword, word)
-    ALL_CAPS.include?(word) || selfword.match(/^\w\.\w\./) ||
+    WORDS.all_caps.include?(word) || selfword.match(/^\w\.\w\./) ||
       selfword.match(/^\w,$/)
   end
 

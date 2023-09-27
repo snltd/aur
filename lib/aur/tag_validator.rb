@@ -99,9 +99,7 @@ module Aur
     end
 
     def contains_ampersand?(string)
-      return false unless string.include?('&')
-
-      !ALLOWABLE_AMPERSANDS.include?(string)
+      string.include?('&')
     end
   end
 

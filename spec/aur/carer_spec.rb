@@ -13,20 +13,27 @@ class CarerTest < Minitest::Test
     @t = Aur::Carer.new(sample_data)
   end
 
-  def test_do_we
-    assert @t.do_we?(
+  def test_ignore
+    assert @t.ignore?(
       Aur::Exception::LintDirBadFileCount.new,
       Pathname.new('/storage/flac/albums/pqrs/stone_roses.second_coming')
     )
 
-    refute @t.do_we?(
+    refute @t.ignore?(
       Aur::Exception::LintDirBadFileCount.new,
       Pathname.new('/storage/flac/albums/pqrs/slint.spiderland')
     )
 
-    refute @t.do_we?(
+    refute @t.ignore?(
       Aur::Exception::LintDuplicateTags.new,
       Pathname.new('/storage/flac/albums/pqrs/stone_roses.second_coming')
+    )
+
+    assert @t.ignore?(
+      Aur::Exception::InvalidTagValue.new,
+      Pathname.new(
+        '/storage/flac/eps/annie.the_a_and_r_ep/04.annie.invisible.flac'
+      )
     )
   end
 

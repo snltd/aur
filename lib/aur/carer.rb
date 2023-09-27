@@ -16,12 +16,18 @@ module Aur
       @ok = conf.fetch(:yes_i_know, {})
     end
 
-    def do_we?(exception, path)
+    def ignore?(exception, path)
       exc_key = lookup_key(exception)
 
       return false unless ok.key?(exc_key)
 
+      return true if dir_ignore?(ok[exc_key], path)
+
       lookup_values(path).any? { |p| ok[exc_key].include?(p) }
+    end
+
+    def dir_ignore?(keys, path)
+      keys.select { |k| k.end_with?('/') }.any? { |d| path.to_s.include?(d) }
     end
 
     def lookup_key(exception)
