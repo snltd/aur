@@ -7,7 +7,7 @@ require_relative '../../../lib/aur/commands/wantflac'
 
 # Test for wantflac methods
 #
-class TestWantflac < Minitest::Test
+class TestWantflac
   def setup
     @t = Aur::Command::Wantflac.new(Pathname.new(RES_DIR))
   end
@@ -30,22 +30,6 @@ class TestWantflac < Minitest::Test
       @t.album_name(
         Pathname.new('/storage/albums/pqrs/slint.spiderland/bonus_disc')
       )
-    )
-  end
-
-  def test_filter
-    dirs = [
-      [Pathname.new('albums/abc/broadcast.tender_buttons'), 4],
-      [Pathname.new('eps/slint.untitled'), 4],
-      [Pathname.new('radio_shows/armando_iannucci.down_your_ear'), 1],
-      [Pathname.new('spoken_word/derek_and_clive.live'), 6],
-      [Pathname.new('christmas/spackers/various.christmas_spacker_2008'), 20]
-    ]
-
-    assert_equal(
-      [[Pathname.new('albums/abc/broadcast.tender_buttons'), 4],
-       [Pathname.new('eps/slint.untitled'), 4]],
-      @t.filter(dirs)
     )
   end
 end

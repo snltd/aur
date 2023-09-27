@@ -1,36 +1,44 @@
 # frozen_string_literal: true
 
-require_relative 'syncflac'
 require_relative '../constants'
+require_relative 'mixins/file_tree'
 
 module Aur
   module Command
     #
     # Shows which things we have as MP3 but not as FLAC
     #
-    class Wantflac < Syncflac
+    class Wantflac
+      include Aur::Mixin::FileTree
+
+      def initialize(root, opts = {})
+        @root = root
+        @opts = opts
+      end
+
       def run
         @conf = CONF.fetch(:wantflac_ignore, {})
 
-        extend Aur::Command::WantflacTracks if opts[:tracks]
+        extend Aur::Command::WantflacTracks if @opts[:tracks]
 
-        # difference(flacs, mp3s).each { |dir| action(dir) }
         puts difference
       end
 
-      def action(dir)
-        puts dir
-      end
-
       def difference
-        (string_map(mp3s) - string_map(flacs)).reject do |d|
-          @conf.fetch(:dirs, []).include?(d) ||
-            @conf.fetch(:top_level, []).any? { |tl| d.start_with?(tl) }
+        ignores = @conf.fetch(:top_level, [])
+
+        (string_map(mp3s) - string_map(flacs) - @conf.fetch(:dirs,
+                                                            [])).reject do |d|
+          ignores.any? { |tl| d.start_with?(tl) }
         end
       end
 
-      def string_map(dirs)
-        dirs.map { |d| d.first.to_s }
+      def flacs
+        content_under(@root.join('flac'), '.flac')
+      end
+
+      def mp3s
+        content_under(@root.join('mp3'), '.mp3')
       end
 
       def self.screen_flist(_flist, _opts)
@@ -48,6 +56,10 @@ module Aur
 
       private
 
+      def string_map(dirs)
+        dirs.map { |d| d.first.to_s }
+      end
+
       def ignore(type)
         @conf.fetch(type, []).map { |f| "#{f}.flac" }
       end
@@ -61,13 +73,13 @@ module Aur
       end
 
       def mp3_list
-        mdir.join('tracks').children.map do |f|
+        @root.join('mp3', 'tracks').children.map do |f|
           f.basename.to_s.sub(/mp3$/, 'flac')
         end
       end
 
       def flac_list
-        fdir.join('tracks').children.map { |f| f.basename.to_s }
+        @root.join('flac', 'tracks').children.map { |f| f.basename.to_s }
       end
     end
   end
