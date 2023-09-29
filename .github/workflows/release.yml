@@ -7,14 +7,18 @@ on:
 
 jobs:
   build:
-    name: Build + Publish
+    name: Build Gem and Publish to Github Private Repo
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v3
     - name: Set env
-      run: echo "RELEASE_VERSION=$(echo ${GITHUB_REF:10})" >> $GITHUB_ENV
-    - name: Set up Ruby 3.2
+      run: echo "RELEASE_VERSION=$(echo ${GITHUB_REF:10})" >>$GITHUB_ENV
+    - name: Install dependencies
+      uses: awalsh128/cache-apt-pkgs-action@latest
+      with:
+        packages: imagemagick flac lame shntool ffmpeg
+        version: 1.0
+    - name: Set up Ruby 
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: 3.2
