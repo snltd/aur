@@ -15,6 +15,7 @@ module Aur
         tagger.tag!(opts[:'<tag>'].to_sym => val)
       end
 
+      # rubocop:disable Metrics/MethodLength
       def self.help
         require_relative '../fileinfo'
 
@@ -34,6 +35,7 @@ module Aur
           Setting year to the string NIL clears its value.
         EOHELP
       end
+      # rubocop:enable Metrics/MethodLength
     end
   end
 end

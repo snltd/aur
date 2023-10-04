@@ -98,7 +98,7 @@ module Aur
       def correctly_named?(dir, on_retry: false)
         name = dir.basename.to_s
 
-        return if name == 'tracks'
+        return false if name == 'tracks'
 
         return true if name.match(/^[a-z0-9][a-z\-._0-9]+[a-z0-9]$/) &&
                        name.split('.').size == 2 && !name.start_with?('the_')
@@ -248,7 +248,7 @@ module Aur
       end
 
       def decent_compression?(files)
-        return unless files.first.extname == '.flac'
+        return false unless files.first.extname == '.flac'
 
         runtime = files.sum { |f| Aur::FileInfo.new(f).raw_time }
         space = files.sum(&:size)

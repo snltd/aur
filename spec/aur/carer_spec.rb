@@ -67,6 +67,6 @@ class CarerTest < Minitest::Test
   private
 
   def sample_data
-    YAML.safe_load(File.read(RES_DIR.join('aur.yml')), symbolize_names: true)
+    YAML.safe_load_file(RES_DIR.join('aur.yml'), symbolize_names: true)
   end
 end

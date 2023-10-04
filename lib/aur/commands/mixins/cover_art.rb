@@ -15,7 +15,7 @@ module Aur
 
       # rubocop:disable Metrics/CyclomaticComplexity
       def cover_art_looks_ok?(file)
-        return unless file&.exist?
+        return false unless file&.exist?
 
         x, y = FastImage.size(file)
         dims = "#{x} x #{y}"
