@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'base'
+require_relative '../fileinfo'
 require_relative '../renamers'
 require_relative '../constants'
 
@@ -28,14 +29,24 @@ module Aur
       end
 
       def construct_cmd(file1, file2)
-        "#{BIN[:ffmpeg]} -hide_banner -loglevel panic -i #{escaped(file1)} " +
-          escaped(file2)
+        "#{BIN[:ffmpeg]} -hide_banner -loglevel panic -i #{escaped(file1)} " \
+          "#{extra_opts(file1, file2)} #{escaped(file2)}"
       end
 
       def check_dependencies
         return if BIN[:ffmpeg].exist?
 
         raise(Aur::Exception::MissingBinary, BIN[:ffmpeg])
+      end
+
+      def extra_opts(file1, file2)
+        f1info = FileInfo.new(file1)
+
+        if file2.extname == '.m4a'
+          "-c:a aac -b:a #{f1info.raw_bitrate}"
+        else
+          ''
+        end
       end
 
       # These will never be accessed, so they can be anything.
