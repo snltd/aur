@@ -130,7 +130,11 @@ rescue Docopt::Exit => e
   abort e.message
 end
 
-CONF = YAML.safe_load_file(CONF_FILE, symbolize_names: true) if CONF_FILE.exist?
+CONF = if CONF_FILE.exist?
+         YAML.safe_load_file(CONF_FILE, symbolize_names: true)
+        else
+          {}
+        end
 
 CMDS.each do |cmd|
   next unless opts[cmd]
