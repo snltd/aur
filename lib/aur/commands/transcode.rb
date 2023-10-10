@@ -42,7 +42,7 @@ module Aur
       def extra_opts(file1, file2)
         f1info = FileInfo.new(file1)
 
-        if file2.extname == '.m4a'
+        if file2.extname == '.m4b'
           "-c:a aac -b:a #{f1info.raw_bitrate}"
         else
           ''
