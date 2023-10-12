@@ -19,7 +19,7 @@ module Aur
         cmd = construct_cmd(file, target)
         puts "#{file} -> #{target}"
 
-        return if system(cmd)
+        return true if system(cmd)
 
         raise Aur::Exception::FailedOperation, "transcode #{file} #{target}"
       end
@@ -30,7 +30,7 @@ module Aur
 
       def construct_cmd(file1, file2)
         "#{BIN[:ffmpeg]} -hide_banner -loglevel panic -i #{escaped(file1)} " \
-          "#{extra_opts(file1, file2)} #{escaped(file2)}"
+        "#{extra_opts(file1, file2)} #{escaped(file2)}".squeeze(' ')
       end
 
       def check_dependencies
@@ -40,9 +40,8 @@ module Aur
       end
 
       def extra_opts(file1, file2)
-        f1info = FileInfo.new(file1)
-
         if file2.extname == '.m4b'
+          f1info = FileInfo.new(file1)
           "-c:a aac -b:a #{f1info.raw_bitrate}"
         else
           ''

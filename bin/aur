@@ -132,9 +132,9 @@ end
 
 CONF = if CONF_FILE.exist?
          YAML.safe_load_file(CONF_FILE, symbolize_names: true)
-        else
-          {}
-        end
+       else
+         {}
+       end
 
 CMDS.each do |cmd|
   next unless opts[cmd]
