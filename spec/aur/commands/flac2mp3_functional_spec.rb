@@ -40,7 +40,5 @@ class TestFlac2Mp3Command < Minitest::Test
     end
   end
 
-  def action
-    :flac2mp3
-  end
+  def action = :flac2mp3
 end

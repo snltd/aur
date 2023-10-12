@@ -7,8 +7,6 @@ require_relative '../../../lib/aur/stdlib/numeric'
 # Tests for extensions to Numeric class
 #
 class TestNumeric < Minitest::Test
-  parallelize_me!
-
   def test_to_n
     assert_equal('02', 2.to_n)
     assert_equal('99', 99.to_n)

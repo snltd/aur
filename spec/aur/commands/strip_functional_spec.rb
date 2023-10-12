@@ -22,7 +22,7 @@ class TestStripCommand < Minitest::Test
       assert_equal('aur', original.tags[:encoder])
 
       assert_output("Surplus tags in #{f}: COMPOSER, ENCODER, TEMPO\n", '') do
-        Aur::Action.new(:strip, [f]).run!
+        Aur::Action.new(action, [f]).run!
       end
 
       new = Aur::FileInfo.new(f)
@@ -40,7 +40,7 @@ class TestStripCommand < Minitest::Test
       refute original.picture?
       assert_equal(REQ_TAGS[:flac].sort, original.tags.keys.sort)
 
-      assert_output('', '') { Aur::Action.new(:strip, [f]).run! }
+      assert_output('', '') { Aur::Action.new(action, [f]).run! }
       assert_equal(original_mtime, f.mtime)
     end
   end
@@ -67,7 +67,7 @@ class TestStripCommand < Minitest::Test
       assert_output(
         "Surplus tags in #{f}: apic, tcom, tenc, tlen, tsse, txxx\n"
       ) do
-        Aur::Action.new(:strip, [f]).run!
+        Aur::Action.new(action, [f]).run!
       end
 
       new = Aur::FileInfo.new(f)
@@ -86,12 +86,10 @@ class TestStripCommand < Minitest::Test
       refute original.picture?
       assert_equal(%i[tit2 tpe1 trck talb tcon tyer], original.tags.keys)
 
-      assert_output('', '') { Aur::Action.new(:strip, [f]).run! }
+      assert_output('', '') { Aur::Action.new(action, [f]).run! }
       assert_equal(original_mtime, f.mtime)
     end
   end
 
-  def action
-    :strip
-  end
+  def action = :strip
 end

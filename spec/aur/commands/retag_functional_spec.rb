@@ -57,7 +57,5 @@ class TestRetagCommand < Minitest::Test
     end
   end
 
-  def action
-    :retag
-  end
+  def action = :retag
 end

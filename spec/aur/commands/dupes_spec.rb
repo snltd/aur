@@ -7,8 +7,6 @@ require_relative '../../../lib/aur/commands/dupes'
 # Run a dupe test
 #
 class TestDupes < Minitest::Test
-  parallelize_me!
-
   TEST_DIR = RES_DIR.join('dupes')
   F_DIR = TEST_DIR.join('flac')
   T_DIR = F_DIR.join('tracks')

@@ -25,9 +25,7 @@ class TestTagsCommand < Minitest::Test
     end
   end
 
-  def action
-    :tags
-  end
+  def action = :tags
 end
 
 def bad_name_flac_tags

@@ -28,7 +28,5 @@ class TestName2NumCommand < Minitest::Test
     end
   end
 
-  def action
-    :name2num
-  end
+  def action = :name2num
 end

@@ -44,7 +44,5 @@ class TestITagCommand < Minitest::Test
     end
   end
 
-  def action
-    :itag
-  end
+  def action = :itag
 end

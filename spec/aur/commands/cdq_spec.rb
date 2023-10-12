@@ -7,8 +7,6 @@ require_relative '../../../lib/aur/commands/cdq'
 # Test for cdq internals
 #
 class TestCdq < Minitest::Test
-  parallelize_me!
-
   def test_construct_cmd
     t = Aur::Command::Cdq.new(RES_DIR.join('test_tone--100hz.flac'))
 

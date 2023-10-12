@@ -26,7 +26,5 @@ class TestTag2NameCommand < Minitest::Test
     end
   end
 
-  def action
-    :tag2name
-  end
+  def action = :tag2name
 end

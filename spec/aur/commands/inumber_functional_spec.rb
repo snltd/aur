@@ -40,7 +40,5 @@ class TestINumberCommand < Minitest::Test
     end
   end
 
-  def action
-    :inumber
-  end
+  def action = :inumber
 end

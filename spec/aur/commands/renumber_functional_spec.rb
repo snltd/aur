@@ -64,16 +64,16 @@ class TestRenumberCommand < Minitest::Test
     end
   end
 
-  def action
-    :renumber
+  def action = :renumber
+
+  private
+
+  def renumber_command(file, direction, number)
+    opts = { '<file>': file, '<number>': number }
+
+    opts[:up] = true if direction == :up
+    opts[:down] = true if direction == :down
+
+    Aur::Action.new(:renumber, [file], opts).run!
   end
-end
-
-def renumber_command(file, direction, number)
-  opts = { '<file>': file, '<number>': number }
-
-  opts[:up] = true if direction == :up
-  opts[:down] = true if direction == :down
-
-  Aur::Action.new(:renumber, [file], opts).run!
 end

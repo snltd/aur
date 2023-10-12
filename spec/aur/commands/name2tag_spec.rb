@@ -7,11 +7,9 @@ require_relative '../../../lib/aur/commands/name2tag'
 # Test for name2tag command
 #
 class TestName2tag < Minitest::Test
-  parallelize_me!
-
-  N2T_DIR = RES_DIR.join('name2tag', 'null_set.some_stuff_by')
-
   def test_flac_and_mp3
+    n2t_dir = RES_DIR.join('name2tag', 'null_set.some_stuff_by')
+
     SUPPORTED_TYPES.each do |_type|
       t1 = Aur::Command::Name2tag.new(
         RES_DIR.join('test_tone--100hz.flac')
@@ -26,7 +24,7 @@ class TestName2tag < Minitest::Test
       )
 
       t2 = Aur::Command::Name2tag.new(
-        N2T_DIR.join('01.the_null_set.song_one.mp3')
+        n2t_dir.join('01.the_null_set.song_one.mp3')
       )
 
       assert_equal(

@@ -7,8 +7,6 @@ require_relative '../../../lib/aur/commands/thes'
 # Test for thes command
 #
 class TestThes < Minitest::Test
-  parallelize_me!
-
   def test_new_name
     t = Aur::Command::Thes.new(RES_DIR.join('test_tone--100hz.flac'))
 

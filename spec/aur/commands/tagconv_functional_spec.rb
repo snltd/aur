@@ -35,7 +35,7 @@ class TestTagconvCommand < Minitest::Test
       assert_equal(v2_tags, info.our_tags)
 
       assert_output("       Removing 7 ID3v1 tags\n", '') do
-        Aur::Action.new(:tagconv, [f]).run!
+        Aur::Action.new(action, [f]).run!
       end
 
       info = Aur::FileInfo.new(f)
@@ -77,7 +77,7 @@ class TestTagconvCommand < Minitest::Test
                     "       genre -> Alternative\n" \
                     "       Removing 7 ID3v1 tags\n",
                     '') do
-        Aur::Action.new(:tagconv, [f]).run!
+        Aur::Action.new(action, [f]).run!
       end
 
       info = Aur::FileInfo.new(f)
@@ -94,7 +94,5 @@ class TestTagconvCommand < Minitest::Test
     end
   end
 
-  def action
-    :tagconv
-  end
+  def action = :tagconv
 end

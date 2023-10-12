@@ -129,13 +129,11 @@ class TestMp3dirCommand < Minitest::Test
     end
   end
 
-  def action
-    :mp3dir
-  end
-
   def act(dirs, opts = {})
     opts[:'<directory>'] = [dirs].flatten
 
     Aur::Action.new(action, [], opts).run!
   end
+
+  def action = :mp3dir
 end

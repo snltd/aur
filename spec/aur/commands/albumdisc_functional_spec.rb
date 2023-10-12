@@ -47,7 +47,5 @@ class TestAlbumdiscCommand < Minitest::Test
     end
   end
 
-  def action
-    :albumdisc
-  end
+  def action = :albumdisc
 end

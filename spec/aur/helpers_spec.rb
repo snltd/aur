@@ -4,7 +4,7 @@
 require_relative '../spec_helper'
 require_relative '../../lib/aur/helpers'
 
-# Tests
+# Tests for helper methods
 #
 class TestHelpers < Minitest::Test
   include Aur::Helpers

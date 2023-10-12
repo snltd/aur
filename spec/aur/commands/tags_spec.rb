@@ -7,8 +7,6 @@ require_relative '../../../lib/aur/commands/tags'
 # Test tags command
 #
 class TestTagsCmd < Minitest::Test
-  parallelize_me!
-
   def test_fmt_line
     flac = Aur::Command::Tags.new(RES_DIR.join('test_tone--100hz.flac'))
 

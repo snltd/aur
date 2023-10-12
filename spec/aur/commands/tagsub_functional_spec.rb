@@ -56,16 +56,16 @@ class TestTagsubCommand < Minitest::Test
     end
   end
 
-  def action
-    :tagsub
+  def action = :tagsub
+
+  private
+
+  def tagsub_command(file, tag, find, replace)
+    opts = { '<file>': file,
+             '<tag>': tag,
+             '<find>': find,
+             '<replace>': replace }
+
+    Aur::Action.new(:tagsub, [file], opts).run!
   end
-end
-
-def tagsub_command(file, tag, find, replace)
-  opts = { '<file>': file,
-           '<tag>': tag,
-           '<find>': find,
-           '<replace>': replace }
-
-  Aur::Action.new(:tagsub, [file], opts).run!
 end

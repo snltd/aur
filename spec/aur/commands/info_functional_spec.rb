@@ -25,9 +25,7 @@ class TestInfoCommand < Minitest::Test
     end
   end
 
-  def action
-    :info
-  end
+  def action = :info
 end
 
 # Ruby absolutely will not have these as heredocs. That single leading space

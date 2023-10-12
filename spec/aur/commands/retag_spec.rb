@@ -14,7 +14,7 @@ class TestRetag < Minitest::Test
     @t = Aur::Command::Retag.new(RES_DIR.join('double_title.flac'))
   end
 
-  def test_retag?
+  def test_retag_mixed_case
     assert @t.retag?(
       tag_names,
       { 'block_size' => 168,
@@ -29,7 +29,9 @@ class TestRetag < Minitest::Test
         'GENRE' => 'Noise',
         'TITLE' => 'other' }
     )
+  end
 
+  def test_retag_all_downcased
     assert @t.retag?(
       tag_names,
       { 'block_size' => 168,
@@ -43,7 +45,9 @@ class TestRetag < Minitest::Test
         'genre' => 'Noise',
         'title' => 'other' }
     )
+  end
 
+  def test_retag_as_they_should_be
     refute @t.retag?(
       tag_names,
       { 'block_size' => 168,
@@ -58,6 +62,8 @@ class TestRetag < Minitest::Test
         'TITLE' => 'other' }
     )
   end
+
+  private
 
   def tag_names
     { artist: 'ARTIST',

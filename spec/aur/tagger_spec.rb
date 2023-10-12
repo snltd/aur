@@ -9,13 +9,6 @@ require_relative '../../lib/aur/fileinfo'
 # spies.
 #
 class TestTagger < Minitest::Test
-  attr_reader :t_mp3
-
-  def setup
-    mp3info = Aur::FileInfo.new(RES_DIR.join('test_tone--100hz.mp3'))
-    @t_mp3 = Aur::Tagger.new(mp3info, {})
-  end
-
   def test_flac
     flacinfo = Aur::FileInfo.new(RES_DIR.join('test_tone--100hz.flac'))
     t = Aur::Tagger.new(flacinfo, {})
@@ -42,6 +35,8 @@ class TestTagger < Minitest::Test
   # doesn't matter though. We have full functional tests.
   #
   def test_mp3
+    mp3info = Aur::FileInfo.new(RES_DIR.join('test_tone--100hz.mp3'))
+    t_mp3 = Aur::Tagger.new(mp3info, {})
     spy = Spy.on(Mp3Info, :open)
     # Because we Spy on the #open method and Mp3Info works on a block passed
     # to #open, nothing inside the loop (e.g. the calling of the #msg method)

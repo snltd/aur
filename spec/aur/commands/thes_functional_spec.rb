@@ -17,19 +17,17 @@ class TestThesCommand < Minitest::Test
         assert_tag(f, :artist, 'Test Tones')
 
         assert_output("      artist -> The Test Tones\n", '') do
-          Aur::Action.new(:thes, [f]).run!
+          Aur::Action.new(action, [f]).run!
         end
 
         assert_tag(f, :artist, 'The Test Tones')
 
-        assert_output('', '') { Aur::Action.new(:thes, [f]).run! }
+        assert_output('', '') { Aur::Action.new(action, [f]).run! }
 
         assert_tag(f, :artist, 'The Test Tones')
       end
     end
   end
 
-  def action
-    :thes
-  end
+  def action = :thes
 end

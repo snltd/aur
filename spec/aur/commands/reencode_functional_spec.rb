@@ -16,7 +16,7 @@ class TestReencodeCommand < Minitest::Test
       original_tags = Aur::FileInfo.new(f).our_tags
 
       assert_output("#{f} -> #{f} [re-encoded]\n", '') do
-        Aur::Action.new(:reencode, [f]).run!
+        Aur::Action.new(action, [f]).run!
       end
 
       new_mtime = f.mtime
@@ -33,7 +33,7 @@ class TestReencodeCommand < Minitest::Test
       original_tags = Aur::FileInfo.new(f).our_tags
 
       assert_output("#{f} -> #{f} [re-encoded]\n", '') do
-        Aur::Action.new(:reencode, [f]).run!
+        Aur::Action.new(action, [f]).run!
       end
 
       assert(f.exist?)
@@ -53,7 +53,5 @@ class TestReencodeCommand < Minitest::Test
     end
   end
 
-  def action
-    :reencode
-  end
+  def action = :reencode
 end

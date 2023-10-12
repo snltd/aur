@@ -94,10 +94,8 @@ class TestSetCommand < Minitest::Test
   def set_command(file, tag, value)
     opts = { '<file>': file, '<tag>': tag, '<value>': value }
 
-    Aur::Action.new(:set, [file], opts).run!
+    Aur::Action.new(action, [file], opts).run!
   end
 
-  def action
-    :set
-  end
+  def action = :set
 end
