@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require 'digest'
+require 'openssl'
 require_relative '../../spec_helper'
 require_relative '../../../lib/aur/action'
 require_relative '../../../lib/aur/fileinfo'
@@ -32,13 +32,13 @@ class TestCdqCommand < Minitest::Test
   def test_cdq_no_need
     with_test_file('cdq') do |f|
       file = f.join('artist.already-cdq.flac')
-      original_digest = Digest::MD5.file(file).hexdigest
+      original_digest = OpenSSL::Digest::MD5.file(file).hexdigest
 
       assert_output("File is already CD quality.\n") do
         Aur::Action.new(:cdq, [file]).run!
       end
 
-      assert_equal(original_digest, Digest::MD5.file(file).hexdigest)
+      assert_equal(original_digest, OpenSSL::Digest::MD5.file(file).hexdigest)
     end
   end
 
@@ -46,13 +46,13 @@ class TestCdqCommand < Minitest::Test
     with_test_file('cdq') do |f|
       file = f.join('artist.not-a-flac.mp3')
 
-      original_digest = Digest::MD5.file(file).hexdigest
+      original_digest = OpenSSL::Digest::MD5.file(file).hexdigest
 
       assert_output("Can't convert lossy to lossless.\n") do
         Aur::Action.new(:cdq, [file]).run!
       end
 
-      assert_equal(original_digest, Digest::MD5.file(file).hexdigest)
+      assert_equal(original_digest, OpenSSL::Digest::MD5.file(file).hexdigest)
     end
   end
 end
