@@ -9,6 +9,8 @@ require_relative '../../lib/aur/exception'
 # test the carer
 #
 class CarerTest < Minitest::Test
+  parallelize_me!
+
   def setup
     @t = Aur::Carer.new(sample_data)
   end

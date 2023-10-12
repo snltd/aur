@@ -11,10 +11,10 @@ class TestFlac2Mp3Command < Minitest::Test
 
   def test_flac2mp3
     with_test_file('test_tone--100hz.flac') do |f|
-      expected_file = TMP_DIR.join('test_tone--100hz.mp3')
+      expected_file = f.parent.join('test_tone--100hz.mp3')
       refute(expected_file.exist?)
 
-      assert_output("#{f} -> #{TMP_DIR}/test_tone--100hz.mp3\n", '') do
+      assert_output("#{f} -> #{f.parent}/test_tone--100hz.mp3\n", '') do
         Aur::Action.new(:flac2mp3, [f]).run!
       end
 
@@ -31,7 +31,7 @@ class TestFlac2Mp3Command < Minitest::Test
     with_test_file('test_tone--100hz.mp3') do |f|
       assert_output(
         nil,
-        "ERROR: Unhandled error on #{TMP_DIR.join('test_tone--100hz.mp3')}\n"
+        "ERROR: Unhandled error on #{f.parent.join('test_tone--100hz.mp3')}\n"
       ) do
         assert_raises(SystemExit) { Aur::Action.new(:flac2mp3, [f]).run! }
       end

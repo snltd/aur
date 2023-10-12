@@ -9,6 +9,8 @@ require_relative '../../lib/aur/fileinfo'
 class TestFileInfo < Minitest::Test
   attr_reader :flac, :mp3
 
+  parallelize_me!
+
   def setup
     @flac = Aur::FileInfo.new(RES_DIR.join('test_tone--100hz.flac'))
     @mp3 = Aur::FileInfo.new(RES_DIR.join('test_tone--100hz.mp3'))
@@ -60,13 +62,8 @@ class TestFileInfo < Minitest::Test
   end
 
   def test_partner
-    fdir = TMP_DIR.join('flac', 'singer.lp')
-    mdir = TMP_DIR.join('mp3', 'singer.lp')
-
-    FileUtils.mkdir_p(fdir)
-    FileUtils.touch(fdir.join('01.singer.song.flac'))
-    FileUtils.mkdir_p(mdir)
-    FileUtils.touch(mdir.join('01.singer.song.mp3'))
+    fdir = RES_DIR.join('fileinfo', 'flac', 'singer.lp')
+    mdir = RES_DIR.join('fileinfo', 'mp3', 'singer.lp')
 
     assert_equal(
       fdir.join('01.singer.song.flac'),
@@ -77,9 +74,6 @@ class TestFileInfo < Minitest::Test
       mdir.join('01.singer.song.mp3'),
       flac.partner(fdir.join('01.singer.song.flac'))
     )
-
-    FileUtils.rm_r(TMP_DIR.join('flac'))
-    FileUtils.rm_r(TMP_DIR.join('mp3'))
   end
 
   def test_prt_name

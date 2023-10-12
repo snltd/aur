@@ -26,7 +26,7 @@ module Aur
       end
 
       def run
-        return if @dir.children.all?(&:directory?)
+        return if ignore?(@dir)
 
         lint(@dir)
       rescue Errno::ENOTDIR
@@ -34,6 +34,10 @@ module Aur
       rescue Errno::ENOENT
         warn "'#{@dir}' not found."
         false
+      end
+
+      def ignore?(dir)
+        dir.children.all?(&:directory?) || dir.basename.to_s == 'tracks'
       end
 
       # rubocop:disable Metrics/MethodLength

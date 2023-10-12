@@ -10,6 +10,8 @@ require_relative '../../lib/aur/fileinfo'
 class TestRenamers < Minitest::Test
   include Aur::Renamers
 
+  parallelize_me!
+
   def test_track_fnum
     assert_equal('06', track_fnum(flac_info))
     assert_equal('00', track_fnum(mp3_info))
@@ -49,7 +51,7 @@ class TestRenamers < Minitest::Test
   def test_rename_file_ok
     with_test_file('01.test_artist.untagged_song.mp3') do |f|
       out, err = capture_io do
-        rename_file(f, TMP_DIR.join('target_file.mp3'))
+        rename_file(f, f.parent.join('target_file.mp3'))
       end
 
       assert_equal("01.test_artist.untagged_song.mp3 -> target_file.mp3\n", out)
@@ -59,9 +61,10 @@ class TestRenamers < Minitest::Test
 
   def test_rename_file_exists
     with_test_file('01.test_artist.untagged_song.mp3') do |f|
-      FileUtils.cp(RES_DIR.join('bad_name.mp3'), TMP_DIR)
+      test_dir = f.parent
+      FileUtils.cp(RES_DIR.join('bad_name.mp3'), test_dir)
 
-      assert_silent { rename_file(f, TMP_DIR.join('bad_name.mp3')) }
+      assert_silent { rename_file(f, test_dir.join('bad_name.mp3')) }
     end
   end
 

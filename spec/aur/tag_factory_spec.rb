@@ -9,6 +9,8 @@ require_relative '../../lib/aur/tag_factory'
 class TestName2Tag < Minitest::Test
   attr_reader :t
 
+  parallelize_me!
+
   def setup
     @t = Aur::TagFactory.new
   end

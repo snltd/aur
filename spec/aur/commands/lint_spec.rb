@@ -23,7 +23,7 @@ class TestLint < Minitest::Test
       05.a_band.a_song-with_brackets.flac
       07.some_singer.i-n-i-t-i-a-l-s.flac
     ].each do |f|
-      assert(t.correctly_named?(TMP_DIR.join(f)), "#{f} should pass")
+      assert(t.correctly_named?(RES_DIR.join(f)), "#{f} should pass")
     end
 
     %w[
@@ -41,7 +41,7 @@ class TestLint < Minitest::Test
       07.the_somethings.i-n-i-t-i-a-l-s.flac
     ].each do |f|
       assert_raises(Aur::Exception::LintBadName, "#{f} should fail") do
-        t.correctly_named?(TMP_DIR.join(f))
+        t.correctly_named?(RES_DIR.join(f))
       end
     end
   end

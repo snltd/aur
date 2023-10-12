@@ -11,16 +11,13 @@ class TestName2TagCommand < Minitest::Test
 
   def test_name2tag
     SUPPORTED_TYPES.each do |type|
-      out = <<~EOOUT
-        /tmp/aurtest/01.test_artist.untagged_song.#{type}
-              artist -> Test Artist
-               title -> Untagged Song
-               album -> Aurtest
-               t_num -> 1
-      EOOUT
-
       with_test_file("01.test_artist.untagged_song.#{type}") do |f|
-        assert_output(out, '') { Aur::Action.new(:name2tag, [f]).run! }
+        out, err = capture_io { Aur::Action.new(:name2tag, [f]).run! }
+
+        assert_match(/artist -> Test Artist/, out)
+        assert_match(/title -> Untagged Song/, out)
+        assert_match(/t_num -> 1/, out)
+        assert_empty(err)
         assert(f.exist?)
 
         out, err = capture_io { Aur::Action.new(:info, [f]).run! }

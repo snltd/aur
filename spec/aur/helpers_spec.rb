@@ -9,6 +9,8 @@ require_relative '../../lib/aur/helpers'
 class TestHelpers < Minitest::Test
   include Aur::Helpers
 
+  parallelize_me!
+
   FLAC_DIR = RES_DIR.join('lintdir', 'flac')
   MP3_DIR = RES_DIR.join('lintdir', 'mp3')
 

@@ -12,7 +12,7 @@ class TestNum2NameCommand < Minitest::Test
   def test_num2name
     SUPPORTED_TYPES.each do |type|
       with_test_file("bad_name.#{type}") do |f|
-        expected_file = TMP_DIR.join("02.bad_name.#{type}")
+        expected_file = f.parent.join("02.bad_name.#{type}")
         refute(expected_file.exist?)
 
         assert_output("bad_name.#{type} -> 02.bad_name.#{type}\n", '') do
@@ -34,22 +34,19 @@ class TestNum2NameCommand < Minitest::Test
 
   def test_num2name_no_number_tag
     SUPPORTED_TYPES.each do |type|
-      setup_test_dir
-      source_file = TMP_DIR.join("untagged_file.#{type}")
-      FileUtils.cp(RES_DIR.join("01.test_artist.untagged_song.#{type}"),
-                   source_file)
+      with_test_file("test_tone--100hz.#{type}") do |f|
+        target = f.parent.join("06.test_tone--100hz.#{type}")
 
-      assert(source_file.exist?)
+        assert f.exist?
+        refute target.exist?
 
-      assert_output(
-        "untagged_file.#{type} -> 00.untagged_file.#{type}\n", ''
-      ) do
-        Aur::Action.new(:num2name, [source_file]).run!
+        assert_output("#{f.basename} -> #{target.basename}\n", '') do
+          Aur::Action.new(:num2name, [f]).run!
+        end
+
+        refute f.exist?
+        assert target.exist?
       end
-
-      refute(source_file.exist?)
-      assert TMP_DIR.join("00.untagged_file.#{type}").exist?
-      cleanup_test_dir
     end
   end
 

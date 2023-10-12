@@ -10,6 +10,8 @@ require_relative '../../lib/aur/fileinfo'
 class TestTagger < Minitest::Test
   attr_reader :t_mp3
 
+  parallelize_me!
+
   def setup
     mp3info = Aur::FileInfo.new(RES_DIR.join('test_tone--100hz.mp3'))
     @t_mp3 = Aur::Tagger.new(mp3info, {})

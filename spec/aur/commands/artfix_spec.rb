@@ -7,8 +7,6 @@ require_relative '../../../lib/aur/commands/artfix'
 # Unit tests for Artfix class
 #
 class TestArtfix < Minitest::Test
-  attr_reader :t
-
   def setup
     @t = Aur::Command::Artfix.new
   end
@@ -34,11 +32,11 @@ class TestArtfix < Minitest::Test
 
   def test_new_name
     %w[something.jpg something.jpeg something.Jpg something.JPG].each do |f|
-      assert_equal(TMP_DIR.join('front.jpg'), @t.new_name(TMP_DIR + f))
+      assert_equal(RES_DIR.join('front.jpg'), @t.new_name(RES_DIR.join(f)))
     end
 
     assert_raises(Aur::Exception::UnsupportedFiletype) do
-      @t.new_name(TMP_DIR.join('something.png'))
+      @t.new_name(RES_DIR.join('something.png'))
     end
   end
 end

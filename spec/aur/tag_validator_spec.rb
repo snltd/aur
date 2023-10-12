@@ -9,6 +9,8 @@ require_relative '../../lib/aur/tag_validator'
 class TestTagValidator < Minitest::Test
   attr_reader :lax, :strict
 
+  parallelize_me!
+
   def setup
     @lax = Aur::TagValidator.new(nil, strict: false)
     @strict = Aur::TagValidator.new(

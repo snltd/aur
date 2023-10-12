@@ -30,7 +30,7 @@ class TestUNumberCommand < Minitest::Test
         end
 
         refute(f.exist?)
-        new_file = TMP_DIR.join("04.#{fpart}")
+        new_file = f.dirname.join("04.#{fpart}")
         assert new_file.exist?
 
         assert_output(/Track no : 4$/, '') do

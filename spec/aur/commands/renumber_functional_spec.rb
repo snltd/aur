@@ -23,7 +23,7 @@ class TestRenumberCommand < Minitest::Test
           renumber_command(f, :up, '3')
         end
 
-        assert_tag(TMP_DIR.join(outfile), :t_num, '9')
+        assert_tag(f.dirname.join(outfile), :t_num, '9')
       end
     end
   end
@@ -41,7 +41,7 @@ class TestRenumberCommand < Minitest::Test
           renumber_command(f, :down, '4')
         end
 
-        assert_tag(TMP_DIR.join(outfile), :t_num, '2')
+        assert_tag(f.dirname.join(outfile), :t_num, '2')
       end
     end
   end

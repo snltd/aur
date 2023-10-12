@@ -9,6 +9,8 @@ require_relative '../../lib/aur/action'
 class CommandTest < Minitest::Test
   attr_reader :obj
 
+  parallelize_me!
+
   def setup
     @obj = Aur::Action.new(:info, RES_DIR.children)
   end

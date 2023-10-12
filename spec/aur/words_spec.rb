@@ -7,6 +7,8 @@ require_relative '../../lib/aur/words'
 # Tests for Words class
 #
 class TestWords < Minitest::Test
+  parallelize_me!
+
   def test_words
     t = Aur::Words.new(example_conf)
 
