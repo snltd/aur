@@ -21,7 +21,7 @@ TestTags = Struct.new(:artist,
                       :filetype,
                       keyword_init: true)
 
-# set up a test directory and put a copy of the given file inside it. Said
+# Set up a test directory and put a copy of the given file inside it. Said
 # file must be in RES_DIR.
 # @param [String] name of file you wish to test
 # @return [Pathname] reference to the file in temp directory

@@ -5,12 +5,11 @@ require_relative '../spec_helper'
 require_relative '../../lib/aur/tagger'
 require_relative '../../lib/aur/fileinfo'
 
-# Ensure files are tagged correctly
+# Ensure files are tagged correctly. Don't parallelize this, it breaks the
+# spies.
 #
 class TestTagger < Minitest::Test
   attr_reader :t_mp3
-
-  parallelize_me!
 
   def setup
     mp3info = Aur::FileInfo.new(RES_DIR.join('test_tone--100hz.mp3'))

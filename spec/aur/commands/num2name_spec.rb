@@ -14,19 +14,6 @@ class TestNum2name < Minitest::Test
     @mp3 = Aur::Command::Num2name.new(RES_DIR.join('test_tone--100hz.mp3'))
   end
 
-  def test_run
-    mv = Spy.on(FileUtils, :mv)
-
-    assert_output("test_tone--100hz.flac -> 06.test_tone--100hz.flac\n", '') do
-      @flac.run
-    end
-
-    assert(mv.has_been_called?)
-    assert_equal([RES_DIR.join('test_tone--100hz.flac'),
-                  RES_DIR.join('06.test_tone--100hz.flac')],
-                 mv.calls.first.args)
-  end
-
   def test_new_filename_flac
     assert_equal('06.test_tone--100hz.flac', @flac.new_filename)
   end

@@ -4,11 +4,9 @@
 require_relative '../../spec_helper'
 require_relative '../../../lib/aur/commands/name2num'
 
-# Test for name2num command
+# Test for name2num command. Lots of Spies, so don't parallelize
 #
 class TestName2num < Minitest::Test
-  parallelize_me!
-
   def test_flac
     t = Aur::Command::Name2num.new(
       RES_DIR.join('01.test_artist.untagged_song.flac')

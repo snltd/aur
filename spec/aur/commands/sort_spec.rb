@@ -4,11 +4,9 @@
 require_relative '../../spec_helper'
 require_relative '../../../lib/aur/commands/sort'
 
-# Tests for sort command
+# Tests for sort command. Don't parallelize -- it breaks Spy.
 #
 class TestSort < Minitest::Test
-  parallelize_me!
-
   def test_run
     t = Aur::Command::Sort.new(RES_DIR.join('test_tone--100hz.flac'))
     mv = Spy.on(FileUtils, :mv)
