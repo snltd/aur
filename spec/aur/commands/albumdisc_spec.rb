@@ -16,7 +16,7 @@ class TestAlbumdisc < Minitest::Test
   end
 
   def test_disc_number
-    assert_nil t.disc_number(
+    assert_nil @t.disc_number(
       Pathname.new('/a/artist.album/01.artist.song.flac')
     )
 
