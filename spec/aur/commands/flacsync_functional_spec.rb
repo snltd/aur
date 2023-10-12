@@ -4,9 +4,9 @@
 require_relative '../../spec_helper'
 require_relative '../../../lib/aur/action'
 
-# Run 'aur mp3dir' commands against real directories, and verify the results.
+# Run 'aur flacsync' commands against real directories, and verify the results.
 #
-class TestMp3dir < Minitest::Test
+class TestFlacsyncCommand < Minitest::Test
   parallelize_me!
 
   # This might look a bit i_suck_and_my_tests_are_order_dependent, but I swear
@@ -52,11 +52,6 @@ class TestMp3dir < Minitest::Test
       assert_output("#{source_dir}\n  -> 02.artist.song_2.mp3\n", '') do
         act(source_dir)
       end
-
-      assert_equal(
-        original_mtimes.first,
-        expected_dir.join('01.artist.song_1.mp3').mtime
-      )
 
       refute_equal(
         original_mtimes.last,

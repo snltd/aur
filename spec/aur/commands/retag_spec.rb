@@ -5,9 +5,9 @@ require_relative '../../spec_helper'
 require_relative '../../../lib/aur/exception'
 require_relative '../../../lib/aur/commands/retag'
 
-# Only has functional tests. There's no logic worth testing.
+# Test Retag command
 #
-class TestTagflat < Minitest::Test
+class TestRetag < Minitest::Test
   parallelize_me!
 
   def setup
