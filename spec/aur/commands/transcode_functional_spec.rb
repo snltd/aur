@@ -8,6 +8,8 @@ require_relative '../../../lib/aur/fileinfo'
 # Run 'aur reencode' commands against a real file, and verify the results
 #
 class TestReencodeCommand < Minitest::Test
+  parallelize_me!
+
   def test_transcode_flac_to_wav_and_back
     with_test_file('test_tone--100hz.flac') do |f|
       wav = f.parent.join('test_tone--100hz.wav')

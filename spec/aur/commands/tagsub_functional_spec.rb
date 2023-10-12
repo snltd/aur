@@ -7,6 +7,8 @@ require_relative '../../../lib/aur/action'
 # Run 'aur tagsub' commands against things, and verify the results
 #
 class TestTagsubCommand < Minitest::Test
+  parallelize_me!
+
   include Aur::CommandTests
 
   def test_tagsub

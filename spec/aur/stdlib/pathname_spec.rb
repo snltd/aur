@@ -7,6 +7,8 @@ require_relative '../../../lib/aur/stdlib/pathname'
 # Tests for Pathname extentions
 #
 class TestPathname < Minitest::Test
+  parallelize_me!
+
   def test_extclass
     assert_equal('Flac', Pathname.new('file.flac').extclass)
     assert_equal('Mp3', Pathname.new('file.mp3').extclass)

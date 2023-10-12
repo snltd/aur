@@ -7,6 +7,8 @@ require_relative '../../../lib/aur/commands/reencode'
 # Test for reencode internals
 #
 class TestReencode < Minitest::Test
+  parallelize_me!
+
   def test_construct_cmd
     t = Aur::Command::Reencode.new(RES_DIR.join('test_tone--100hz.flac'))
 

@@ -8,6 +8,8 @@ require_relative '../../../lib/aur/stdlib/pathname'
 # Test for transcode internals
 #
 class TestTranscode < Minitest::Test
+  parallelize_me!
+
   def test_construct_cmd
     t = Aur::Command::Transcode.new(RES_DIR.join('test_tone--100hz.flac'))
 

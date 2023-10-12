@@ -7,7 +7,7 @@ require_relative '../../../lib/aur/commands/albumdisc'
 # Tests for Albumdisc
 #
 class TestAlbumdisc < Minitest::Test
-  attr_reader :t
+  parallelize_me!
 
   def setup
     @t = Aur::Command::Albumdisc.new(
@@ -21,13 +21,13 @@ class TestAlbumdisc < Minitest::Test
     )
 
     assert_equal(3,
-                 t.disc_number(
+                 @t.disc_number(
                    Pathname.new('/a/artist.album/disc_3/01.artist.song.flac')
                  ))
   end
 
   def test_new_album
-    assert_nil t.new_album('Album (Disc 1)', 1)
-    assert_equal('Album (Disc 1)', t.new_album('Album', 1))
+    assert_nil @t.new_album('Album (Disc 1)', 1)
+    assert_equal('Album (Disc 1)', @t.new_album('Album', 1))
   end
 end

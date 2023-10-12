@@ -8,7 +8,9 @@ require_relative '../../../lib/aur/fileinfo'
 # Run 'aur tagconv' commands against things, and verify the results
 #
 class TestTagconvCommand < Minitest::Test
-  # include Aur::CommandTests
+  parallelize_me!
+
+  include Aur::CommandTests
 
   def test_remove_v1_tags_from_file_with_both
     with_test_file('test_tone--100hz.mp3') do |f|

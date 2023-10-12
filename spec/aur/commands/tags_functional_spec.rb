@@ -7,6 +7,8 @@ require_relative '../../../lib/aur/action'
 # Run 'aur tags' commands against things, and verify the output
 #
 class TestTagsCommand < Minitest::Test
+  parallelize_me!
+
   attr_reader :dir
 
   include Aur::CommandTests

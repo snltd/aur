@@ -7,8 +7,7 @@ require_relative '../../../lib/aur/action'
 # Run 'aur ls' commands against a mock filesystem, and verify the results.
 #
 class TestLsCommand < Minitest::Test
-  FDIR = RES_DIR.join('lintdir', 'flac')
-  MDIR = RES_DIR.join('lintdir', 'mp3')
+  parallelize_me!
 
   def test_empty_directory
     assert_silent { act(RES_DIR.parent) }

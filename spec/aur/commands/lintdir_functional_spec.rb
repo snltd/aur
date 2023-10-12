@@ -8,6 +8,8 @@ require_relative '../../../lib/aur/action'
 # results.
 #
 class TestLintdirCommand < Minitest::Test
+  parallelize_me!
+
   FDIR = RES_DIR.join('lintdir', 'flac')
   MDIR = RES_DIR.join('lintdir', 'mp3')
   ADIR = RES_DIR.join('lintdir-artwork')

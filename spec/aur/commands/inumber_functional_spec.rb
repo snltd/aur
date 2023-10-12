@@ -7,6 +7,8 @@ require_relative '../../../lib/aur/action'
 # Run 'aur inumber' commands against things, and verify the results
 #
 class TestUNumberCommand < Minitest::Test
+  parallelize_me!
+
   include Aur::CommandTests
 
   def test_flac_inumber

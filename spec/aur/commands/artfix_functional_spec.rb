@@ -8,6 +8,8 @@ require_relative '../../../lib/aur/action'
 # Run 'aur artfix' commands against a mock filesystem, and verify the results.
 #
 class TestArtfixCommand < Minitest::Test
+  parallelize_me!
+
   AF_DIR = RES_DIR.join('artfix')
 
   def test_directory_nothing_to_do

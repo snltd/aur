@@ -7,6 +7,8 @@ require_relative '../../../lib/aur/action'
 # Run 'aur num2name' commands against things, and verify the results
 #
 class TestName2NumCommand < Minitest::Test
+  parallelize_me!
+
   include Aur::CommandTests
 
   def test_flac_name2num

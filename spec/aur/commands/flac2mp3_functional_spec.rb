@@ -7,6 +7,8 @@ require_relative '../../../lib/aur/action'
 # Run 'aur flac2mp3' commands against things, and verify the results
 #
 class TestFlac2Mp3Command < Minitest::Test
+  parallelize_me!
+
   include Aur::CommandTests
 
   def test_flac2mp3

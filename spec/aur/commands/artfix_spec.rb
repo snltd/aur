@@ -7,6 +7,8 @@ require_relative '../../../lib/aur/commands/artfix'
 # Unit tests for Artfix class
 #
 class TestArtfix < Minitest::Test
+  parallelize_me!
+
   def setup
     @t = Aur::Command::Artfix.new
   end

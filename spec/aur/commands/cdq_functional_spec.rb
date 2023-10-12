@@ -9,6 +9,8 @@ require_relative '../../../lib/aur/fileinfo'
 # Run 'aur cdq' commands against a real file, and verify the results
 #
 class TestCdqCommand < Minitest::Test
+  parallelize_me!
+
   def test_hi_res_flac_to_cdq
     with_test_file('cdq') do |f|
       file = f.join('artist.hi-res.flac')

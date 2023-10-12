@@ -7,6 +7,8 @@ require_relative '../../../lib/aur/action'
 # Run 'aur lint' commands against known entities
 #
 class TestLintCommand < Minitest::Test
+  parallelize_me!
+
   L_DIR = RES_DIR.join('lint')
   T_DIR = L_DIR.join('tracks')
   B_DIR = RES_DIR.join('lint-bitrate', 'mp3', 'eps', 'tester.test_ep')

@@ -7,6 +7,8 @@ require_relative '../../../lib/aur/action'
 # Run 'aur thes' commands against things, and verify the results
 #
 class TestThesCommand < Minitest::Test
+  parallelize_me!
+
   include Aur::CommandTests
 
   def test_flac_thes

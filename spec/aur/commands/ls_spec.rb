@@ -7,7 +7,7 @@ require_relative '../../../lib/aur/commands/ls'
 # Tests the internals of the 'aur ls' command
 #
 class TestLs < Minitest::Test
-  attr_reader :t
+  parallelize_me!
 
   def setup
     @t = Aur::Command::Ls.new
@@ -15,7 +15,7 @@ class TestLs < Minitest::Test
 
   def test_format_line_short
     [70, 80, 90, 100, 120, 150, 180].each do |n|
-      assert_equal(n, t.format_line(t.format_string(n), short_tags).length)
+      assert_equal(n, @t.format_line(t.format_string(n), short_tags).length)
     end
   end
 

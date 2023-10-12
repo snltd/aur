@@ -7,6 +7,8 @@ require_relative '../../../lib/aur/commands/name2tag'
 # Test for name2tag command
 #
 class TestName2tag < Minitest::Test
+  parallelize_me!
+
   N2T_DIR = RES_DIR.join('name2tag', 'null_set.some_stuff_by')
 
   def test_flac_and_mp3
