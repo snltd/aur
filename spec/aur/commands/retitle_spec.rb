@@ -7,8 +7,10 @@ require_relative '../../../lib/aur/commands/retitle'
 # Tests the internals of the retitle command
 #
 class TestRetitle < Minitest::Test
+  T_DIR = RES_DIR.join('commands', 'retitle')
+
   def test_retitle
-    t = Aur::Command::Retitle.new(RES_DIR.join('bad_name.flac'))
+    t = Aur::Command::Retitle.new(T_DIR.join('bad_name.flac'))
 
     assert_equal('Original Title', t.retitle('Original Title'))
     assert_equal('Fix the Article', t.retitle('Fix The Article'))

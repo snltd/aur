@@ -9,19 +9,21 @@ require_relative '../../../lib/aur/commands/base'
 class TestBase < Minitest::Test
   parallelize_me!
 
+  T_DIR = RES_DIR.join('commands', 'base')
+
   def test_initialize_flac
-    obj = Aur::Command::Base.new(RES_DIR.join('test_tone--100hz.flac'))
-    assert_equal(RES_DIR.join('test_tone--100hz.flac'), obj.file)
+    obj = Aur::Command::Base.new(T_DIR.join('test.flac'))
+    assert_equal(T_DIR.join('test.flac'), obj.file)
     assert_instance_of(Aur::FileInfo, obj.info)
   end
 
   def test_initialize_mp3
-    obj = Aur::Command::Base.new(RES_DIR.join('test_tone--100hz.mp3'))
-    assert_equal(RES_DIR.join('test_tone--100hz.mp3'), obj.file)
+    obj = Aur::Command::Base.new(T_DIR.join('test.mp3'))
+    assert_equal(T_DIR.join('test.mp3'), obj.file)
     assert_instance_of(Aur::FileInfo, obj.info)
   end
 
   def test_initialize_jpg
-    assert_raises(NameError) { Aur::Base.new(RES_DIR.join('front.jpg')) }
+    assert_raises(NameError) { Aur::Base.new(T_DIR.join('front.jpg')) }
   end
 end

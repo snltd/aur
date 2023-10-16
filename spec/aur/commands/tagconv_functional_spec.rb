@@ -10,10 +10,12 @@ require_relative '../../../lib/aur/fileinfo'
 class TestTagconvCommand < Minitest::Test
   parallelize_me!
 
+  T_DIR = RES_DIR.join('commands', 'tagconv')
+
   include Aur::CommandTests
 
   def test_remove_v1_tags_from_file_with_both
-    with_test_file('test_tone--100hz.mp3') do |f|
+    with_test_file(T_DIR.join('test_v1_and_v2.mp3')) do |f|
       info = Aur::FileInfo.new(f)
 
       v1_tags = { 'title' => '100hz',
@@ -46,7 +48,7 @@ class TestTagconvCommand < Minitest::Test
   end
 
   def test_promote_tags
-    with_test_file('01.test_artist.v1_tags_only.mp3') do |f|
+    with_test_file(T_DIR.join('01.test_artist.v1_tags_only.mp3')) do |f|
       info = Aur::FileInfo.new(f)
 
       assert_equal(

@@ -4,17 +4,20 @@
 require_relative '../../spec_helper'
 require_relative '../../../lib/aur/action'
 
-# Run 'aur tag2name' commands against things, and verify the results
+# Run 'aur name2tag' commands against things, and verify the results
 #
 class TestName2TagCommand < Minitest::Test
+  T_DIR = RES_DIR.join('commands', 'name2tag')
+
   parallelize_me!
 
   include Aur::CommandTests
 
   def test_name2tag
-    SUPPORTED_TYPES.each do |type|
-      with_test_file("01.test_artist.untagged_song.#{type}") do |f|
-        out, err = capture_io { Aur::Action.new(:name2tag, [f]).run! }
+    with_test_file(T_DIR) do |dir|
+      SUPPORTED_TYPES.each do |type|
+        f = dir.join("01.test_artist.untagged_song.#{type}")
+        out, err = capture_io { Aur::Action.new(action, [f]).run! }
 
         assert_match(/artist -> Test Artist/, out)
         assert_match(/title -> Untagged Song/, out)

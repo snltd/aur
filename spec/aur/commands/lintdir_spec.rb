@@ -10,7 +10,7 @@ require_relative '../../../lib/aur/commands/lintdir'
 class TestLintdir < Minitest::Test
   parallelize_me!
 
-  LINT_DIR = RES_DIR.join('lintdir')
+  T_DIR = RES_DIR.join('commands', 'artfix')
 
   def setup
     @t = Aur::Command::Lintdir.new
@@ -21,12 +21,12 @@ class TestLintdir < Minitest::Test
     bad = %w[Slint.Spiderland smiths.the.smiths the_smiths.the_smiths]
 
     good.each do |f|
-      assert @t.correctly_named?(Pathname.new(LINT_DIR).join(f))
+      assert @t.correctly_named?(Pathname.new(T_DIR).join(f))
     end
 
     bad.each do |f|
       assert_raises(Aur::Exception::LintDirBadName) do
-        @t.correctly_named?(Pathname.new(LINT_DIR).join(f))
+        @t.correctly_named?(Pathname.new(T_DIR).join(f))
       end
     end
   end
@@ -109,10 +109,10 @@ class TestLintdir < Minitest::Test
 
   def test_filenum
     assert_equal(5,
-                 @t.filenum(Pathname.new(LINT_DIR.join('05.artist.song.flac'))))
+                 @t.filenum(Pathname.new(T_DIR.join('05.artist.song.flac'))))
 
     assert_equal(11,
-                 @t.filenum(Pathname.new(LINT_DIR.join('11.artist.song.mp3'))))
+                 @t.filenum(Pathname.new(T_DIR.join('11.artist.song.mp3'))))
   end
 
   def test_supported

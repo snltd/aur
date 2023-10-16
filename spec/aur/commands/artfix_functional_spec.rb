@@ -10,14 +10,14 @@ require_relative '../../../lib/aur/action'
 class TestArtfixCommand < Minitest::Test
   parallelize_me!
 
-  AF_DIR = RES_DIR.join('artfix')
+  T_DIR = RES_DIR.join('commands', 'artfix')
 
   def test_directory_nothing_to_do
-    assert_silent { act(nil, AF_DIR.join('eps', 'pram.meshes')) }
+    assert_silent { act(nil, T_DIR.join('eps', 'pram.meshes')) }
   end
 
   def test_artfix_rename_only
-    with_test_file(AF_DIR) do |dir|
+    with_test_file(T_DIR) do |dir|
       tdir = dir.join('albums', 'jesus_lizard.liar')
       assert tdir.join('cover.jpg').exist?
       refute tdir.join('front.jpg').exist?
@@ -36,7 +36,7 @@ class TestArtfixCommand < Minitest::Test
   end
 
   def _test_artfix_rename_and_resize
-    with_test_file(AF_DIR) do |dir|
+    with_test_file(T_DIR) do |dir|
       tdir = dir.join('albums', 'windy_and_carl.portal')
 
       assert tdir.join('Front.JPG').exist?
@@ -63,7 +63,7 @@ class TestArtfixCommand < Minitest::Test
   end
 
   def test_artfix_not_square
-    with_test_file(AF_DIR) do |dir|
+    with_test_file(T_DIR) do |dir|
       link_dir = dir.join('target')
       tdir = dir.join('albums', 'fridge.ceefax')
       assert tdir.join('cover.jpg').exist?

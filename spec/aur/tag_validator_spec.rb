@@ -13,7 +13,7 @@ class TestTagValidator < Minitest::Test
     @lax = Aur::TagValidator.new(nil, strict: false)
     @strict = Aur::TagValidator.new(
       Aur::FileInfo.new(
-        RES_DIR.join('lint', '02.singer_and_the_band.file_for_test.flac')
+        RES_DIR.join('tag_validator', '01.artist.file_for_test.flac')
       ),
       strict: true
     )
@@ -63,8 +63,8 @@ class TestTagValidator < Minitest::Test
   end
 
   def test_t_num_strict
-    assert @strict.t_num('2')
-    refute @strict.t_num('02')
+    assert @strict.t_num('1')
+    refute @strict.t_num('01')
   end
 
   # year and genre are the same whether linting is strict or lax

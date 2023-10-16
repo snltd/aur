@@ -10,18 +10,18 @@ require_relative '../../../lib/aur/fileinfo'
 class TestRenumberCommand < Minitest::Test
   parallelize_me!
 
+  T_DIR = RES_DIR.join('commands', 'renumber')
+
   include Aur::CommandTests
 
   def test_renumber_up
-    SUPPORTED_TYPES.each do |type|
-      with_test_file("test_tone--100hz.#{type}") do |f|
+    with_test_file(T_DIR) do |dir|
+      SUPPORTED_TYPES.each do |type|
+        f = dir.join("test.#{type}")
         assert_tag(f, :t_num, '6')
-        outfile = "09.test_tone--100hz.#{type}"
+        outfile = "09.test.#{type}"
 
-        assert_output(
-          "       t_num -> 9\ntest_tone--100hz.#{type} -> #{outfile}\n",
-          ''
-        ) do
+        assert_output("       t_num -> 9\ntest.#{type} -> #{outfile}\n", '') do
           renumber_command(f, :up, '3')
         end
 
@@ -31,15 +31,13 @@ class TestRenumberCommand < Minitest::Test
   end
 
   def test_flac_renumber_down
-    SUPPORTED_TYPES.each do |type|
-      with_test_file("test_tone--100hz.#{type}") do |f|
+    with_test_file(T_DIR) do |dir|
+      SUPPORTED_TYPES.each do |type|
+        f = dir.join("test.#{type}")
         assert_tag(f, :t_num, '6')
-        outfile = "02.test_tone--100hz.#{type}"
+        outfile = "02.test.#{type}"
 
-        assert_output(
-          "       t_num -> 2\ntest_tone--100hz.#{type} -> #{outfile}\n",
-          ''
-        ) do
+        assert_output("       t_num -> 2\ntest.#{type} -> #{outfile}\n", '') do
           renumber_command(f, :down, '4')
         end
 
@@ -49,12 +47,12 @@ class TestRenumberCommand < Minitest::Test
   end
 
   def test_flac_renumber_down_too_far
-    SUPPORTED_TYPES.each do |type|
-      with_test_file("test_tone--100hz.#{type}") do |f|
+    with_test_file(T_DIR) do |dir|
+      SUPPORTED_TYPES.each do |type|
+        f = dir.join("test.#{type}")
         assert_tag(f, :t_num, '6')
 
-        assert_output('',
-                      "ERROR: #{f}: '-9' is an invalid t_num\n") do
+        assert_output('', "ERROR: #{f}: '-9' is an invalid t_num\n") do
           assert_raises(SystemExit) { renumber_command(f, :down, '15') }
         end
 

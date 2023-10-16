@@ -10,10 +10,12 @@ require_relative '../../../lib/aur/fileinfo'
 class TestRetagCommand < Minitest::Test
   parallelize_me!
 
+  T_DIR = RES_DIR.join('commands', 'retag')
+
   include Aur::CommandTests
 
   def test_flac
-    with_test_file('double_title.flac') do |f|
+    with_test_file(T_DIR.join('double_title.flac')) do |f|
       original = Aur::FileInfo.new(f)
 
       assert original.rawtags.key?('title')
@@ -43,7 +45,7 @@ class TestRetagCommand < Minitest::Test
   end
 
   def test_flac_nothing_to_change
-    with_test_file('retagged.flac') do |f|
+    with_test_file(T_DIR.join('retagged.flac')) do |f|
       original = Aur::FileInfo.new(f)
       original_mtime = f.mtime
 

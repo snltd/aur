@@ -9,8 +9,10 @@ require_relative '../../../lib/aur/commands/info'
 class TestInfo < Minitest::Test
   parallelize_me!
 
+  T_DIR = RES_DIR.join('commands', 'info')
+
   def setup
-    @flac = Aur::Command::Info.new(RES_DIR.join('test_tone--100hz.flac'))
+    @flac = Aur::Command::Info.new(T_DIR.join('test.flac'))
   end
 
   def test_fmt_line
@@ -23,7 +25,7 @@ class TestInfo < Minitest::Test
   end
 
   def test_filename
-    assert_equal('test_tone--100hz.flac', @flac.fields[:Filename])
+    assert_equal('test.flac', @flac.fields[:Filename])
   end
 
   def test_bitrate
@@ -43,11 +45,11 @@ class TestInfo < Minitest::Test
   end
 
   def test_f_title
-    assert_equal('test_tone--100hz', @flac.info.f_title)
+    assert_equal('test', @flac.info.f_title)
   end
 
   def test_f_album
-    assert_equal('resources', @flac.info.f_album)
+    assert_equal('info', @flac.info.f_album)
   end
 
   def test_f_t_num

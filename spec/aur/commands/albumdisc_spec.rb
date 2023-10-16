@@ -9,9 +9,11 @@ require_relative '../../../lib/aur/commands/albumdisc'
 class TestAlbumdisc < Minitest::Test
   parallelize_me!
 
+  T_DIR = RES_DIR.join('commands', 'albumdisc')
+
   def setup
     @t = Aur::Command::Albumdisc.new(
-      RES_DIR.join('01.test_artist.untagged_song.flac')
+      T_DIR.join('01.test_artist.untagged_song.flac')
     )
   end
 

@@ -10,8 +10,10 @@ require_relative '../../../lib/aur/commands/lint'
 class TestLint < Minitest::Test
   parallelize_me!
 
+  T_DIR = RES_DIR.join('commands', 'lint')
+
   def setup
-    @t = Aur::Command::Lint.new(RES_DIR.join('bad_name.flac'))
+    @t = Aur::Command::Lint.new(T_DIR.join('bad_name.flac'))
   end
 
   def test_correctly_named?
@@ -23,7 +25,7 @@ class TestLint < Minitest::Test
       05.a_band.a_song-with_brackets.flac
       07.some_singer.i-n-i-t-i-a-l-s.flac
     ].each do |f|
-      assert(@t.correctly_named?(RES_DIR.join(f)), "#{f} should pass")
+      assert(@t.correctly_named?(T_DIR.join(f)), "#{f} should pass")
     end
 
     %w[
@@ -41,7 +43,7 @@ class TestLint < Minitest::Test
       07.the_somethings.i-n-i-t-i-a-l-s.flac
     ].each do |f|
       assert_raises(Aur::Exception::LintBadName, "#{f} should fail") do
-        @t.correctly_named?(RES_DIR.join(f))
+        @t.correctly_named?(T_DIR.join(f))
       end
     end
   end
@@ -51,7 +53,7 @@ class TestLint < Minitest::Test
 
     capture_io do # because the MP3 library stderrs a warning
       err = assert_raises(Aur::Exception::LintMissingTags) do
-        Aur::Command::Lint.new(RES_DIR.join('missing_tags.mp3')).correct_tags?
+        Aur::Command::Lint.new(T_DIR.join('missing_tags.mp3')).correct_tags?
       end
 
       assert_equal('tcon', err.message)
@@ -59,7 +61,7 @@ class TestLint < Minitest::Test
 
     capture_io do
       err = assert_raises(Aur::Exception::LintUnwantedTags) do
-        Aur::Command::Lint.new(RES_DIR.join('unstripped.mp3')).correct_tags?
+        Aur::Command::Lint.new(T_DIR.join('unstripped.mp3')).correct_tags?
       end
 
       assert_equal('tenc, tcom, txxx, apic', err.message)
@@ -76,10 +78,10 @@ end
 class TestLintTracks < Minitest::Test
   parallelize_me!
 
-  L_DIR = RES_DIR.join('lint', 'tracks')
+  T_DIR = RES_DIR.join('commands', 'lint', 'tracks')
 
   def setup
-    @t = Aur::Command::Lint.new(L_DIR.join('album_file.flac'))
+    @t = Aur::Command::Lint.new(T_DIR.join('album_file.flac'))
   end
 
   def test_correctly_named?
@@ -91,7 +93,7 @@ class TestLintTracks < Minitest::Test
       a_band.a_song-with_brackets.flac
       some_singer.i-n-i-t-i-a-l-s.flac
     ].each do |f|
-      assert(@t.correctly_named?(L_DIR.join(f)), "#{f} should pass")
+      assert(@t.correctly_named?(T_DIR.join(f)), "#{f} should pass")
     end
 
     %w[
@@ -108,7 +110,7 @@ class TestLintTracks < Minitest::Test
       the_somethings.i-n-i-t-i-a-l-s.flac
     ].each do |f|
       assert_raises(Aur::Exception::LintBadName, "#{f} should fail") do
-        @t.correctly_named?(L_DIR.join(f))
+        @t.correctly_named?(T_DIR.join(f))
       end
     end
   end
@@ -118,7 +120,7 @@ class TestLintTracks < Minitest::Test
 
     capture_io do # because the MP3 library stderrs a warning
       assert_raises(Aur::Exception::LintMissingTags) do
-        Aur::Command::Lint.new(L_DIR.join('missing_tags.mp3')).correct_tags?
+        Aur::Command::Lint.new(T_DIR.join('missing_tags.mp3')).correct_tags?
       end
     end
   end

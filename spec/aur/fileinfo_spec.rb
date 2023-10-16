@@ -9,9 +9,11 @@ require_relative '../../lib/aur/fileinfo'
 class TestFileInfo < Minitest::Test
   parallelize_me!
 
+  T_DIR = RES_DIR.join('fileinfo')
+
   def setup
-    @flac = Aur::FileInfo.new(RES_DIR.join('test_tone--100hz.flac'))
-    @mp3 = Aur::FileInfo.new(RES_DIR.join('test_tone--100hz.mp3'))
+    @flac = Aur::FileInfo.new(T_DIR.join('test.flac'))
+    @mp3 = Aur::FileInfo.new(T_DIR.join('test.mp3'))
   end
 
   def test_time
@@ -60,8 +62,8 @@ class TestFileInfo < Minitest::Test
   end
 
   def test_partner
-    fdir = RES_DIR.join('fileinfo', 'flac', 'singer.lp')
-    mdir = RES_DIR.join('fileinfo', 'mp3', 'singer.lp')
+    fdir = T_DIR.join('flac', 'singer.album')
+    mdir = T_DIR.join('mp3', 'singer.album')
 
     assert_equal(
       fdir.join('01.singer.song.flac'),
@@ -75,29 +77,25 @@ class TestFileInfo < Minitest::Test
   end
 
   def test_prt_name
-    assert_equal(
-      'test_tone--100hz.flac',
-      Aur::FileInfo.new(RES_DIR.join('test_tone--100hz.flac')).prt_name
-    )
-    assert_equal(
-      'test_tone...',
-      Aur::FileInfo.new(RES_DIR.join('test_tone--100hz.flac')).prt_name(12)
-    )
+    assert_equal('test.flac', @flac.prt_name)
+
+    long_name = Aur::FileInfo.new(T_DIR.join('file_with_very_long_name.flac'))
+    assert_equal('file_with...', long_name.prt_name(12))
   end
 
   def test_picture?
     refute(@flac.picture?)
-    with_pic = Aur::FileInfo.new(RES_DIR.join('unstripped.flac'))
+    with_pic = Aur::FileInfo.new(T_DIR.join('unstripped.flac'))
     assert(with_pic.picture?)
   end
 
   def test_unsupported
     assert_raises(Aur::Exception::UnsupportedFiletype) do
-      Aur::FileInfo.new(RES_DIR.join('front.png'))
+      Aur::FileInfo.new(T_DIR.join('front.png'))
     end
 
     assert_raises(Aur::Exception::UnsupportedFiletype) do
-      Aur::FileInfo.new(RES_DIR)
+      Aur::FileInfo.new(T_DIR)
     end
   end
 

@@ -10,10 +10,12 @@ require_relative '../../../lib/aur/fileinfo'
 class TestStripCommand < Minitest::Test
   parallelize_me!
 
+  T_DIR = RES_DIR.join('commands', 'strip')
+
   include Aur::CommandTests
 
   def test_flac
-    with_test_file('unstripped.flac') do |f|
+    with_test_file(T_DIR.join('unstripped.flac')) do |f|
       original = Aur::FileInfo.new(f)
 
       assert original.picture?
@@ -33,7 +35,7 @@ class TestStripCommand < Minitest::Test
   end
 
   def test_flac_nothing_to_strip
-    with_test_file('bad_name.flac') do |f|
+    with_test_file(T_DIR.join('stripped.flac')) do |f|
       original = Aur::FileInfo.new(f)
       original_mtime = f.mtime
 
@@ -53,7 +55,7 @@ class TestStripCommand < Minitest::Test
                       tcon: 'Test',
                       tyer: '2021' }
 
-    with_test_file('unstripped.mp3') do |f|
+    with_test_file(T_DIR.join('unstripped.mp3')) do |f|
       # Suppress library warning
       original = nil
       capture_io { original = Aur::FileInfo.new(f) }
@@ -79,7 +81,7 @@ class TestStripCommand < Minitest::Test
   end
 
   def test_mp3_nothing_to_strip
-    with_test_file('bad_name.mp3') do |f|
+    with_test_file(T_DIR.join('stripped.mp3')) do |f|
       original = Aur::FileInfo.new(f)
       original_mtime = f.mtime
 

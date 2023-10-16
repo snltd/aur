@@ -9,15 +9,18 @@ require_relative '../../../lib/aur/action'
 class TestTag2NameCommand < Minitest::Test
   parallelize_me!
 
+  T_DIR = RES_DIR.join('commands', 'tag2name')
+
   include Aur::CommandTests
 
   def test_flac_tag2name
-    SUPPORTED_TYPES.each do |type|
-      expected = "02.null_set.sammy_davis_jr--dancing.#{type}"
+    with_test_file(T_DIR) do |dir|
+      SUPPORTED_TYPES.each do |type|
+        f = dir.join("bad_name.#{type}")
+        expected = "02.null_set.sammy_davis_jr--dancing.#{type}"
 
-      with_test_file("bad_name.#{type}") do |f|
         assert_output("bad_name.#{type} -> #{expected}\n", '') do
-          Aur::Action.new(:tag2name, [f]).run!
+          Aur::Action.new(action, [f]).run!
         end
 
         refute(f.exist?)

@@ -7,8 +7,10 @@ require_relative '../../../lib/aur/commands/strip'
 # Test internals of strip command
 #
 class TestStrip < Minitest::Test
+  T_DIR = RES_DIR.join('commands', 'strip')
+
   def test_real_tags
-    t = Aur::Command::Strip.new(RES_DIR.join('test_tone--100hz.flac'))
+    t = Aur::Command::Strip.new(T_DIR.join('test.flac'))
 
     assert_equal(
       %w[Album TITLE iTunNORM iTunes_CDDB_IDs Title].sort,

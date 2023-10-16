@@ -9,9 +9,11 @@ require_relative '../../../lib/aur/commands/tag2name'
 class TestTag2name < Minitest::Test
   parallelize_me!
 
+  T_DIR = RES_DIR.join('commands', 'tag2name')
+
   def setup
-    @flac = Aur::Command::Tag2name.new(RES_DIR.join('test_tone--100hz.flac'))
-    @mp3 = Aur::Command::Tag2name.new(RES_DIR.join('test_tone--100hz.mp3'))
+    @flac = Aur::Command::Tag2name.new(T_DIR.join('test.flac'))
+    @mp3 = Aur::Command::Tag2name.new(T_DIR.join('test.mp3'))
   end
 
   def test_safe_filename_flac

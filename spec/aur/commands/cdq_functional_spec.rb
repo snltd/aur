@@ -11,8 +11,10 @@ require_relative '../../../lib/aur/fileinfo'
 class TestCdqCommand < Minitest::Test
   parallelize_me!
 
+  T_DIR = RES_DIR.join('commands', 'cdq')
+
   def test_hi_res_flac_to_cdq
-    with_test_file('cdq') do |f|
+    with_test_file(T_DIR) do |f|
       file = f.join('artist.hi-res.flac')
 
       original_tags = Aur::FileInfo.new(file).our_tags
@@ -30,7 +32,7 @@ class TestCdqCommand < Minitest::Test
   end
 
   def test_cdq_no_need
-    with_test_file('cdq') do |f|
+    with_test_file(T_DIR) do |f|
       file = f.join('artist.already-cdq.flac')
       original_digest = OpenSSL::Digest::MD5.file(file).hexdigest
 
@@ -43,7 +45,7 @@ class TestCdqCommand < Minitest::Test
   end
 
   def test_cdq_mp3
-    with_test_file('cdq') do |f|
+    with_test_file(T_DIR) do |f|
       file = f.join('artist.not-a-flac.mp3')
 
       original_digest = OpenSSL::Digest::MD5.file(file).hexdigest

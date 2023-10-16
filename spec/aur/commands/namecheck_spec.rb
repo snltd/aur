@@ -7,24 +7,16 @@ require_relative '../../../lib/aur/commands/namecheck'
 # Test namecheck methods
 #
 class TestNamecheck < Minitest::Test
+  T_DIR = RES_DIR.join('commands', 'namecheck')
+
   def setup
-    @t = Aur::Command::Namecheck.new(RES_DIR.join('namecheck', 'flac', 'thes'))
+    @t = Aur::Command::Namecheck.new(T_DIR.join('flac', 'thes'))
   end
 
   def test_files
-    assert(
-      @t.files(RES_DIR.join('namecheck', 'flac')).all? do |f|
-        f.extname == '.flac'
-      end
-    )
-
-    assert(
-      @t.files(RES_DIR.join('namecheck', 'mp3')).all? do |f|
-        f.extname == '.mp3'
-      end
-    )
-
-    assert_empty(@t.files(RES_DIR.join('namecheck', 'mp3', 'thes')))
+    assert(@t.files(T_DIR.join('flac')).all? { |f| f.extname == '.flac' })
+    assert(@t.files(T_DIR.join('mp3')).all? { |f| f.extname == '.mp3' })
+    assert_empty(@t.files(T_DIR.join('mp3', 'thes')))
   end
 
   def test_unique_list_of_artists

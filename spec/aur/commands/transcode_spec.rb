@@ -8,15 +8,16 @@ require_relative '../../../lib/aur/stdlib/pathname'
 # Test for transcode internals
 #
 class TestTranscode < Minitest::Test
+  T_DIR = RES_DIR.join('commands', 'transcode')
+
   def test_construct_cmd
-    t = Aur::Command::Transcode.new(RES_DIR.join('test_tone--100hz.flac'))
+    t = Aur::Command::Transcode.new(T_DIR.join('test.flac'))
 
     assert_equal(
       "#{BIN_DIR}/ffmpeg -hide_banner -loglevel panic -i " \
-      "\"#{RES_DIR}/test_tone--100hz.flac\" " \
-      "\"#{RES_DIR}/test_tone--100hz.mp3\"",
-      t.construct_cmd(RES_DIR.join('test_tone--100hz.flac'),
-                      RES_DIR.join('test_tone--100hz.mp3'))
+      "\"#{T_DIR.join('test.flac')}\" " \
+      "\"#{T_DIR.join('test.mp3')}\"",
+      t.construct_cmd(T_DIR.join('test.flac'), T_DIR.join('test.mp3'))
     )
   end
 end

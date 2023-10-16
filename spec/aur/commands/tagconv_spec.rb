@@ -7,8 +7,10 @@ require_relative '../../../lib/aur/commands/tagconv'
 # Done with functional spec
 #
 class TestTagconv < Minitest::Test
+  T_DIR = RES_DIR.join('commands', 'tagconv')
+
   def test_convert_tags
-    t = Aur::Command::Tagconv.new(RES_DIR.join('test_tone--100hz.mp3'))
+    t = Aur::Command::Tagconv.new(T_DIR.join('test.mp3'))
 
     assert_equal(
       { artist: 'Test',

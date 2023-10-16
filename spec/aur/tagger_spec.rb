@@ -9,9 +9,15 @@ require_relative '../../lib/aur/fileinfo'
 # spies.
 #
 class TestTagger < Minitest::Test
+  T_DIR = RES_DIR.join('tagger')
+
+  def setup
+    @flac = Aur::FileInfo.new(T_DIR.join('test.flac'))
+    @mp3 = Aur::FileInfo.new(T_DIR.join('test.mp3'))
+  end
+
   def test_flac
-    flacinfo = Aur::FileInfo.new(RES_DIR.join('test_tone--100hz.flac'))
-    t = Aur::Tagger.new(flacinfo, {})
+    t = Aur::Tagger.new(@flac, {})
 
     del = Spy.on(t.info.raw, :comment_del)
     add = Spy.on(t.info.raw, :comment_add)
@@ -35,8 +41,7 @@ class TestTagger < Minitest::Test
   # doesn't matter though. We have full functional tests.
   #
   def test_mp3
-    mp3info = Aur::FileInfo.new(RES_DIR.join('test_tone--100hz.mp3'))
-    t_mp3 = Aur::Tagger.new(mp3info, {})
+    t_mp3 = Aur::Tagger.new(@mp3, {})
     spy = Spy.on(Mp3Info, :open)
     # Because we Spy on the #open method and Mp3Info works on a block passed
     # to #open, nothing inside the loop (e.g. the calling of the #msg method)
@@ -47,8 +52,7 @@ class TestTagger < Minitest::Test
   end
 
   def test_validate
-    flacinfo = Aur::FileInfo.new(RES_DIR.join('test_tone--100hz.flac'))
-    t = Aur::Tagger.new(flacinfo, {})
+    t = Aur::Tagger.new(@flac, {})
 
     assert_equal({ artist: 'Prince' }, t.validate(artist: 'Prince'))
     assert_equal({ title: '1999' }, t.validate(title: '1999'))

@@ -9,19 +9,21 @@ require_relative '../../../lib/aur/action'
 class TestInfoCommand < Minitest::Test
   parallelize_me!
 
+  T_DIR = RES_DIR.join('commands', 'info')
+
   attr_reader :dir
 
   include Aur::CommandTests
 
   def test_flac_info
     assert_output(bad_name_flac_info, '') do
-      Aur::Action.new(:info, [RES_DIR.join('bad_name.flac')]).run!
+      Aur::Action.new(:info, [T_DIR.join('bad_name.flac')]).run!
     end
   end
 
   def test_mp3_info
     assert_output(bad_name_mp3_info, '') do
-      Aur::Action.new(:info, [RES_DIR.join('bad_name.mp3')]).run!
+      Aur::Action.new(:info, [T_DIR.join('bad_name.mp3')]).run!
     end
   end
 

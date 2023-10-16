@@ -7,13 +7,15 @@ require_relative '../../../lib/aur/action'
 # Run 'aur inumber' commands against things, and verify the results
 #
 class TestINumberCommand < Minitest::Test
+  T_DIR = RES_DIR.join('commands', 'inumber')
+
   include Aur::CommandTests
 
   def test_flac_inumber
     SUPPORTED_TYPES.each do |type|
       fpart = "test_artist.untagged_song.#{type}"
 
-      with_test_file("01.#{fpart}") do |f|
+      with_test_file(T_DIR.join("01.#{fpart}")) do |f|
         out, = capture_io { Aur::Action.new(:info, [f]).run! }
         refute_match(/Track no : 4/, out)
 
@@ -25,7 +27,7 @@ class TestINumberCommand < Minitest::Test
             "01.#{fpart} -> 04.#{fpart}\n",
             ''
           ) do
-            Aur::Action.new(:inumber, [f]).run!
+            Aur::Action.new(action, [f]).run!
           end
         end
 

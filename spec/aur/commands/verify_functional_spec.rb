@@ -10,23 +10,23 @@ require_relative '../../../lib/aur/constants'
 class TestVerifyCommand < Minitest::Test
   parallelize_me!
 
+  T_DIR = RES_DIR.join('commands', 'verify')
+
   attr_reader :dir
 
   include Aur::CommandTests
 
   def test_verify_nothing
     assert_output('', "No valid files supplied.\n") do
-      Aur::Action.new(:verify, [RES_DIR.join('front.png')]).run!
+      Aur::Action.new(:verify, [T_DIR.join('front.png')]).run!
     end
   end
 
   def test_flac_verify
-    assert_output(/bad_name.flac\s+OK$/, '') do
-      Aur::Action.new(:verify, [RES_DIR.join('bad_name.flac')]).run!
+    assert_output(/good_file.flac\s+OK$/, '') do
+      Aur::Action.new(:verify, [T_DIR.join('good_file.flac')]).run!
     end
   end
 
-  def action
-    :verify
-  end
+  def action = :verify
 end

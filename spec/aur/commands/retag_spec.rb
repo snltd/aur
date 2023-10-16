@@ -10,8 +10,10 @@ require_relative '../../../lib/aur/commands/retag'
 class TestRetag < Minitest::Test
   parallelize_me!
 
+  T_DIR = RES_DIR.join('commands', 'retag')
+
   def setup
-    @t = Aur::Command::Retag.new(RES_DIR.join('double_title.flac'))
+    @t = Aur::Command::Retag.new(T_DIR.join('double_title.flac'))
   end
 
   def test_retag_mixed_case

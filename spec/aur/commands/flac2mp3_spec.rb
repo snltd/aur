@@ -10,20 +10,22 @@ require_relative '../../../lib/aur/constants'
 class TestFlac2Mp3 < Minitest::Test
   parallelize_me!
 
+  T_DIR = RES_DIR.join('commands', 'flac2mp3')
+
   def setup
-    @t = Aur::Command::Flac2mp3.new(RES_DIR.join('test_tone--100hz.flac'))
+    @t = Aur::Command::Flac2mp3.new(T_DIR.join('test.flac'))
   end
 
   def test_construct_command
     assert_equal(
-      "#{BIN[:flac]} -dsc \"#{RES_DIR.join('test_tone--100hz.flac')}\" " \
+      "#{BIN[:flac]} -dsc \"#{T_DIR.join('test.flac')}\" " \
       "| #{BIN[:lame]} " \
       '-q2 --vbr-new --preset 128 --id3v2-only --add-id3v2 --silent ' \
       '--tt "Song Title" --ta "Band" --tl "Album Title" --ty "1993" ' \
-      "--tn \"4\" --tg \"Noise\" - \"#{RES_DIR.join('test_tone--100hz.mp3')}\"",
+      "--tn \"4\" --tg \"Noise\" - \"#{T_DIR.join('test.mp3')}\"",
       @t.construct_command(
-        RES_DIR.join('test_tone--100hz.flac'),
-        RES_DIR.join('test_tone--100hz.mp3'),
+        T_DIR.join('test.flac'),
+        T_DIR.join('test.mp3'),
         test_tags
       )
     )

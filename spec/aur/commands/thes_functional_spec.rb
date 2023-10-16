@@ -9,11 +9,14 @@ require_relative '../../../lib/aur/action'
 class TestThesCommand < Minitest::Test
   parallelize_me!
 
+  T_DIR = RES_DIR.join('commands', 'thes')
+
   include Aur::CommandTests
 
   def test_flac_thes
-    SUPPORTED_TYPES.each do |type|
-      with_test_file("test_tone--100hz.#{type}") do |f|
+    with_test_file(T_DIR) do |dir|
+      SUPPORTED_TYPES.each do |type|
+        f = dir.join("test.#{type}")
         assert_tag(f, :artist, 'Test Tones')
 
         assert_output("      artist -> The Test Tones\n", '') do
