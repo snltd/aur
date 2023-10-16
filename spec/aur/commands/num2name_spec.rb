@@ -9,11 +9,9 @@ require_relative '../../../lib/aur/commands/num2name'
 class TestNum2name < Minitest::Test
   parallelize_me!
 
-  T_DIR = RES_DIR.join('commands', 'num2name')
-
   def setup
-    @flac = Aur::Command::Num2name.new(T_DIR.join('test.flac'))
-    @mp3 = Aur::Command::Num2name.new(T_DIR.join('test.mp3'))
+    @flac = Aur::Command::Num2name.new(UNIT_FLAC)
+    @mp3 = Aur::Command::Num2name.new(UNIT_MP3)
   end
 
   def test_new_filename_flac

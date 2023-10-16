@@ -7,10 +7,8 @@ require_relative '../../../lib/aur/commands/reencode'
 # Test for reencode internals
 #
 class TestReencode < Minitest::Test
-  T_DIR = RES_DIR.join('commands', 'reencode')
-
   def test_construct_cmd
-    f = T_DIR.join('test.flac')
+    f = UNIT_FLAC
     t = Aur::Command::Reencode.new(f)
 
     assert_equal(

@@ -16,14 +16,20 @@ class TestInfoCommand < Minitest::Test
   include Aur::CommandTests
 
   def test_flac_info
-    assert_output(bad_name_flac_info, '') do
-      Aur::Action.new(:info, [T_DIR.join('bad_name.flac')]).run!
+    assert_output(info_flac_test_output, '') do
+      Aur::Action.new(
+        action,
+        [T_DIR.join('03.a_singer.this--is_a_test.flac')]
+      ).run!
     end
   end
 
   def test_mp3_info
-    assert_output(bad_name_mp3_info, '') do
-      Aur::Action.new(:info, [T_DIR.join('bad_name.mp3')]).run!
+    assert_output(info_mp3_test_output, '') do
+      Aur::Action.new(
+        action,
+        [T_DIR.join('02.imaginary_band.lets_sing_a_song.mp3')]
+      ).run!
     end
   end
 
@@ -33,30 +39,30 @@ end
 # Ruby absolutely will not have these as heredocs. That single leading space
 # trips it up.
 #
-def bad_name_flac_info
-  %( Filename : bad_name.flac
+def info_flac_test_output
+  %( Filename : 03.a_singer.this--is_a_test.flac
      Type : FLAC
   Bitrate : 16-bit/44100Hz
-     Time : 0.5
-   Artist : The Null Set
-    Album : Some Stuff By
-    Title : Sammy Davis Jr. (Dancing)
-    Genre : Electronic
- Track no : 2
-     Year : 2021
+     Time : 0.0
+   Artist : A Singer
+    Album : A Fictional LP
+    Title : This (Is a Test)
+    Genre : Pretend
+ Track no : 3
+     Year : 2023
 
 )
 end
 
-def bad_name_mp3_info
-  %( Filename : bad_name.mp3
+def info_mp3_test_output
+  %( Filename : 02.imaginary_band.lets_sing_a_song.mp3
      Type : MP3
-  Bitrate : 199kbps (variable)
-     Time : 0.5
-   Artist : The Null Set
-    Album : Some Stuff By
-    Title : Sammy Davis Jr. (Dancing)
-    Genre : Electronic
+  Bitrate : 106.66666666666667kbps (variable)
+     Time : 0.1
+   Artist : Imaginary Band
+    Album : Unit Tester
+    Title : Let's Sing a Song
+    Genre : Ruby
  Track no : 2
      Year : 2021
 

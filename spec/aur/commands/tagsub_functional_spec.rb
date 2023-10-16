@@ -54,7 +54,7 @@ class TestTagsubCommand < Minitest::Test
     end
   end
 
-  def _test_flac_tagsub_bad_tag
+  def test_flac_tagsub_bad_tag
     assert_output('', "'badtag' tag not found.\n") do
       tagsub_command(T_DIR.join('test.flac'), :badtag, 'find', 'replace')
     end

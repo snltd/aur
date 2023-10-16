@@ -9,10 +9,8 @@ require_relative '../../../lib/aur/commands/renumber'
 class TestRenumber < Minitest::Test
   parallelize_me!
 
-  T_DIR = RES_DIR.join('commands', 'renumber')
-
   def test_validate_mp3
-    t = Aur::Command::Renumber.new(T_DIR.join('test.mp3'))
+    t = Aur::Command::Renumber.new(UNIT_MP3)
 
     assert_equal(5, t.validate('5'))
     assert_raises(Aur::Exception::InvalidValue) { t.validate('0') }
@@ -21,7 +19,7 @@ class TestRenumber < Minitest::Test
   end
 
   def test_validate_flac
-    t = Aur::Command::Renumber.new(T_DIR.join('test.flac'))
+    t = Aur::Command::Renumber.new(UNIT_FLAC)
 
     assert_equal(5, t.validate('5'))
     assert_raises(Aur::Exception::InvalidValue) { t.validate('0') }

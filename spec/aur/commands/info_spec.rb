@@ -9,10 +9,8 @@ require_relative '../../../lib/aur/commands/info'
 class TestInfo < Minitest::Test
   parallelize_me!
 
-  T_DIR = RES_DIR.join('commands', 'info')
-
   def setup
-    @flac = Aur::Command::Info.new(T_DIR.join('test.flac'))
+    @flac = Aur::Command::Info.new(UNIT_FLAC)
   end
 
   def test_fmt_line
@@ -49,7 +47,7 @@ class TestInfo < Minitest::Test
   end
 
   def test_f_album
-    assert_equal('info', @flac.info.f_album)
+    assert_equal('unit', @flac.info.f_album)
   end
 
   def test_f_t_num

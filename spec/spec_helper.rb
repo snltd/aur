@@ -20,6 +20,10 @@ TestTags = Struct.new(:artist,
                       :filetype,
                       keyword_init: true)
 
+UNIT_FLAC = RES_DIR.join('unit', 'test.flac')
+UNIT_MP3 = RES_DIR.join('unit', 'test.mp3')
+UNIT_JPG = RES_DIR.join('unit', 'test.jpg')
+
 # Set up a test directory and put a copy of the given file inside it. Said
 # file must be in RES_DIR.
 # @param [String] name of file you wish to test

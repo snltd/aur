@@ -12,8 +12,8 @@ class TestTag2name < Minitest::Test
   T_DIR = RES_DIR.join('commands', 'tag2name')
 
   def setup
-    @flac = Aur::Command::Tag2name.new(T_DIR.join('test.flac'))
-    @mp3 = Aur::Command::Tag2name.new(T_DIR.join('test.mp3'))
+    @flac = Aur::Command::Tag2name.new(UNIT_FLAC)
+    @mp3 = Aur::Command::Tag2name.new(UNIT_MP3)
   end
 
   def test_safe_filename_flac

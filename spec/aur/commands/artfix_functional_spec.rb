@@ -13,12 +13,12 @@ class TestArtfixCommand < Minitest::Test
   T_DIR = RES_DIR.join('commands', 'artfix')
 
   def test_directory_nothing_to_do
-    assert_silent { act(nil, T_DIR.join('eps', 'pram.meshes')) }
+    assert_silent { act(nil, T_DIR.join('eps', 'test.good_art')) }
   end
 
   def test_artfix_rename_only
     with_test_file(T_DIR) do |dir|
-      tdir = dir.join('albums', 'jesus_lizard.liar')
+      tdir = dir.join('albums', 'test.wrong_name')
       assert tdir.join('cover.jpg').exist?
       refute tdir.join('front.jpg').exist?
 
@@ -35,9 +35,9 @@ class TestArtfixCommand < Minitest::Test
     end
   end
 
-  def _test_artfix_rename_and_resize
+  def test_artfix_rename_and_resize
     with_test_file(T_DIR) do |dir|
-      tdir = dir.join('albums', 'windy_and_carl.portal')
+      tdir = dir.join('albums', 'test.wrong_name--wrong_size')
 
       assert tdir.join('Front.JPG').exist?
       refute tdir.join('front.jpg').exist?
@@ -65,7 +65,7 @@ class TestArtfixCommand < Minitest::Test
   def test_artfix_not_square
     with_test_file(T_DIR) do |dir|
       link_dir = dir.join('target')
-      tdir = dir.join('albums', 'fridge.ceefax')
+      tdir = dir.join('albums', 'test.wrong_name--not_square')
       assert tdir.join('cover.jpg').exist?
       refute tdir.join('front.jpg').exist?
       refute link_dir.exist?
@@ -83,8 +83,9 @@ class TestArtfixCommand < Minitest::Test
       assert link_dir.exist?
 
       path_prefix = link_dir.parent.to_s[1..].tr('/', '-')
+
       assert link_dir.join(
-        "#{path_prefix}-albums-fridge.ceefax-front.jpg"
+        "#{path_prefix}-albums-test.wrong_name--not_square-front.jpg"
       ).exist?
     end
   end
@@ -92,8 +93,10 @@ class TestArtfixCommand < Minitest::Test
   private
 
   def act(link_dir, *dirs)
-    Aur::Action.new(:artfix,
-                    [],
-                    { '<directory>': dirs, linkdir: link_dir }).run!
+    Aur::Action.new(
+      :artfix,
+      [],
+      { '<directory>': dirs, linkdir: link_dir }
+    ).run!
   end
 end

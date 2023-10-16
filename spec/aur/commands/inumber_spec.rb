@@ -8,10 +8,8 @@ require_relative '../../../lib/aur/commands/inumber'
 # Tests for interactive numbering
 #
 class TestInumber < Minitest::Test
-  T_DIR = RES_DIR.join('commands', 'inumber')
-
   def test_validate
-    t = Aur::Command::Inumber.new(T_DIR.join('test.flac'))
+    t = Aur::Command::Inumber.new(UNIT_FLAC)
 
     assert_equal(5, t.validate('5'))
     assert_equal(1, t.validate('1'))

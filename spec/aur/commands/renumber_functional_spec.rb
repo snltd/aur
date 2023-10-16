@@ -17,11 +17,13 @@ class TestRenumberCommand < Minitest::Test
   def test_renumber_up
     with_test_file(T_DIR) do |dir|
       SUPPORTED_TYPES.each do |type|
-        f = dir.join("test.#{type}")
+        f = dir.join("test.song.#{type}")
         assert_tag(f, :t_num, '6')
-        outfile = "09.test.#{type}"
+        outfile = "09.test.song.#{type}"
 
-        assert_output("       t_num -> 9\ntest.#{type} -> #{outfile}\n", '') do
+        assert_output(
+          "       t_num -> 9\n#{f.basename} -> #{outfile}\n", ''
+        ) do
           renumber_command(f, :up, '3')
         end
 
@@ -33,11 +35,11 @@ class TestRenumberCommand < Minitest::Test
   def test_flac_renumber_down
     with_test_file(T_DIR) do |dir|
       SUPPORTED_TYPES.each do |type|
-        f = dir.join("test.#{type}")
+        f = dir.join("test.song.#{type}")
         assert_tag(f, :t_num, '6')
-        outfile = "02.test.#{type}"
+        outfile = "02.test.song.#{type}"
 
-        assert_output("       t_num -> 2\ntest.#{type} -> #{outfile}\n", '') do
+        assert_output("       t_num -> 2\n#{f.basename} -> #{outfile}\n", '') do
           renumber_command(f, :down, '4')
         end
 
@@ -49,7 +51,7 @@ class TestRenumberCommand < Minitest::Test
   def test_flac_renumber_down_too_far
     with_test_file(T_DIR) do |dir|
       SUPPORTED_TYPES.each do |type|
-        f = dir.join("test.#{type}")
+        f = dir.join("test.song.#{type}")
         assert_tag(f, :t_num, '6')
 
         assert_output('', "ERROR: #{f}: '-9' is an invalid t_num\n") do

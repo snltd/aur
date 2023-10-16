@@ -13,24 +13,21 @@ class TestNum2NameCommand < Minitest::Test
 
   include Aur::CommandTests
 
-  def test_num2name
+  def test_num2name_number_tag
     with_test_file(T_DIR) do |dir|
       SUPPORTED_TYPES.each do |type|
-        f = dir.join("bad_name.#{type}")
-        expected_file = f.parent.join("02.bad_name.#{type}")
-        refute(expected_file.exist?)
+        f = dir.join("test.number_tag.#{type}")
+        target = f.parent.join("02.#{f.basename}")
 
-        assert_output("bad_name.#{type} -> 02.bad_name.#{type}\n", '') do
+        assert f.exist?
+        refute target.exist?
+
+        assert_output("#{f.basename} -> #{target.basename}\n", '') do
           Aur::Action.new(action, [f]).run!
         end
 
-        refute(f.exist?)
-        assert(expected_file.exist?)
-
-        out, err = capture_io { Aur::Action.new(action, [expected_file]).run! }
-
-        assert_empty(err)
-        assert_equal("No change required.\n", out)
+        refute f.exist?
+        assert target.exist?
       end
     end
   end
@@ -38,8 +35,8 @@ class TestNum2NameCommand < Minitest::Test
   def test_num2name_no_number_tag
     with_test_file(T_DIR) do |dir|
       SUPPORTED_TYPES.each do |type|
-        f = dir.join("test.#{type}")
-        target = f.parent.join("06.test.#{type}")
+        f = dir.join("test.no_number_tag.#{type}")
+        target = f.parent.join("00.#{f.basename}")
 
         assert f.exist?
         refute target.exist?

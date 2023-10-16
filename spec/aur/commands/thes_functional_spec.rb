@@ -16,7 +16,7 @@ class TestThesCommand < Minitest::Test
   def test_flac_thes
     with_test_file(T_DIR) do |dir|
       SUPPORTED_TYPES.each do |type|
-        f = dir.join("test.#{type}")
+        f = dir.join("test.the_the.#{type}")
         assert_tag(f, :artist, 'Test Tones')
 
         assert_output("      artist -> The Test Tones\n", '') do

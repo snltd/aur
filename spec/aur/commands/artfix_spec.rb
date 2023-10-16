@@ -17,18 +17,18 @@ class TestArtfix < Minitest::Test
 
   def test_image_files
     assert_equal(
-      [T_DIR.join('albums', 'jesus_lizard.liar/cover.jpg')],
-      @t.image_files(T_DIR.join('albums', 'jesus_lizard.liar'))
+      [T_DIR.join('albums', 'test.wrong_name/cover.jpg')],
+      @t.image_files(T_DIR.join('albums', 'test.wrong_name'))
     )
 
     assert_equal(
-      [T_DIR.join('albums', 'windy_and_carl.portal/Front.JPG')],
-      @t.image_files(T_DIR.join('albums', 'windy_and_carl.portal'))
+      [T_DIR.join('albums', 'test.wrong_name--wrong_size/Front.JPG')],
+      @t.image_files(T_DIR.join('albums', 'test.wrong_name--wrong_size'))
     )
 
     assert_equal(
       [],
-      @t.image_files(T_DIR.join('albums', 'ween.the_pod'))
+      @t.image_files(T_DIR.join('albums', 'test.no_artwork'))
     )
   end
 
