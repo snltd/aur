@@ -7,6 +7,8 @@ require_relative '../../../lib/aur/commands/mp3dir'
 # Tests for mp3dir class
 #
 class TestMp3dir < Minitest::Test
+  parallelize_me!
+
   def test_mp3_target_dir
     t = Aur::Command::Mp3dir.new(Pathname.new('/storage/flac/eps'))
 

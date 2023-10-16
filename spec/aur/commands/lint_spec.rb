@@ -8,10 +8,12 @@ require_relative '../../../lib/aur/commands/lint'
 # Tests for linting album and EP files
 #
 class TestLint < Minitest::Test
-  attr_reader :t
+  parallelize_me!
+
+  T_DIR = RES_DIR.join('commands', 'lint')
 
   def setup
-    @t = Aur::Command::Lint.new(RES_DIR.join('bad_name.flac'))
+    @t = Aur::Command::Lint.new(T_DIR.join('bad_name.flac'))
   end
 
   def test_correctly_named?
@@ -23,7 +25,7 @@ class TestLint < Minitest::Test
       05.a_band.a_song-with_brackets.flac
       07.some_singer.i-n-i-t-i-a-l-s.flac
     ].each do |f|
-      assert(t.correctly_named?(TMP_DIR.join(f)), "#{f} should pass")
+      assert(@t.correctly_named?(T_DIR.join(f)), "#{f} should pass")
     end
 
     %w[
@@ -41,17 +43,17 @@ class TestLint < Minitest::Test
       07.the_somethings.i-n-i-t-i-a-l-s.flac
     ].each do |f|
       assert_raises(Aur::Exception::LintBadName, "#{f} should fail") do
-        t.correctly_named?(TMP_DIR.join(f))
+        @t.correctly_named?(T_DIR.join(f))
       end
     end
   end
 
   def test_correct_tags?
-    assert t.correct_tags?
+    assert @t.correct_tags?
 
     capture_io do # because the MP3 library stderrs a warning
       err = assert_raises(Aur::Exception::LintMissingTags) do
-        Aur::Command::Lint.new(RES_DIR.join('missing_tags.mp3')).correct_tags?
+        Aur::Command::Lint.new(T_DIR.join('missing_tags.mp3')).correct_tags?
       end
 
       assert_equal('tcon', err.message)
@@ -59,7 +61,7 @@ class TestLint < Minitest::Test
 
     capture_io do
       err = assert_raises(Aur::Exception::LintUnwantedTags) do
-        Aur::Command::Lint.new(RES_DIR.join('unstripped.mp3')).correct_tags?
+        Aur::Command::Lint.new(T_DIR.join('unstripped.mp3')).correct_tags?
       end
 
       assert_equal('tenc, tcom, txxx, apic', err.message)
@@ -67,19 +69,19 @@ class TestLint < Minitest::Test
   end
 
   def test_correct_tag_values?
-    assert t.correct_tag_values?
+    assert @t.correct_tag_values?
   end
 end
 
 # Tests for linting files in tracks/
 #
 class TestLintTracks < Minitest::Test
-  attr_reader :t
+  parallelize_me!
 
-  L_DIR = RES_DIR.join('lint', 'tracks')
+  T_DIR = RES_DIR.join('commands', 'lint', 'tracks')
 
   def setup
-    @t = Aur::Command::Lint.new(L_DIR.join('album_file.flac'))
+    @t = Aur::Command::Lint.new(T_DIR.join('album_file.flac'))
   end
 
   def test_correctly_named?
@@ -91,7 +93,7 @@ class TestLintTracks < Minitest::Test
       a_band.a_song-with_brackets.flac
       some_singer.i-n-i-t-i-a-l-s.flac
     ].each do |f|
-      assert(t.correctly_named?(L_DIR.join(f)), "#{f} should pass")
+      assert(@t.correctly_named?(T_DIR.join(f)), "#{f} should pass")
     end
 
     %w[
@@ -108,51 +110,51 @@ class TestLintTracks < Minitest::Test
       the_somethings.i-n-i-t-i-a-l-s.flac
     ].each do |f|
       assert_raises(Aur::Exception::LintBadName, "#{f} should fail") do
-        t.correctly_named?(L_DIR.join(f))
+        @t.correctly_named?(T_DIR.join(f))
       end
     end
   end
 
   def test_correct_tags?
-    assert t.correct_tags?
+    assert @t.correct_tags?
 
     capture_io do # because the MP3 library stderrs a warning
       assert_raises(Aur::Exception::LintMissingTags) do
-        Aur::Command::Lint.new(L_DIR.join('missing_tags.mp3')).correct_tags?
+        Aur::Command::Lint.new(T_DIR.join('missing_tags.mp3')).correct_tags?
       end
     end
   end
 
   def test_correct_tag_values?
     err = assert_raises(Aur::Exception::InvalidTagValue) do
-      t.correct_tag_values?
+      @t.correct_tag_values?
     end
 
     assert_equal('Album tag should not be set', err.message)
   end
 
   def test_validate_album_disc
-    assert t.validate_album_disc('Album (Disc 1)', 'disc_1')
-    assert t.validate_album_disc('(Disc 2 - Paris 1972-05-24)', 'disc_2')
-    assert t.validate_album_disc('An Album', 'band.an_album')
-    assert t.validate_album_disc('Black Sheep (Disc 1: Return of the Native)',
-                                 'disc_1-return_of_the_native')
+    assert @t.validate_album_disc('Album (Disc 1)', 'disc_1')
+    assert @t.validate_album_disc('(Disc 2 - Paris 1972-05-24)', 'disc_2')
+    assert @t.validate_album_disc('An Album', 'band.an_album')
+    assert @t.validate_album_disc('Black Sheep (Disc 1: Return of the Native)',
+                                  'disc_1-return_of_the_native')
 
     err = assert_raises(Aur::Exception::InvalidTagValue) do
-      t.validate_album_disc('Album', 'disc_2')
+      @t.validate_album_disc('Album', 'disc_2')
     end
 
     assert_equal(err.message,
                  'file in disc_ dir, but has no disc number in album tag')
 
     err = assert_raises(Aur::Exception::InvalidTagValue) do
-      t.validate_album_disc('Album (Disc 1)', 'band.album')
+      @t.validate_album_disc('Album (Disc 1)', 'band.album')
     end
 
     assert_equal(err.message, 'album tag: disc 1 but not in disc_ dir')
 
     err = assert_raises(Aur::Exception::InvalidTagValue) do
-      t.validate_album_disc('Album (Disc 1)', 'disc_2')
+      @t.validate_album_disc('Album (Disc 1)', 'disc_2')
     end
 
     assert_equal(err.message, 'album tag: disc 1; directory disc 2')

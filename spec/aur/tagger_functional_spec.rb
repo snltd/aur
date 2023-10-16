@@ -8,9 +8,14 @@ require_relative '../../lib/aur/tagger'
 # Run tagger against real files and observe real changes
 #
 class TestTaggerFunctional < Minitest::Test
+  T_DIR = RES_DIR.join('tagger')
+
+  parallelize_me!
+
   def test_tagging
-    SUPPORTED_TYPES.each do |type|
-      with_test_file("test_tone--100hz.#{type}") do |f|
+    with_test_file(T_DIR) do |dir|
+      SUPPORTED_TYPES.each do |type|
+        f = dir.join("test.#{type}")
         info = Aur::FileInfo.new(f)
         file = Aur::Tagger.new(info)
 
@@ -36,8 +41,9 @@ class TestTaggerFunctional < Minitest::Test
   # Silently set all the tags on an initially untagged file.
   #
   def test_all_tags
-    SUPPORTED_TYPES.each do |type|
-      with_test_file("01.test_artist.untagged_song.#{type}") do |f|
+    with_test_file(T_DIR) do |dir|
+      SUPPORTED_TYPES.each do |type|
+        f = dir.join("01.test_artist.untagged_song.#{type}")
         info = Aur::FileInfo.new(f)
         file = Aur::Tagger.new(info, quiet: true)
 

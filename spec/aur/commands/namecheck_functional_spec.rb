@@ -7,12 +7,13 @@ require_relative '../../../lib/aur/commands/namecheck'
 
 # Test namecheck against a real filesystem
 #
-class TestNamecheckCmd < Minitest::Test
-  THES_DIR = RES_DIR.join('namecheck', 'flac', 'thes')
-  SIMILAR_DIR = RES_DIR.join('namecheck', 'mp3', 'similar')
+class TestNamecheckCommand < Minitest::Test
+  parallelize_me!
+
+  T_DIR = RES_DIR.join('commands', 'namecheck')
 
   def test_thes
-    out, err = capture_io { act(THES_DIR) }
+    out, err = capture_io { act(T_DIR.join('flac', 'thes')) }
     assert_empty(err)
     lines = out.split("\n")
     assert_equal(4, lines.size)
@@ -23,7 +24,7 @@ class TestNamecheckCmd < Minitest::Test
   end
 
   def test_similars
-    out, err = capture_io { act(SIMILAR_DIR) }
+    out, err = capture_io { act(T_DIR.join('mp3', 'similar')) }
     assert_empty(err)
     lines = out.split("\n")
     assert_equal(10, lines.size)

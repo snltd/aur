@@ -7,11 +7,15 @@ require_relative '../../../lib/aur/action'
 # Run 'aur itag' commands against things, and verify the results
 #
 class TestITagCommand < Minitest::Test
+  parallelize_me!
+
+  T_DIR = RES_DIR.join('commands', 'itag')
+
   include Aur::CommandTests
 
   def test_flac_inumber
     SUPPORTED_TYPES.each do |type|
-      with_test_file("01.test_artist.untagged_song.#{type}") do |f|
+      with_test_file(T_DIR.join("01.test_artist.untagged_song.#{type}")) do |f|
         out, = capture_io { Aur::Action.new(:info, [f]).run! }
         refute_match(/Title : New Title/, out)
 
@@ -20,7 +24,7 @@ class TestITagCommand < Minitest::Test
           assert_output("#{f.basename}[title] > " \
                         "       title -> New Title\n" \
                         '') do
-            Aur::Action.new(:itag, [f], '<tag>': 'title').run!
+            Aur::Action.new(action, [f], '<tag>': 'title').run!
           end
         end
 
@@ -29,7 +33,7 @@ class TestITagCommand < Minitest::Test
           assert_output("#{f.basename}[artist] > " \
                         "      artist -> New Artist\n" \
                         '') do
-            Aur::Action.new(:itag, [f], '<tag>': 'artist').run!
+            Aur::Action.new(action, [f], '<tag>': 'artist').run!
           end
         end
 
@@ -42,7 +46,5 @@ class TestITagCommand < Minitest::Test
     end
   end
 
-  def action
-    :itag
-  end
+  def action = :itag
 end

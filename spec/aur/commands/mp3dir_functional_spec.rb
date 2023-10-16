@@ -6,13 +6,17 @@ require_relative '../../../lib/aur/action'
 
 # Run 'aur mp3dir' commands against real directories, and verify the results.
 #
-class TestMp3dir < Minitest::Test
+class TestMp3dirCommand < Minitest::Test
+  parallelize_me!
+
+  T_DIR = RES_DIR.join('commands', 'mp3dir')
+
   # This might look a bit i_suck_and_my_tests_are_order_dependent, but I swear
   # it's fine. It saves me having to carry around a stack of different
   # half-populated directories.
   #
   def test_mp3dir
-    with_test_file('mp3dir') do |dir|
+    with_test_file(T_DIR) do |dir|
       source_dir = dir.join('flac', 'artist.first_album')
       expected_dir = dir.join('mp3', 'artist.first_album')
       assert(source_dir.exist?)
@@ -53,11 +57,6 @@ class TestMp3dir < Minitest::Test
         act(source_dir)
       end
 
-      # assert_equal(
-      # original_mtimes.first,
-      # expected_dir.join('01.artist.song_1.mp3').mtime
-      # )
-
       refute_equal(
         original_mtimes.last,
         expected_dir.join('02.artist.song_2.mp3').mtime
@@ -77,14 +76,14 @@ class TestMp3dir < Minitest::Test
   end
 
   def test_mp3dir_tidy_up
-    with_test_file('mp3dir') do |dir|
+    with_test_file(T_DIR) do |dir|
       source_dir = dir.join('flac', 'artist.first_album')
       expected_dir = dir.join('mp3', 'artist.first_album')
 
       FileUtils.mkdir_p(expected_dir)
       bonus = expected_dir.join('03.artist.rubbish_bonus_track.mp3')
 
-      FileUtils.cp(RES_DIR.join('test_tone--100hz.mp3'), bonus)
+      FileUtils.cp(T_DIR.join('test.mp3'), bonus)
 
       assert(source_dir.exist?)
       assert(expected_dir.exist?)
@@ -107,8 +106,8 @@ class TestMp3dir < Minitest::Test
   end
 
   def test_running_in_the_wrong_place
-    with_test_file('lintdir') do |dir|
-      d = dir.join('mp3', 'pram.meshes')
+    with_test_file(T_DIR) do |dir|
+      d = dir.join('mp3', 'tester.good_album')
 
       assert_output('',
                     "ERROR: Bad input: #{d} is not in /flac/ hierarchy\n") do
@@ -118,8 +117,8 @@ class TestMp3dir < Minitest::Test
   end
 
   def test_running_against_a_file
-    with_test_file('lintdir') do |dir|
-      f = dir.join('flac', 'fall.eds_babe', '04.fall.free_ranger.flac')
+    with_test_file(T_DIR) do |dir|
+      f = dir.join('flac', 'artist.first_album', '01.artist.song_1.flac')
 
       assert_output("#{f}\n", "ERROR: Argument must be a directory.\n") do
         assert_raises(SystemExit) { act(f) }
@@ -127,13 +126,11 @@ class TestMp3dir < Minitest::Test
     end
   end
 
-  def action
-    :mp3dir
-  end
-
   def act(dirs, opts = {})
     opts[:'<directory>'] = [dirs].flatten
 
     Aur::Action.new(action, [], opts).run!
   end
+
+  def action = :mp3dir
 end

@@ -8,16 +8,17 @@ require_relative '../../../lib/aur/action'
 # Run 'aur artfix' commands against a mock filesystem, and verify the results.
 #
 class TestArtfixCommand < Minitest::Test
-  AF_DIR = RES_DIR.join('artfix')
-  LINK_DIR = TMP_DIR.join('linkdir')
+  parallelize_me!
+
+  T_DIR = RES_DIR.join('commands', 'artfix')
 
   def test_directory_nothing_to_do
-    assert_silent { act(AF_DIR.join('eps', 'pram.meshes')) }
+    assert_silent { act(nil, T_DIR.join('eps', 'test.good_art')) }
   end
 
   def test_artfix_rename_only
-    with_test_file(AF_DIR) do |dir|
-      tdir = dir.join('albums', 'jesus_lizard.liar')
+    with_test_file(T_DIR) do |dir|
+      tdir = dir.join('albums', 'test.wrong_name')
       assert tdir.join('cover.jpg').exist?
       refute tdir.join('front.jpg').exist?
 
@@ -26,7 +27,7 @@ class TestArtfixCommand < Minitest::Test
         "resizing #{tdir}/front.jpg\n",
         nil
       ) do
-        act(tdir)
+        act(nil, tdir)
       end
 
       refute tdir.join('cover.jpg').exist?
@@ -34,9 +35,9 @@ class TestArtfixCommand < Minitest::Test
     end
   end
 
-  def _test_artfix_rename_and_resize
-    with_test_file(AF_DIR) do |dir|
-      tdir = dir.join('albums', 'windy_and_carl.portal')
+  def test_artfix_rename_and_resize
+    with_test_file(T_DIR) do |dir|
+      tdir = dir.join('albums', 'test.wrong_name--wrong_size')
 
       assert tdir.join('Front.JPG').exist?
       refute tdir.join('front.jpg').exist?
@@ -49,7 +50,7 @@ class TestArtfixCommand < Minitest::Test
       assert_output("renaming #{tdir}/Front.JPG -> front.jpg\n" \
                     "resizing #{tdir}/front.jpg\n",
                     nil) do
-        act(tdir)
+        act(nil, tdir)
       end
 
       assert tdir.join('front.jpg').exist?
@@ -62,34 +63,40 @@ class TestArtfixCommand < Minitest::Test
   end
 
   def test_artfix_not_square
-    with_test_file(AF_DIR) do |dir|
-      tdir = dir.join('albums', 'fridge.ceefax')
+    with_test_file(T_DIR) do |dir|
+      link_dir = dir.join('target')
+      tdir = dir.join('albums', 'test.wrong_name--not_square')
       assert tdir.join('cover.jpg').exist?
       refute tdir.join('front.jpg').exist?
-      refute LINK_DIR.exist?
+      refute link_dir.exist?
 
       assert_output(
         "renaming #{tdir}/cover.jpg -> front.jpg\n" \
-        "linking #{tdir}/front.jpg to /tmp/aurtest/linkdir\n",
+        "linking #{tdir}/front.jpg to #{link_dir}\n",
         nil
       ) do
-        act(tdir)
+        act(link_dir, tdir)
       end
 
       refute tdir.join('cover.jpg').exist?
       assert tdir.join('front.jpg').exist?
-      assert LINK_DIR.exist?
-      assert LINK_DIR.join(
-        'tmp-aurtest-artfix-albums-fridge.ceefax-front.jpg'
+      assert link_dir.exist?
+
+      path_prefix = link_dir.parent.to_s[1..].tr('/', '-')
+
+      assert link_dir.join(
+        "#{path_prefix}-albums-test.wrong_name--not_square-front.jpg"
       ).exist?
     end
   end
 
   private
 
-  def act(*dirs)
-    Aur::Action.new(:artfix,
-                    [],
-                    { '<directory>': dirs, linkdir: LINK_DIR }).run!
+  def act(link_dir, *dirs)
+    Aur::Action.new(
+      :artfix,
+      [],
+      { '<directory>': dirs, linkdir: link_dir }
+    ).run!
   end
 end

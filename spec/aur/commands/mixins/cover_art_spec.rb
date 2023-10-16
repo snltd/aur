@@ -9,23 +9,33 @@ require_relative '../../../../lib/aur/commands/mixins/cover_art'
 # Test for cover art mixin
 #
 class TestCoverArtMixin < Minitest::Test
+  parallelize_me!
+
+  T_DIR = RES_DIR.join('commands', 'mixins', 'cover_art')
+
   include Aur::Mixin::CoverArt
 
-  ART_DIR = RES_DIR.join('lintdir-artwork')
-
   def test_cover_art_looks_ok?
-    assert cover_art_looks_ok?(ART_DIR.join('just_right', 'front.jpg'))
+    assert cover_art_looks_ok?(
+      T_DIR.join('tester.artwork_just_right', 'front.jpg')
+    )
 
     assert_raises(Aur::Exception::LintDirCoverArtTooBig) do
-      assert cover_art_looks_ok?(ART_DIR.join('too_big', 'front.jpg'))
+      assert cover_art_looks_ok?(
+        T_DIR.join('tester.artwork_too_big', 'front.jpg')
+      )
     end
 
     assert_raises(Aur::Exception::LintDirCoverArtTooSmall) do
-      assert cover_art_looks_ok?(ART_DIR.join('too_small', 'front.jpg'))
+      assert cover_art_looks_ok?(
+        T_DIR.join('tester.artwork_too_small', 'front.jpg')
+      )
     end
 
     assert_raises(Aur::Exception::LintDirCoverArtNotSquare) do
-      assert cover_art_looks_ok?(ART_DIR.join('not_square', 'front.jpg'))
+      assert cover_art_looks_ok?(
+        T_DIR.join('tester.artwork_not_square', 'front.jpg')
+      )
     end
   end
 

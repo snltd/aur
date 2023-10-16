@@ -8,8 +8,10 @@ require_relative '../../../lib/aur/fileinfo'
 # Run 'aur copytags' commands against things, and verify the results
 #
 class TestCopytagsCommand < Minitest::Test
+  T_DIR = RES_DIR.join('commands', 'copytags')
+
   def test_remove_v1_tags_from_file_with_both
-    with_test_file('copytags') do |dir|
+    with_test_file(T_DIR) do |dir|
       flac = dir.join('flac', '01.artist.song.flac')
       mp3 = dir.join('mp3', '01.artist.song.mp3')
 
@@ -31,6 +33,8 @@ class TestCopytagsCommand < Minitest::Test
       assert_equal(flac_tags, Aur::FileInfo.new(mp3).our_tags)
     end
   end
+
+  private
 
   def flac_tags
     { artist: 'Artist',

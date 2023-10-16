@@ -8,15 +8,15 @@ require_relative '../../../lib/aur/commands/cdq'
 #
 class TestCdq < Minitest::Test
   def test_construct_cmd
-    t = Aur::Command::Cdq.new(RES_DIR.join('test_tone--100hz.flac'))
+    t = Aur::Command::Cdq.new(UNIT_FLAC)
+
+    intermediate = UNIT_FLAC.parent.join('intermediate-file.flac')
 
     assert_equal(
-      "#{BIN_DIR}/ffmpeg -hide_banner -loglevel error " \
-      "-i \"#{RES_DIR}/test_tone--100hz.flac\" " \
+      "#{BIN_DIR}/ffmpeg -hide_banner -loglevel error -i \"#{UNIT_FLAC}\" " \
       '-af aresample=out_sample_fmt=s16:out_sample_rate=44100 ' \
-      "\"#{RES_DIR}/intermediate-file.flac\"",
-      t.construct_cmd(RES_DIR.join('test_tone--100hz.flac'),
-                      RES_DIR.join('intermediate-file.flac'))
+      "\"#{intermediate}\"",
+      t.construct_cmd(UNIT_FLAC, intermediate)
     )
   end
 end

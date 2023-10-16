@@ -7,11 +7,12 @@ require_relative '../../../lib/aur/action'
 # Run 'aur ls' commands against a mock filesystem, and verify the results.
 #
 class TestLsCommand < Minitest::Test
-  FDIR = RES_DIR.join('lintdir', 'flac')
-  MDIR = RES_DIR.join('lintdir', 'mp3')
+  parallelize_me!
+
+  T_DIR = RES_DIR.join('commands', 'ls')
 
   def test_empty_directory
-    assert_silent { act(RES_DIR.parent) }
+    assert_silent { act(T_DIR.parent) }
   end
 
   # rubocop:disable Layout/LineLength
@@ -21,7 +22,7 @@ class TestLsCommand < Minitest::Test
       "03 The Null Set      High Beam                           Some Stuff By\n",
       ''
     ) do
-      act(RES_DIR.join('null_set.some_stuff_by'))
+      act(T_DIR.join('null_set.some_stuff_by'))
     end
   end
   # rubocop:enable Layout/LineLength
@@ -34,7 +35,7 @@ class TestLsCommand < Minitest::Test
       Aur::Action.new(
         :ls,
         [],
-        '<directory>': [RES_DIR.join('null_set.some_stuff_by')], delim: '|'
+        '<directory>': [T_DIR.join('null_set.some_stuff_by')], delim: '|'
       ).run!
     end
   end

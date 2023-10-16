@@ -5,14 +5,16 @@ require_relative '../../spec_helper'
 require_relative '../../../lib/aur/exception'
 require_relative '../../../lib/aur/commands/retag'
 
-# Only has functional tests. There's no logic worth testing.
+# Test Retag command
 #
-class TestTagflat < Minitest::Test
+class TestRetag < Minitest::Test
+  parallelize_me!
+
   def setup
-    @t = Aur::Command::Retag.new(RES_DIR.join('double_title.flac'))
+    @t = Aur::Command::Retag.new(UNIT_FLAC)
   end
 
-  def test_retag?
+  def test_retag_mixed_case
     assert @t.retag?(
       tag_names,
       { 'block_size' => 168,
@@ -27,7 +29,9 @@ class TestTagflat < Minitest::Test
         'GENRE' => 'Noise',
         'TITLE' => 'other' }
     )
+  end
 
+  def test_retag_all_downcased
     assert @t.retag?(
       tag_names,
       { 'block_size' => 168,
@@ -41,7 +45,9 @@ class TestTagflat < Minitest::Test
         'genre' => 'Noise',
         'title' => 'other' }
     )
+  end
 
+  def test_retag_as_they_should_be
     refute @t.retag?(
       tag_names,
       { 'block_size' => 168,
@@ -56,6 +62,8 @@ class TestTagflat < Minitest::Test
         'TITLE' => 'other' }
     )
   end
+
+  private
 
   def tag_names
     { artist: 'ARTIST',

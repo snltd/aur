@@ -4,13 +4,14 @@
 require_relative '../spec_helper'
 require_relative '../../lib/aur/helpers'
 
-# Tests
+# Tests for helper methods
 #
 class TestHelpers < Minitest::Test
   include Aur::Helpers
 
-  FLAC_DIR = RES_DIR.join('lintdir', 'flac')
-  MP3_DIR = RES_DIR.join('lintdir', 'mp3')
+  parallelize_me!
+
+  T_DIR = RES_DIR.join('helpers', 'dirs')
 
   def test_escaped
     assert_equal('"Spiderland"', escaped('Spiderland'))
@@ -19,38 +20,14 @@ class TestHelpers < Minitest::Test
   end
 
   def test_recursive_dir_list
-    assert_equal(
-      lintdirs,
-      Aur::Helpers.recursive_dir_list([RES_DIR.join('lintdir')])
-    )
+    assert_equal(lintdirs, Aur::Helpers.recursive_dir_list([T_DIR]).sort)
 
     assert_equal(
       lintdirs,
       Aur::Helpers.recursive_dir_list(
-        [RES_DIR.join('lintdir'), FLAC_DIR, MP3_DIR]
-      )
+        [T_DIR, T_DIR.join('flac'), T_DIR.join('mp3')]
+      ).sort
     )
-  end
-
-  def lintdirs
-    [RES_DIR.join('lintdir'),
-     FLAC_DIR,
-     FLAC_DIR.join('slint.spiderland_remastered'),
-     FLAC_DIR.join('slint.spiderland_remastered/bonus_disc'),
-     FLAC_DIR.join('fall.eds_babe'),
-     FLAC_DIR.join('tester.different_album'),
-     FLAC_DIR.join('tester.different_genre'),
-     FLAC_DIR.join('tester.different_year'),
-     MP3_DIR,
-     MP3_DIR.join('heavenly.atta_girl'),
-     MP3_DIR.join('broadcast.pendulum'),
-     MP3_DIR.join('pet_shop_boys.very'),
-     MP3_DIR.join('pet_shop_boys.very/further_listening_1992-1994'),
-     MP3_DIR.join('tegan_and_sara.the_con'),
-     MP3_DIR.join('seefeel.starethrough_ep'),
-     MP3_DIR.join('afx.analogue_bubblebath'),
-     MP3_DIR.join('polvo.cor.crane_secret'),
-     MP3_DIR.join('pram.meshes')].sort
   end
 
   def test_format_time
@@ -58,5 +35,24 @@ class TestHelpers < Minitest::Test
     assert_equal('0.3', format_time(0.3))
     assert_equal('1:13', format_time(73.5))
     assert_equal('1:04:36', format_time(3876))
+  end
+
+  private
+
+  def lintdirs
+    [T_DIR,
+     T_DIR.join('flac'),
+     T_DIR.join('flac', 'eps'),
+     T_DIR.join('flac', 'eps', 'band.ep_1'),
+     T_DIR.join('flac', 'eps', 'band.ep_2'),
+     T_DIR.join('flac', 'albums'),
+     T_DIR.join('flac', 'albums', 'abc'),
+     T_DIR.join('flac', 'albums', 'pqrs'),
+     T_DIR.join('flac', 'albums', 'abc', 'artist.lp'),
+     T_DIR.join('flac', 'albums', 'pqrs', 'singer.album'),
+     T_DIR.join('flac', 'albums', 'pqrs', 'singer.album', 'bonus_disc'),
+     T_DIR.join('mp3'),
+     T_DIR.join('mp3', 'eps'),
+     T_DIR.join('mp3', 'eps', 'band.ep_1')].sort
   end
 end

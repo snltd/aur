@@ -9,4 +9,3 @@ gem 'rubocop', '~> 1.51', group: :development
 gem 'rubocop-minitest', '~> 0.14', group: :development
 gem 'rubocop-performance', '~> 1.11', group: :development
 gem 'rubocop-rake', '~> 0.6', group: :development
-gem 'spy', '~> 1.0', group: :development

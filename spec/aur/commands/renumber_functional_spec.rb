@@ -8,51 +8,53 @@ require_relative '../../../lib/aur/fileinfo'
 # Run 'aur renumber' commands against things, and verify the results
 #
 class TestRenumberCommand < Minitest::Test
+  parallelize_me!
+
+  T_DIR = RES_DIR.join('commands', 'renumber')
+
   include Aur::CommandTests
 
   def test_renumber_up
-    SUPPORTED_TYPES.each do |type|
-      with_test_file("test_tone--100hz.#{type}") do |f|
+    with_test_file(T_DIR) do |dir|
+      SUPPORTED_TYPES.each do |type|
+        f = dir.join("test.song.#{type}")
         assert_tag(f, :t_num, '6')
-        outfile = "09.test_tone--100hz.#{type}"
+        outfile = "09.test.song.#{type}"
 
         assert_output(
-          "       t_num -> 9\ntest_tone--100hz.#{type} -> #{outfile}\n",
-          ''
+          "       t_num -> 9\n#{f.basename} -> #{outfile}\n", ''
         ) do
           renumber_command(f, :up, '3')
         end
 
-        assert_tag(TMP_DIR.join(outfile), :t_num, '9')
+        assert_tag(f.dirname.join(outfile), :t_num, '9')
       end
     end
   end
 
   def test_flac_renumber_down
-    SUPPORTED_TYPES.each do |type|
-      with_test_file("test_tone--100hz.#{type}") do |f|
+    with_test_file(T_DIR) do |dir|
+      SUPPORTED_TYPES.each do |type|
+        f = dir.join("test.song.#{type}")
         assert_tag(f, :t_num, '6')
-        outfile = "02.test_tone--100hz.#{type}"
+        outfile = "02.test.song.#{type}"
 
-        assert_output(
-          "       t_num -> 2\ntest_tone--100hz.#{type} -> #{outfile}\n",
-          ''
-        ) do
+        assert_output("       t_num -> 2\n#{f.basename} -> #{outfile}\n", '') do
           renumber_command(f, :down, '4')
         end
 
-        assert_tag(TMP_DIR.join(outfile), :t_num, '2')
+        assert_tag(f.dirname.join(outfile), :t_num, '2')
       end
     end
   end
 
   def test_flac_renumber_down_too_far
-    SUPPORTED_TYPES.each do |type|
-      with_test_file("test_tone--100hz.#{type}") do |f|
+    with_test_file(T_DIR) do |dir|
+      SUPPORTED_TYPES.each do |type|
+        f = dir.join("test.song.#{type}")
         assert_tag(f, :t_num, '6')
 
-        assert_output('',
-                      "ERROR: #{f}: '-9' is an invalid t_num\n") do
+        assert_output('', "ERROR: #{f}: '-9' is an invalid t_num\n") do
           assert_raises(SystemExit) { renumber_command(f, :down, '15') }
         end
 
@@ -62,16 +64,16 @@ class TestRenumberCommand < Minitest::Test
     end
   end
 
-  def action
-    :renumber
+  def action = :renumber
+
+  private
+
+  def renumber_command(file, direction, number)
+    opts = { '<file>': file, '<number>': number }
+
+    opts[:up] = true if direction == :up
+    opts[:down] = true if direction == :down
+
+    Aur::Action.new(:renumber, [file], opts).run!
   end
-end
-
-def renumber_command(file, direction, number)
-  opts = { '<file>': file, '<number>': number }
-
-  opts[:up] = true if direction == :up
-  opts[:down] = true if direction == :down
-
-  Aur::Action.new(:renumber, [file], opts).run!
 end

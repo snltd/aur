@@ -7,13 +7,9 @@ require_relative '../../../lib/aur/commands/ls'
 # Tests the internals of the 'aur ls' command
 #
 class TestLs < Minitest::Test
-  attr_reader :t
-
-  def setup
-    @t = Aur::Command::Ls.new
-  end
-
   def test_format_line_short
+    t = Aur::Command::Ls.new
+
     [70, 80, 90, 100, 120, 150, 180].each do |n|
       assert_equal(n, t.format_line(t.format_string(n), short_tags).length)
     end

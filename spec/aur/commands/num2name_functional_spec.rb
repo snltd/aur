@@ -7,53 +7,49 @@ require_relative '../../../lib/aur/action'
 # Run 'aur num2name' commands against things, and verify the results
 #
 class TestNum2NameCommand < Minitest::Test
+  parallelize_me!
+
+  T_DIR = RES_DIR.join('commands', 'num2name')
+
   include Aur::CommandTests
 
-  def test_num2name
-    SUPPORTED_TYPES.each do |type|
-      with_test_file("bad_name.#{type}") do |f|
-        expected_file = TMP_DIR.join("02.bad_name.#{type}")
-        refute(expected_file.exist?)
+  def test_num2name_number_tag
+    with_test_file(T_DIR) do |dir|
+      SUPPORTED_TYPES.each do |type|
+        f = dir.join("test.number_tag.#{type}")
+        target = f.parent.join("02.#{f.basename}")
 
-        assert_output("bad_name.#{type} -> 02.bad_name.#{type}\n", '') do
-          Aur::Action.new(:num2name, [f]).run!
+        assert f.exist?
+        refute target.exist?
+
+        assert_output("#{f.basename} -> #{target.basename}\n", '') do
+          Aur::Action.new(action, [f]).run!
         end
 
-        refute(f.exist?)
-        assert(expected_file.exist?)
-
-        out, err = capture_io do
-          Aur::Action.new(:num2name, [expected_file]).run!
-        end
-
-        assert_empty(err)
-        assert_equal("No change required.\n", out)
+        refute f.exist?
+        assert target.exist?
       end
     end
   end
 
   def test_num2name_no_number_tag
-    SUPPORTED_TYPES.each do |type|
-      setup_test_dir
-      source_file = TMP_DIR.join("untagged_file.#{type}")
-      FileUtils.cp(RES_DIR.join("01.test_artist.untagged_song.#{type}"),
-                   source_file)
+    with_test_file(T_DIR) do |dir|
+      SUPPORTED_TYPES.each do |type|
+        f = dir.join("test.no_number_tag.#{type}")
+        target = f.parent.join("00.#{f.basename}")
 
-      assert(source_file.exist?)
+        assert f.exist?
+        refute target.exist?
 
-      assert_output(
-        "untagged_file.#{type} -> 00.untagged_file.#{type}\n", ''
-      ) do
-        Aur::Action.new(:num2name, [source_file]).run!
+        assert_output("#{f.basename} -> #{target.basename}\n", '') do
+          Aur::Action.new(action, [f]).run!
+        end
+
+        refute f.exist?
+        assert target.exist?
       end
-
-      refute(source_file.exist?)
-      assert TMP_DIR.join("00.untagged_file.#{type}").exist?
-      cleanup_test_dir
     end
   end
 
-  def action
-    :num2name
-  end
+  def action = :num2name
 end

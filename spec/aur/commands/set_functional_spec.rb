@@ -7,11 +7,17 @@ require_relative '../../../lib/aur/action'
 # Run 'aur set...' commands against things, and verify the results
 #
 class TestSetCommand < Minitest::Test
+  parallelize_me!
+
+  T_DIR = RES_DIR.join('commands', 'set')
+
   include Aur::CommandTests
 
   def test_flac_set
-    SUPPORTED_TYPES.each do |type|
-      with_test_file("01.test_artist.untagged_song.#{type}") do |f|
+    with_test_file(T_DIR) do |_dir|
+      SUPPORTED_TYPES.each do |type|
+        f = T_DIR.join("01.test_artist.untagged_song.#{type}")
+
         assert_output("      artist -> My Rubbish Band\n", '') do
           set_command(f, 'artist', 'My Rubbish Band')
         end
@@ -58,8 +64,10 @@ class TestSetCommand < Minitest::Test
   end
 
   def test_set_bad_tag
-    SUPPORTED_TYPES.each do |type|
-      with_test_file("01.test_artist.untagged_song.#{type}") do |f|
+    with_test_file(T_DIR) do |_dir|
+      SUPPORTED_TYPES.each do |type|
+        f = T_DIR.join("01.test_artist.untagged_song.#{type}")
+
         assert_output(
           '',
           "ERROR: #{f}: cannot validate 'singer' (invalid tag)\n"
@@ -71,8 +79,10 @@ class TestSetCommand < Minitest::Test
   end
 
   def test_set_invalid_tag
-    SUPPORTED_TYPES.each do |type|
-      with_test_file("01.test_artist.untagged_song.#{type}") do |f|
+    with_test_file(T_DIR) do |_dir|
+      SUPPORTED_TYPES.each do |type|
+        f = T_DIR.join("01.test_artist.untagged_song.#{type}")
+
         assert_output('', "ERROR: #{f}: 'Five' is an invalid t_num\n") do
           assert_raises(SystemExit) { set_command(f, 't_num', 'Five') }
         end
@@ -92,10 +102,8 @@ class TestSetCommand < Minitest::Test
   def set_command(file, tag, value)
     opts = { '<file>': file, '<tag>': tag, '<value>': value }
 
-    Aur::Action.new(:set, [file], opts).run!
+    Aur::Action.new(action, [file], opts).run!
   end
 
-  def action
-    :set
-  end
+  def action = :set
 end

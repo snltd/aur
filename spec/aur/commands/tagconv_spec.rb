@@ -4,16 +4,12 @@
 require_relative '../../spec_helper'
 require_relative '../../../lib/aur/commands/tagconv'
 
-# Done with functional spec
+# Tagconv is mostly tested by the functional spec
 #
 class TestTagconv < Minitest::Test
-  attr_reader :t
-
-  def setup
-    @t = Aur::Command::Tagconv.new(RES_DIR.join('test_tone--100hz.mp3'))
-  end
-
   def test_convert_tags
+    t = Aur::Command::Tagconv.new(UNIT_MP3)
+
     assert_equal(
       { artist: 'Test',
         album: 'Test Album',

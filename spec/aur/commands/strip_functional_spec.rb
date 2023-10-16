@@ -8,10 +8,14 @@ require_relative '../../../lib/aur/fileinfo'
 # Run 'aur strip' commands against things, and verify the results
 #
 class TestStripCommand < Minitest::Test
+  parallelize_me!
+
+  T_DIR = RES_DIR.join('commands', 'strip')
+
   include Aur::CommandTests
 
   def test_flac
-    with_test_file('unstripped.flac') do |f|
+    with_test_file(T_DIR.join('unstripped.flac')) do |f|
       original = Aur::FileInfo.new(f)
 
       assert original.picture?
@@ -20,7 +24,7 @@ class TestStripCommand < Minitest::Test
       assert_equal('aur', original.tags[:encoder])
 
       assert_output("Surplus tags in #{f}: COMPOSER, ENCODER, TEMPO\n", '') do
-        Aur::Action.new(:strip, [f]).run!
+        Aur::Action.new(action, [f]).run!
       end
 
       new = Aur::FileInfo.new(f)
@@ -31,14 +35,14 @@ class TestStripCommand < Minitest::Test
   end
 
   def test_flac_nothing_to_strip
-    with_test_file('bad_name.flac') do |f|
+    with_test_file(T_DIR.join('stripped.flac')) do |f|
       original = Aur::FileInfo.new(f)
       original_mtime = f.mtime
 
       refute original.picture?
       assert_equal(REQ_TAGS[:flac].sort, original.tags.keys.sort)
 
-      assert_output('', '') { Aur::Action.new(:strip, [f]).run! }
+      assert_output('', '') { Aur::Action.new(action, [f]).run! }
       assert_equal(original_mtime, f.mtime)
     end
   end
@@ -51,7 +55,7 @@ class TestStripCommand < Minitest::Test
                       tcon: 'Test',
                       tyer: '2021' }
 
-    with_test_file('unstripped.mp3') do |f|
+    with_test_file(T_DIR.join('unstripped.mp3')) do |f|
       # Suppress library warning
       original = nil
       capture_io { original = Aur::FileInfo.new(f) }
@@ -65,7 +69,7 @@ class TestStripCommand < Minitest::Test
       assert_output(
         "Surplus tags in #{f}: apic, tcom, tenc, tlen, tsse, txxx\n"
       ) do
-        Aur::Action.new(:strip, [f]).run!
+        Aur::Action.new(action, [f]).run!
       end
 
       new = Aur::FileInfo.new(f)
@@ -77,19 +81,17 @@ class TestStripCommand < Minitest::Test
   end
 
   def test_mp3_nothing_to_strip
-    with_test_file('bad_name.mp3') do |f|
+    with_test_file(T_DIR.join('stripped.mp3')) do |f|
       original = Aur::FileInfo.new(f)
       original_mtime = f.mtime
 
       refute original.picture?
       assert_equal(%i[tit2 tpe1 trck talb tcon tyer], original.tags.keys)
 
-      assert_output('', '') { Aur::Action.new(:strip, [f]).run! }
+      assert_output('', '') { Aur::Action.new(action, [f]).run! }
       assert_equal(original_mtime, f.mtime)
     end
   end
 
-  def action
-    :strip
-  end
+  def action = :strip
 end

@@ -8,12 +8,15 @@ require_relative '../../../lib/aur/action'
 # results.
 #
 class TestLintdirCommand < Minitest::Test
-  FDIR = RES_DIR.join('lintdir', 'flac')
-  MDIR = RES_DIR.join('lintdir', 'mp3')
-  ADIR = RES_DIR.join('lintdir-artwork')
+  parallelize_me!
+
+  T_DIR = RES_DIR.join('commands', 'lintdir')
+  FDIR = T_DIR.join('flac')
+  MDIR = T_DIR.join('mp3')
+  ADIR = RES_DIR.join('commands', 'mixins', 'cover_art')
 
   def test_directory_which_is_good
-    assert_silent { act(MDIR.join('broadcast.pendulum')) }
+    assert_silent { act(MDIR.join('tester.good_album')) }
   end
 
   def test_directory_which_only_holds_other_directories
@@ -22,7 +25,7 @@ class TestLintdirCommand < Minitest::Test
 
   def test_directory_with_two_discs
     assert_silent do
-      act(MDIR.join('pet_shop_boys.very', 'further_listening_1992-1994'))
+      act(MDIR.join('tester.bonus_disc', 'bonus_disc'))
     end
   end
 
@@ -33,45 +36,46 @@ class TestLintdirCommand < Minitest::Test
   end
 
   def test_directory_with_a_bad_name
-    assert_output('', /polvo.cor.crane_secret\s+Invalid directory name\n/) do
-      act(MDIR.join('polvo.cor.crane_secret'))
+    assert_output('', /tester.bad.dir.name\s+Invalid directory name\n/) do
+      act(MDIR.join('tester.bad.dir.name'))
     end
   end
 
   def test_directory_with_a_missing_file
     assert_output('',
-                  %r{tegan_and_sara.the_con\s+Missing file\(s\) \(13/14\)\n}) do
-      act(MDIR.join('tegan_and_sara.the_con'))
+                  %r{tester.missing_file\s+Missing file\(s\) \(13/14\)\n}) do
+      act(MDIR.join('tester.missing_file'))
     end
   end
 
   def test_directory_with_a_wrongly_numbered_file
-    assert_output('', /seefeel.starethrough_ep\s+Missing track 02\n/) do
-      act(MDIR.join('seefeel.starethrough_ep'))
+    assert_output('', /tester.wrongly_numbered\s+Missing track 02\n/) do
+      act(MDIR.join('tester.wrongly_numbered'))
     end
   end
 
   def test_directory_with_missing_artwork
-    assert_output('', /#{FDIR.join('fall.eds_babe')}\s+Missing cover art\n/) do
-      act(FDIR.join('fall.eds_babe'))
+    assert_output('',
+                  /#{FDIR.join('tester.missing_art')}\s+Missing cover art\n/) do
+      act(FDIR.join('tester.missing_art'))
     end
   end
 
   def test_directory_with_junk_in
     expected = <<~EOOUT
-      #{MDIR}/pram.meshes\\s+Bad file\\(s\\)
-        #{MDIR}/pram.meshes/some_junk.txt
-        #{MDIR}/pram.meshes/some_more_junk.txt
+      #{MDIR}/tester.with_junk\\s+Bad file\\(s\\)
+        #{MDIR}/tester.with_junk/some_junk.txt
+        #{MDIR}/tester.with_junk/some_more_junk.txt
     EOOUT
 
     assert_output('', Regexp.new(expected, Regexp::MULTILINE)) do
-      act(MDIR.join('pram.meshes'))
+      act(MDIR.join('tester.with_junk'))
     end
   end
 
   def test_directory_with_mixed_filetypes
-    assert_output('', /heavenly.atta_girl\s+Different file types\n/) do
-      act(MDIR.join('heavenly.atta_girl'))
+    assert_output('', /tester.mixed_types\s+Different file types\n/) do
+      act(MDIR.join('tester.mixed_types'))
     end
   end
 
@@ -91,7 +95,6 @@ class TestLintdirCommand < Minitest::Test
 
   def test_artwork
     assert_silent { act(ADIR.join('tester.jpg_artwork')) }
-
     assert_output('', /Bad file/) { act(ADIR.join('tester.png_artwork')) }
   end
 
@@ -99,8 +102,8 @@ class TestLintdirCommand < Minitest::Test
   # everywhere except in GitHub Actions
   #
   def _test_directory_with_artwork_that_should_not_be_there
-    assert_output('', /afx.analogue_bubblebath\s+Unwanted cover art\n/) do
-      act(MDIR.join('afx.analogue_bubblebath'))
+    assert_output('', /tester.unwanted_art\s+Unwanted cover art\n/) do
+      act(MDIR.join('tester.unwanted_art'))
     end
   end
 

@@ -7,45 +7,50 @@ require_relative '../../../../lib/aur/commands/mixins/file_tree'
 # Tests for FileTree mixin
 #
 class Test < Minitest::Test
-  include Aur::Mixin::FileTree
+  parallelize_me!
 
-  TEST_DIR = RES_DIR.join('lintdir', 'flac')
+  T_DIR = RES_DIR.join('commands', 'mixins', 'file_tree')
+
+  include Aur::Mixin::FileTree
 
   def test_content_under
     assert_equal(
       [
-        [Pathname.new('fall.eds_babe'), 4],
-        [Pathname.new('slint.spiderland_remastered'), 6],
-        [Pathname.new('slint.spiderland_remastered/bonus_disc'), 14],
-        [Pathname.new('tester.different_album'), 3],
-        [Pathname.new('tester.different_genre'), 3],
-        [Pathname.new('tester.different_year'), 3]
-      ],
-      content_under(TEST_DIR, '.flac')
+        [Pathname.new('flac/albums/abc/band.album'), 6],
+        [Pathname.new('flac/albums/abc/band.album/bonus_disc'), 3],
+        [Pathname.new('flac/eps/test.some_ep'), 4],
+        [Pathname.new('flac/albums/tuv/tester.first_album'), 5],
+        [Pathname.new('flac/albums/tuv/tester.second_album'), 3],
+        [Pathname.new('flac/albums/tuv/tester.third_album'), 7]
+      ].sort,
+      content_under(T_DIR, '.flac').sort
     )
 
-    assert_equal([], content_under(TEST_DIR, '.mp3'))
+    assert_equal([], content_under(T_DIR, '.mp3'))
   end
 
   def test_files_under
-    result = files_under(TEST_DIR, '.flac')
+    result = files_under(T_DIR, '.flac')
 
     assert_instance_of(Hash, result)
-    assert_equal(33, result.size)
+    assert_equal(28, result.size)
     assert(result.all? { |k, v| k.is_a?(Pathname) && v.is_a?(String) })
+
     assert_equal(
-      TEST_DIR.join('fall.eds_babe', '04.fall.free_ranger.flac'),
-      result.key('fall.free_ranger.flac')
+      'test.song_1.flac',
+      result[T_DIR.join('flac', 'eps', 'test.some_ep', '01.test.song_1.flac')]
     )
   end
 
   def test_dirs_under
-    all = dirs_under(TEST_DIR)
-    assert all.all?(&:directory?)
-    assert_includes(all, TEST_DIR.join('fall.eds_babe'))
+    ep_path = T_DIR.join('flac', 'eps', 'test.some_ep')
 
-    selected = dirs_under(TEST_DIR, ['fall.eds_babe'])
+    all = dirs_under(T_DIR.join('flac'))
+    assert all.all?(&:directory?)
+    assert_includes(all, ep_path)
+
+    selected = dirs_under(T_DIR, [ep_path])
     assert selected.all?(&:directory?)
-    refute_includes(selected, TEST_DIR.join('fall.eds_babe'))
+    refute_includes(selected, ep_path)
   end
 end

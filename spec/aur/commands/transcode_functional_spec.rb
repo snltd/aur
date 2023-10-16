@@ -5,12 +5,16 @@ require_relative '../../spec_helper'
 require_relative '../../../lib/aur/action'
 require_relative '../../../lib/aur/fileinfo'
 
-# Run 'aur reencode' commands against a real file, and verify the results
+# Run 'aur transcode' commands against a real file, and verify the results
 #
-class TestReencodeCommand < Minitest::Test
+class TestTranscodeCommand < Minitest::Test
+  parallelize_me!
+
+  T_DIR = RES_DIR.join('commands', 'transcode')
+
   def test_transcode_flac_to_wav_and_back
-    with_test_file('test_tone--100hz.flac') do |f|
-      wav = TMP_DIR.join('test_tone--100hz.wav')
+    with_test_file(T_DIR.join('test.flac')) do |f|
+      wav = f.parent.join('test.wav')
       original_tags = Aur::FileInfo.new(f).our_tags
 
       assert_output("#{f} -> #{wav}\n", '') do
@@ -37,9 +41,10 @@ class TestReencodeCommand < Minitest::Test
   end
 
   def test_transcode_bad_flac
-    SUPPORTED_TYPES.each do |type|
-      with_test_file(RES_DIR.join("not_really_a.#{type}")) do |f|
-        assert_output("#{f} -> #{TMP_DIR.join('not_really_a.wav')}\n",
+    with_test_file(T_DIR) do |dir|
+      SUPPORTED_TYPES.each do |type|
+        f = dir.join("not_really_a.#{type}")
+        assert_output("#{f} -> #{f.parent.join('not_really_a.wav')}\n",
                       "ERROR: cannot process '#{f}'.\n") do
           Aur::Action.new(:transcode, [f], '<newtype>': 'wav').run!
         end

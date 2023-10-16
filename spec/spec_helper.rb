@@ -3,13 +3,11 @@
 require 'colorize'
 require 'pathname'
 require 'minitest/autorun'
-require 'spy/integration'
 require 'yaml'
 require_relative 'common_command_tests'
 require_relative '../lib/aur/fileinfo'
 
 RES_DIR = Pathname.new(__dir__).join('resources')
-TMP_DIR = Pathname.new('/tmp/aurtest')
 
 TW = 70
 
@@ -22,26 +20,22 @@ TestTags = Struct.new(:artist,
                       :filetype,
                       keyword_init: true)
 
-def setup_test_dir
-  FileUtils.rm_r(TMP_DIR) if TMP_DIR.exist?
-  FileUtils.mkdir_p(TMP_DIR)
-end
+UNIT_FLAC = RES_DIR.join('unit', 'test.flac')
+UNIT_MP3 = RES_DIR.join('unit', 'test.mp3')
+UNIT_JPG = RES_DIR.join('unit', 'test.jpg')
 
-def cleanup_test_dir
-  FileUtils.rm_r(TMP_DIR) if TMP_DIR.exist?
-end
-
-# set up a test directory and put a copy of the given file inside it. Said
+# Set up a test directory and put a copy of the given file inside it. Said
 # file must be in RES_DIR.
 # @param [String] name of file you wish to test
-# @return [Pathname] reference to the file in TMP_DIR
+# @return [Pathname] reference to the file in temp directory
 #
 def with_test_file(file)
-  setup_test_dir
-  FileUtils.cp_r(RES_DIR.join(file), TMP_DIR)
-  file = file.basename if file.is_a?(Pathname)
-  yield(TMP_DIR.join(file))
-  cleanup_test_dir
+  Dir.mktmpdir do |dir|
+    dir = Pathname.new(dir)
+    FileUtils.cp_r(RES_DIR.join(file), dir)
+    file = file.basename if file.is_a?(Pathname)
+    yield(dir.join(file))
+  end
 end
 
 # Nicked from StackOverflow, makes it easy to test things which require user
