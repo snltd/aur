@@ -4,7 +4,7 @@
 require_relative '../../spec_helper'
 require_relative '../../../lib/aur/action'
 
-# Tests for sort command. Don't parallelize -- it breaks Spy.
+# Tests for sort command
 #
 class TestSort < Minitest::Test
   parallelize_me!
@@ -20,9 +20,9 @@ class TestSort < Minitest::Test
       out, err = capture_io { Aur::Action.new(:sort, dir.children).run! }
 
       assert_equal(3, out.lines.count)
-      assert_match(/^artist.song.flac -> artist.album\/$/, out)
-      assert_match(/^01.band.performance.flac -> band.release\/$/, out)
-      assert_match(/^singer.track.flac -> singer.release\/$/, out)
+      assert_match(%r{^artist.song.flac -> artist.album/$}, out)
+      assert_match(%r{^01.band.performance.flac -> band.release/$}, out)
+      assert_match(%r{^singer.track.flac -> singer.release/$}, out)
       assert_empty(err)
 
       assert dir.join('band.release', '01.band.performance.flac').exist?
@@ -44,9 +44,9 @@ class TestSort < Minitest::Test
       out, err = capture_io { Aur::Action.new(:sort, dir.children).run! }
 
       assert_equal(3, out.lines.count)
-      assert_match(/^artist.song.mp3 -> artist.album\/$/, out)
-      assert_match(/^01.band.performance.mp3 -> band.release\/$/, out)
-      assert_match(/^singer.track.mp3 -> singer.release\/$/, out)
+      assert_match(%r{^artist.song.mp3 -> artist.album/$}, out)
+      assert_match(%r{^01.band.performance.mp3 -> band.release/$}, out)
+      assert_match(%r{^singer.track.mp3 -> singer.release/$}, out)
       assert_empty(err)
 
       assert dir.join('band.release', '01.band.performance.mp3').exist?

@@ -3,7 +3,6 @@
 require 'colorize'
 require 'pathname'
 require 'minitest/autorun'
-require 'spy/integration'
 require 'yaml'
 require_relative 'common_command_tests'
 require_relative '../lib/aur/fileinfo'

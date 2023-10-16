@@ -13,20 +13,33 @@ class TestName2NumCommand < Minitest::Test
 
   include Aur::CommandTests
 
-  def test_flac_name2num
+  def test_renumber_from_filename
     with_test_file(T_DIR) do |dir|
       SUPPORTED_TYPES.each do |type|
         f = dir.join("01.test_artist.untagged_song.#{type}")
-        out, err = capture_io { Aur::Action.new(:info, [f]).run! }
-        refute_match(/Track no : 1/, out)
-        assert_empty(err)
+
+        assert_nil Aur::FileInfo.new(f).our_tags[:t_num]
 
         assert_output("       t_num -> 1\n", '') do
-          Aur::Action.new(:name2num, [f]).run!
+          Aur::Action.new(action, [f]).run!
         end
 
-        assert(f.exist?)
-        assert_output(/Track no : 1/, '') { Aur::Action.new(:info, [f]).run! }
+        assert_equal('1', Aur::FileInfo.new(f).our_tags[:t_num])
+      end
+    end
+  end
+
+  def test_no_number_in_filename
+    with_test_file(T_DIR) do |dir|
+      SUPPORTED_TYPES.each do |type|
+        f = dir.join("bad_name.#{type}")
+        assert f.exist?
+
+        assert_output('', "No number found at start of filename\n") do
+          Aur::Action.new(action, [f]).run!
+        end
+
+        assert f.exist?
       end
     end
   end

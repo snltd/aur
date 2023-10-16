@@ -5,9 +5,9 @@ require_relative '../../spec_helper'
 require_relative '../../../lib/aur/action'
 require_relative '../../../lib/aur/fileinfo'
 
-# Run 'aur reencode' commands against a real file, and verify the results
+# Run 'aur transcode' commands against a real file, and verify the results
 #
-class TestReencodeCommand < Minitest::Test
+class TestTranscodeCommand < Minitest::Test
   parallelize_me!
 
   T_DIR = RES_DIR.join('commands', 'transcode')

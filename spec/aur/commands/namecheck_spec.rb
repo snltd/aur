@@ -32,19 +32,15 @@ class TestNamecheck < Minitest::Test
                      'Chanteuse' => [Pathname.new('/a/c')] }
                  ))
 
-    opt = Spy.on(@t, :output)
-
-    @t.check_thes(
-      { 'Artist' => [Pathname.new('/a/a')],
-        'Band' => [Pathname.new('/a/b')],
-        'Chanteuse' => [Pathname.new('/a/c')],
-        'The Band' => [Pathname.new('/a/d')] }
-    )
-
-    assert_equal(1, opt.calls.size)
-    assert_equal(
-      ['The Band', [Pathname.new('/a/d')], 'Band', [Pathname.new('/a/b')]],
-      opt.calls.first.args
-    )
+    assert_output("The Band\n  /a/d\nBand\n  /a/b\n\n", '') do
+      @t.check_thes(
+        {
+          'Artist' => [Pathname.new('/a/a')],
+          'Band' => [Pathname.new('/a/b')],
+          'Chanteuse' => [Pathname.new('/a/c')],
+          'The Band' => [Pathname.new('/a/d')]
+        }
+      )
+    end
   end
 end
