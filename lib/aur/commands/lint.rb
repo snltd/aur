@@ -61,9 +61,7 @@ module Aur
       def err(exception, file, msg)
         return if @carer.ignore?(exception, file)
 
-        if opts[:summary]
-          raise Aur::Exception::Collector, "#{file.dirname}: #{msg}"
-        end
+        raise Aur::Exception::Collector, "#{file.dirname}: #{msg}" if opts[:summary]
 
         warn(format('%-110<file>s    %<msg>s', file: file, msg: msg))
       end
@@ -225,16 +223,13 @@ module Aur
     module LintTracks
       # rubocop:disable Metrics/AbcSize
       def correct_tag_values?
-        unless info.our_tags[:album].nil?
-          raise Aur::Exception::InvalidTagValue, 'Album tag should not be set'
-        end
+        raise Aur::Exception::InvalidTagValue, 'Album tag should not be set' unless info.our_tags[:album].nil?
 
-        unless info.t_num == '1'
-          raise Aur::Exception::InvalidTagValue, 'Track number must be 1'
-        end
+        raise Aur::Exception::InvalidTagValue, 'Track number must be 1' unless info.t_num == '1'
 
         tags = info.our_tags.except(:album)
         optional_tags.each { |t| tags.delete(t) if tags[t].nil? }
+        ignore_tags.each { |t| tags.delete(t) }
         validate_tags(tags)
       end
 
@@ -242,7 +237,7 @@ module Aur
       #
       def unwanted_tags?
         unwanted_tags = info.tags.keys - required_tags - [:encoder]
-        return true if unwanted_tags.empty? || unwanted_tags == [:tyer]
+        return true if (unwanted_tags - ignore_tags).empty?
 
         raise Aur::Exception::LintUnwantedTags, unwanted_tags.join(', ')
       end
@@ -257,6 +252,10 @@ module Aur
 
       def optional_tags
         %i[date talb tyer year genre]
+      end
+
+      def ignore_tags
+        %i[tlen tsse tyer]
       end
     end
   end
