@@ -23,7 +23,7 @@ module Aur
       #
       def tags_from_filename
         TAGS.each_with_object({}) do |tag, aggr|
-          aggr[tag] = TAG_FACTORY.title(info.send("f_#{tag}".to_sym))
+          aggr[tag] = TAG_FACTORY.title(info.send(:"f_#{tag}"))
         end
       end
 

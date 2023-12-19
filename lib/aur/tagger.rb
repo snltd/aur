@@ -34,7 +34,7 @@ module Aur
 
       tags.tap do |t|
         t.each_pair do |name, value|
-          validate_method = "validate_#{name}".to_sym
+          validate_method = :"validate_#{name}"
 
           unless respond_to?(validate_method)
             raise Aur::Exception::InvalidTagName, "cannot validate '#{name}'"

@@ -19,7 +19,7 @@ module Aur
       def run
         dirs = dirs_under(@root.join('flac'), CONF.fetch(:syncflac_omit, []))
 
-        dirs.each { |d, _count| Aur::Command::Mp3dir.new(d).run }
+        dirs.each_key { |d| Aur::Command::Mp3dir.new(d).run }
       end
 
       def self.screen_flist(_flist, _opts)
