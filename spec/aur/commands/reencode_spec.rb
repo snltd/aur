@@ -13,7 +13,7 @@ class TestReencode < Minitest::Test
 
     assert_equal(
       "#{BIN[:ffmpeg]} -hide_banner -loglevel error -i \"#{f}\" " \
-      "-compression_level 8 \"#{f.dirname}/_#{f.basename}\"",
+      "-compression_level 9 \"#{f.dirname}/_#{f.basename}\"",
       t.construct_cmd(f, f.prefixed)
     )
   end
