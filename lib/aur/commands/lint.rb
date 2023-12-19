@@ -61,7 +61,10 @@ module Aur
       def err(exception, file, msg)
         return if @carer.ignore?(exception, file)
 
-        raise Aur::Exception::Collector, "#{file.dirname}: #{msg}" if opts[:summary]
+        if opts[:summary]
+          raise Aur::Exception::Collector,
+                "#{file.dirname}: #{msg}"
+        end
 
         warn(format('%-110<file>s    %<msg>s', file: file, msg: msg))
       end
@@ -223,15 +226,20 @@ module Aur
     module LintTracks
       # rubocop:disable Metrics/AbcSize
       def correct_tag_values?
-        raise Aur::Exception::InvalidTagValue, 'Album tag should not be set' unless info.our_tags[:album].nil?
+        unless info.our_tags[:album].nil?
+          raise Aur::Exception::InvalidTagValue, 'Album tag should not be set'
+        end
 
-        raise Aur::Exception::InvalidTagValue, 'Track number must be 1' unless info.t_num == '1'
+        unless info.t_num == '1'
+          raise Aur::Exception::InvalidTagValue, 'Track number must be 1'
+        end
 
         tags = info.our_tags.except(:album)
         optional_tags.each { |t| tags.delete(t) if tags[t].nil? }
         ignore_tags.each { |t| tags.delete(t) }
         validate_tags(tags)
       end
+      # rubocop:enable Metrics/AbcSize
 
       # We won't complain whether we have a year tag or not
       #
@@ -241,7 +249,6 @@ module Aur
 
         raise Aur::Exception::LintUnwantedTags, unwanted_tags.join(', ')
       end
-      # rubocop:enable Metrics/AbcSize
 
       private
 
