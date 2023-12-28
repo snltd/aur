@@ -24,11 +24,11 @@ Gem::Specification.new do |gem|
 
   gem.metadata['rubygems_mfa_required'] = 'true'
 
-  gem.add_runtime_dependency 'colorize', '~> 0.8'
+  gem.add_runtime_dependency 'colorize', '~> 1.1'
   gem.add_runtime_dependency 'docopt', '~> 0.6'
-  gem.add_runtime_dependency 'fastimage', '~> 2.2'
+  gem.add_runtime_dependency 'fastimage', '~> 2.3'
   gem.add_runtime_dependency 'flacinfo-rb', '~> 1.0'
-  gem.add_runtime_dependency 'i18n', '~> 1.12'
+  gem.add_runtime_dependency 'i18n', '~> 1.14'
   gem.add_runtime_dependency 'ruby-mp3info', '~> 0.8'
 
   gem.required_ruby_version = Gem::Requirement.new('>= 3.0.0')
