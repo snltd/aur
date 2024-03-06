@@ -13,7 +13,7 @@ module Aur
       def run
         return unless opts[:force] || retag?(info.tag_names, info.rawtags)
 
-        tagger.tag!(info.our_tags)
+        tagger.tag!(info.our_tags.transform_values(&:strip))
       end
 
       def retag?(tag_names, rawtags)

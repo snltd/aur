@@ -72,8 +72,14 @@ module Aur
   # Lax linting runs a string against some simple rules.
   #
   module TagValidatorLax
+    # Checks on the raw string
+    def ok_raw?(string)
+      string.match(/,[a-zA-Z]/)
+    end
+
+    # rubocop:disable Metrics/CyclomaticComplexity
     def artist(string)
-      return false if string.nil?
+      return false if string.nil? || ok_raw?(string)
 
       !string.empty? &&
         !contains_ampersand?(string) &&
@@ -82,6 +88,7 @@ module Aur
         !string.match(/\s\s/) &&
         !contains_forbidden?(string)
     end
+    # rubocop:enable Metrics/CyclomaticComplexity
 
     alias title artist
     alias album artist

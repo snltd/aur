@@ -11,6 +11,11 @@ module Aur
       def run
         track_number = info.f_t_num.to_i
 
+        # If there isn't one, have a guess by grabbing the first number we find
+        if track_number.zero?
+          track_number = info.f_title.scan(/\d\d?/).first.to_i
+        end
+
         if track_number.zero?
           warn 'No number found at start of filename'
           return
