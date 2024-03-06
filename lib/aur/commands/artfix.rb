@@ -3,6 +3,7 @@
 require 'fileutils'
 require 'pathname'
 require_relative 'mixins/cover_art'
+require_relative '../helpers'
 require_relative '../exception'
 
 module Aur
@@ -96,7 +97,8 @@ module Aur
       end
 
       def self.screen_flist(_flist, opts)
-        opts[:'<directory>'].to_paths
+        dirs = opts[:'<directory>'].to_paths
+        opts[:recursive] ? Aur::Helpers.recursive_dir_list(dirs) : dirs
       end
 
       def self.help
