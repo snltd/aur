@@ -7,6 +7,7 @@ require_relative '../constants'
 require_relative '../exception'
 require_relative '../tag_validator'
 require_relative '../stdlib/string'
+require_relative 'mixins/file_tree'
 
 module Aur
   module Command
@@ -32,6 +33,20 @@ module Aur
       rescue Errno::ENOENT
         warn "'#{@file}' not found."
         false
+      end
+
+      def self.screen_flist(flist, opts)
+        raw_list = flist.flat_map do |f|
+          if f.directory? && opts[:recursive]
+            Pathname.glob("#{f}/**/*")
+          else
+            f
+          end
+        end
+
+        raw_list.uniq.select do |f|
+          f.file? && SUPPORTED_TYPES.include?(f.extname.delete('.'))
+        end
       end
 
       # rubocop:disable Metrics/MethodLength
@@ -62,8 +77,7 @@ module Aur
         return if @carer.ignore?(exception, file)
 
         if opts[:summary]
-          raise Aur::Exception::Collector,
-                "#{file.dirname}: #{msg}"
+          raise Aur::Exception::Collector, "#{file.dirname}: #{msg}"
         end
 
         warn(format('%-110<file>s    %<msg>s', file: file, msg: msg))
