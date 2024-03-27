@@ -57,9 +57,12 @@ TAGGING = {
     xii
     xiii
     xiv
+    xix
     xv
     xvi
+    xvii
     xviii
+    xx
     xxi
     xxv
     xxx

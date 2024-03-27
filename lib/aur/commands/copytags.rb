@@ -35,9 +35,23 @@ module Aur
         tagger.tag!(Aur::FileInfo.new(@partner).our_tags)
       end
 
+      def self.screen_flist(flist, opts)
+        raw_list = flist.flat_map do |f|
+          if f.directory? && opts[:recursive]
+            Pathname.glob("#{f}/**/*")
+          else
+            f
+          end
+        end
+
+        raw_list.uniq.select do |f|
+          f.file? && SUPPORTED_TYPES.include?(f.extname.delete('.'))
+        end
+      end
+
       def self.help
         <<~EOHELP
-          usage: aur copytags <file>...
+          usage: aur copytags [-r] <file>...
 
           Operates on an MP3 file, copying the tags from the corresponding
           FLAC, if one exists.
